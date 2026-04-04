@@ -39,8 +39,8 @@ export default function Navbar() {
             <img src="/images/logo/logo.jpeg" alt="NDM Logo" className="navbar__logo-img" />
           </div>
           <div className="navbar__logo-text">
-            <span className="navbar__logo-title">ছাত্র আন্দোলন</span>
-            <span className="navbar__logo-sub">Student Movement – NDM</span>
+            <span className="navbar__logo-title">ছাত্র আন্দোলন-এনডিএম</span>
+            <span className="navbar__logo-sub">Student Wing of NDM Bangladesh</span>
           </div>
         </Link>
 

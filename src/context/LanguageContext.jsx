@@ -181,7 +181,7 @@ export const translations = {
     footer_tagline: 'The student wing of National Democratic Movement, Bangladesh.',
     footer_quick: 'Quick Links',
     footer_connect: 'Connect',
-    footer_rights: '© 2026 Student Movement – NDM. All rights reserved.',
+    footer_rights: '© 2026 ছাত্র আন্দোলন-এনডিএম. All rights reserved.',
     footer_parent: 'A wing of',
   },
 
@@ -363,7 +363,7 @@ export const translations = {
     footer_tagline: 'জাতীয় গণতান্ত্রিক আন্দোলন, বাংলাদেশের ছাত্র শাখা।',
     footer_quick: 'দ্রুত লিংক',
     footer_connect: 'সংযুক্ত হন',
-    footer_rights: '© ২০২৬ ছাত্র আন্দোলন – এনডিএম। সর্বস্বত্ব সংরক্ষিত।',
+    footer_rights: '© ২০২৬ ছাত্র আন্দোলন-এনডিএম। সর্বস্বত্ব সংরক্ষিত।',
     footer_parent: 'এর একটি শাখা',
   },
 };
