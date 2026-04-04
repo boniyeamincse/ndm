@@ -12,7 +12,7 @@ const CENTRAL_COMMITTEE = [
     bio_en: 'Political science scholar and campus activist since 2022. Led student unions in three consecutive terms.',
     bio_bn: '২০২২ সাল থেকে রাজনৈতিক বিজ্ঞান গবেষক ও ক্যাম্পাস কর্মী। টানা তিনবার ছাত্র সংসদে নেতৃত্ব দিয়েছেন।',
     facebook: 'https://www.facebook.com/masud.rana.jewel.2025',
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
+    img: '/images/rana/rana.png',
   },
   {
     name_en: 'Nasrin Akter', name_bn: 'নাসরিন আক্তার',

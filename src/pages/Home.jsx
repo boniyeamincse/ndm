@@ -47,7 +47,7 @@ const LEADERS = [
     name_en: 'Masud Rana Jewel', name_bn: 'মাসুদ রানা জুয়েল',
     role_en: 'President, Central Committee', role_bn: 'সভাপতি, কেন্দ্রীয় কমিটি',
     university_en: 'Dhaka University', university_bn: 'ঢাকা বিশ্ববিদ্যালয়',
-    img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80',
+    img: '/images/rana/rana.png',
   },
   {
     name_en: 'Nasrin Akter', name_bn: 'নাসরিন আক্তার',
