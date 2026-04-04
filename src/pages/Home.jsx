@@ -11,7 +11,7 @@ import './Home.css';
 /* ─── Static data ─── */
 const NEWS_ITEMS = [
   {
-    id: 7,
+    id: 8,
     category_en: 'Events', category_bn: 'ইভেন্ট',
     date: 'March 26, 2026',
     title_en: '🇧🇩 Tribute to Freedom Fighters on Independence Day',

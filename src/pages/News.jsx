@@ -7,6 +7,16 @@ import './News.css';
 
 const ALL_NEWS = [
   {
+    id: 8, cat: 'events',
+    date: 'March 26, 2026',
+    title_en: '🇧🇩 Tribute to Freedom Fighters on Independence Day',
+    title_bn: '🇧🇩 মহান স্বাধীনতা দিবসে শহীদদের প্রতি বিনম্র শ্রদ্ধা',
+    excerpt_en: 'On the occasion of Bangladesh Independence Day, a heartfelt program was organized to pay tribute to the martyrs and freedom fighters.',
+    excerpt_bn: 'মহান স্বাধীনতা দিবস উপলক্ষে শহীদ ও বীর মুক্তিযোদ্ধাদের প্রতি গভীর শ্রদ্ধা নিবদনের লক্ষে এক বিশেষ কর্মসূচির আয়োজন করা হয়।',
+    img: '/images/activities/26.jpg',
+    featured: true,
+  },
+  {
     id: 7, cat: 'campus',
     date: 'April 4, 2026',
     title_en: 'Student NDM photo story published from campus movement',
@@ -24,7 +34,7 @@ const ALL_NEWS = [
     excerpt_en: 'Thousands of students gathered at TSC demanding free and fair elections and an end to campus political violence.',
     excerpt_bn: 'হাজার হাজার শিক্ষার্থী টিএসসিতে জড়ো হয়ে অবাধ ও সুষ্ঠু নির্বাচন ও ক্যাম্পাস রাজনৈতিক সহিংসতা বন্ধের দাবি জানায়।',
     img: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&q=80',
-    featured: true,
+    featured: false,
   },
   {
     id: 2, cat: 'national',
