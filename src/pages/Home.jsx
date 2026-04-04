@@ -149,7 +149,7 @@ export default function Home() {
         <div className="container home-about__inner">
           <div className="home-about__img-wrap reveal">
             <img
-              src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=700&q=80"
+              src="/images/photo/student_ndm.jpg"
               alt="Students"
             />
             <div className="home-about__img-badge">
