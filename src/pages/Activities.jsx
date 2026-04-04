@@ -86,6 +86,46 @@ const GALLERY_IMGS = [
   'https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=500&q=80',
 ];
 
+const ACTIVITY_REPORTS = [
+  {
+    id: 1,
+    date: 'March 26, 2026',
+    title_en: '🇧🇩 Tribute to Freedom Fighters on Independence Day',
+    title_bn: '🇧🇩 মহান স্বাধীনতা দিবসে শহীদদের প্রতি বিনম্র শ্রদ্ধা',
+    content_en: `March 26 is a glorious day in the history of Bangladesh. It marks the beginning of our independence and stands as a symbol of sacrifice, courage, and national pride. On the occasion of Bangladesh Independence Day, a student movement organized a heartfelt program to pay tribute to the martyrs and freedom fighters of the Liberation War.
+
+The event was attended by the President of the organization, Masud Rana Juyel, along with other members of the student committee and general participants. Together, they placed floral wreaths in honor of the fallen heroes and observed a moment of silence.
+
+Participants expressed that independence was not achieved easily—it came through the immense sacrifice of countless martyrs. Therefore, it is the responsibility of the younger generation to remember this history, uphold the spirit of patriotism, and contribute to the development of the nation.
+
+In his speech, President Masud Rana Juyel said:
+"The freedom we enjoy today is the result of the sacrifices of our predecessors. We must never let their sacrifices go in vain. The student community must work for the country and always stand for truth and justice."
+
+Leaders and members from different levels of the student movement were also present, making the environment deeply respectful and emotional.
+
+The program concluded with prayers for the souls of the martyrs and for the peace, progress, and prosperity of Bangladesh.
+
+👉 Our Commitment:
+To build a just, developed, and prosperous Bangladesh together—this is our promise.`,
+    content_bn: `২৬ মার্চ—বাংলাদেশের ইতিহাসে এক গৌরবোজ্জ্বল দিন। এই দিনটি আমাদের স্বাধীনতার সূচনা, আত্মত্যাগ আর বীরত্বের প্রতীক। Bangladesh Independence Day উপলক্ষে আজ ছাত্র আন্দোলনের উদ্যোগে গভীর শ্রদ্ধা ও ভালোবাসার সাথে স্মরণ করা হলো মহান মুক্তিযুদ্ধের সকল শহীদ ও বীর মুক্তিযোদ্ধাদের।
+
+আজকের এই কর্মসূচিতে উপস্থিত ছিলেন সংগঠনের সভাপতি মাসুদ রানা জুয়েল সহ ছাত্র আন্দোলনের অন্যান্য কমিটির সদস্যবৃন্দ। তারা সকলে মিলে শহীদদের স্মরণে পুষ্পস্তবক অর্পণ করেন এবং এক মিনিট নীরবতা পালন করেন।
+
+এই আয়োজনে অংশগ্রহণকারী শিক্ষার্থীরা বলেন, স্বাধীনতা কোনো সাধারণ অর্জন নয়—এটি লাখো শহীদের রক্তের বিনিময়ে অর্জিত। তাই নতুন প্রজন্মের দায়িত্ব হলো এই ইতিহাসকে ধারণ করা, দেশপ্রেমে উদ্বুদ্ধ হওয়া এবং দেশের উন্নয়নে নিজেদেরকে নিবেদিত করা।
+
+সভাপতি মাসুদ রানা জুয়েল তার বক্তব্যে বলেন,
+“আমরা যারা আজ স্বাধীন দেশে দাঁড়িয়ে কথা বলছি, এটি সম্ভব হয়েছে আমাদের পূর্বসূরিদের ত্যাগের কারণে। তাদের আত্মত্যাগ কখনো বৃথা যেতে দেওয়া যাবে না। ছাত্রসমাজকে দেশের জন্য কাজ করতে হবে, ন্যায় ও সত্যের পথে থাকতে হবে।”
+
+অনুষ্ঠানে আরও উপস্থিত ছিলেন ছাত্র আন্দোলনের বিভিন্ন স্তরের নেতৃবৃন্দ ও সাধারণ সদস্যরা। তাদের সম্মিলিত অংশগ্রহণে পুরো পরিবেশটি হয়ে ওঠে আবেগঘন ও শ্রদ্ধায় পূর্ণ।
+
+শেষে দোয়া ও মোনাজাতের মাধ্যমে সকল শহীদের আত্মার মাগফিরাত কামনা করা হয় এবং দেশের শান্তি, অগ্রগতি ও সমৃদ্ধি কামনা করা হয়।
+
+👉 এই দিনের অঙ্গীকার:
+আমরা সবাই মিলে একটি সুন্দর, ন্যায়ভিত্তিক ও সমৃদ্ধ বাংলাদেশ গড়ে তুলবো—এই হোক আমাদের প্রতিজ্ঞা।`,
+    images: ['/images/activities/26.jpg', '/images/activities/27.jpg'],
+  },
+];
+
 export default function Activities() {
   const { t, lang } = useLang();
   useScrollReveal();
@@ -144,32 +184,44 @@ export default function Activities() {
             <h2 className="section-title">{t('act_events_title')}</h2>
             <div className="divider" />
           </div>
-          <div className="events-grid">
-            {EVENTS.map((ev, i) => (
-              <div className="event-card card reveal" key={i}>
-                <div className="event-card__date-badge">
-                  {ev.date.split(',')[0].split(' ').slice(0, 2).join(' ')}
+          </div>
+        </div>
+      </section>
+
+      {/* Activity Reports */}
+      <section className="section-pad">
+        <div className="container">
+          <div className="text-center reveal">
+            <span className="section-label">{lang === 'en' ? 'Activity Reports' : 'কার্যক্রম প্রতিবেদন'}</span>
+            <h2 className="section-title">{lang === 'en' ? 'Latest from the Field' : 'মাঠ পর্যায়ের সর্বশেষ সংবাদ'}</h2>
+            <div className="divider" />
+          </div>
+          <div className="reports-column">
+            {ACTIVITY_REPORTS.map(rpt => (
+              <article className="report-card reveal" key={rpt.id}>
+                <div className="report-card__header">
+                  <span className="report-card__date"><Calendar size={14} /> {rpt.date}</span>
+                  <h2 className="report-card__title">{lang === 'en' ? rpt.title_en : rpt.title_bn}</h2>
                 </div>
-                <div className="event-card__body">
-                  <span
-                    className="badge"
-                    style={{ background: `${categoryColor(ev.category)}18`, color: categoryColor(ev.category), marginBottom: '.5rem' }}
-                  >
-                    {ev.category}
-                  </span>
-                  <h3>{lang === 'en' ? ev.title_en : ev.title_bn}</h3>
-                  <div className="event-card__meta">
-                    <span><Calendar size={13} /> {ev.date}</span>
-                    <span><MapPin size={13} /> {lang === 'en' ? ev.location_en : ev.location_bn}</span>
+                <div className="report-card__content">
+                  <div className="report-card__text">
+                    {(lang === 'en' ? rpt.content_en : rpt.content_bn).split('\n\n').map((para, pi) => (
+                      <p key={pi}>{para}</p>
+                    ))}
                   </div>
-                  <p>{lang === 'en' ? ev.desc_en : ev.desc_bn}</p>
-                  <Link to="/join" className="btn btn-primary btn-sm" style={{ marginTop: '1rem' }}>
-                    {lang === 'en' ? 'Register' : 'নিবন্ধন করুন'} <ArrowRight size={13} />
-                  </Link>
+                  <div className="report-card__images">
+                    {rpt.images.map((img, ii) => (
+                      <div className="report-card__img-wrap" key={ii}>
+                        <img src={img} alt={`Activity Snapshot ${ii + 1}`} loading="lazy" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
+        </div>
+      </section>
         </div>
       </section>
 
