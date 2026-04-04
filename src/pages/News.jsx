@@ -7,6 +7,16 @@ import './News.css';
 
 const ALL_NEWS = [
   {
+    id: 7, cat: 'campus',
+    date: 'April 4, 2026',
+    title_en: 'Student NDM photo story published from campus movement',
+    title_bn: 'ক্যাম্পাস আন্দোলন থেকে স্টুডেন্ট এনডিএম ফটো স্টোরি প্রকাশ',
+    excerpt_en: 'A new visual story highlighting student participation in democratic organizing has been added to the NDM news feed.',
+    excerpt_bn: 'গণতান্ত্রিক সংগঠনে শিক্ষার্থীদের অংশগ্রহণ তুলে ধরে একটি নতুন ভিজ্যুয়াল স্টোরি এনডিএম নিউজ ফিডে যুক্ত হয়েছে।',
+    img: '/images/photo/student_ndm.jpg',
+    featured: false,
+  },
+  {
     id: 1, cat: 'campus',
     date: 'March 28, 2026',
     title_en: 'Student Movement NDM holds mass rally at Dhaka University',
