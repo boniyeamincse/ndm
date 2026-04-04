@@ -11,6 +11,16 @@ import './Home.css';
 /* ─── Static data ─── */
 const NEWS_ITEMS = [
   {
+    id: 7,
+    category_en: 'Events', category_bn: 'ইভেন্ট',
+    date: 'March 26, 2026',
+    title_en: '🇧🇩 Tribute to Freedom Fighters on Independence Day',
+    title_bn: '🇧🇩 মহান স্বাধীনতা দিবসে শহীদদের প্রতি বিনম্র শ্রদ্ধা',
+    excerpt_en: 'On the occasion of Bangladesh Independence Day, a heartfelt program was organized to pay tribute to the martyrs and freedom fighters.',
+    excerpt_bn: 'মহান স্বাধীনতা দিবস উপলক্ষে শহীদ ও বীর মুক্তিযোদ্ধাদের প্রতি গভীর শ্রদ্ধা নিবদনের লক্ষে এক বিশেষ কর্মসূচির আয়োজন করা হয়।',
+    img: '/images/activities/26.jpg',
+  },
+  {
     id: 1,
     category_en: 'Campus', category_bn: 'ক্যাম্পাস',
     date: 'March 28, 2026',
