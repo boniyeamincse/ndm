@@ -15,24 +15,54 @@ const VALUES = [
 
 const TIMELINE = [
   {
-    year: '2024',
-    en: 'July–August uprising shakes Bangladesh. Students lead the historic mass movement demanding democratic accountability.',
-    bn: 'জুলাই-আগস্ট অভ্যুত্থান বাংলাদেশকে কাঁপিয়ে দেয়। শিক্ষার্থীরা গণতান্ত্রিক জবাবদিহিতার দাবিতে ঐতিহাসিক গণআন্দোলনের নেতৃত্ব দেয়।',
+    year: '2017',
+    en: 'National Democratic Movement (NDM) founded by Bobby Hajjaj. The seeds of a principled student wing are sown.',
+    bn: 'ববি হাজ্জাজ কর্তৃক এনডিএম প্রতিষ্ঠিত। একটি নীতিনিষ্ঠ ছাত্র শাখার বীজ বপন করা হয়।',
   },
   {
-    year: '2024 (Late)',
-    en: 'Student Movement – NDM formally established as the student wing of National Democratic Movement under the leadership of Bobby Hajjaj.',
-    bn: 'ববি হাজ্জাজের নেতৃত্বে জাতীয় গণতান্ত্রিক আন্দোলনের ছাত্র শাখা হিসেবে ছাত্র আন্দোলন – এনডিএম আনুষ্ঠানিকভাবে প্রতিষ্ঠিত হয়।',
+    year: '2018',
+    en: 'Early mobilization during national political shifts. Focus on building core leadership among university students.',
+    bn: 'জাতীয় রাজনৈতিক পরিবর্তনের প্রেক্ষাপটে প্রাথমিক প্রচারণা। মূল নেতৃত্ব তৈরির ওপর গুরুত্বারোপ।',
+  },
+  {
+    year: '2019',
+    en: 'Expansion of campus units in Dhaka and key urban centers. First major advocacy for educational reforms.',
+    bn: 'ঢাকা ও প্রধান শহরগুলোতে ক্যাম্পাস ইউনিটের সম্প্রসারণ। শিক্ষা সংস্কারের জন্য প্রথম বড় ধরণের প্রচারণা।',
+  },
+  {
+    year: '2020',
+    en: 'Youth-led community service and social awareness campaigns launched during the global pandemic.',
+    bn: 'মহামারীর সময়ে তরুণদের নেতৃত্বে জনসেবা এবং সামাজিক সচেতনতামূলক কার্যক্রম শুরু।',
+  },
+  {
+    year: '2021',
+    en: 'Growing voice against campus oppression. Strengthening organizational structure across universities.',
+    bn: 'ক্যাম্পাস নিপীড়নের বিরুদ্ধে সোচ্চার হওয়া। সাংগঠনিক কাঠামো শক্তিশালী করা।',
+  },
+  {
+    year: '2022',
+    en: 'Nationwide outreach reaching 30+ districts. Focus on training the next generation of democratic leaders.',
+    bn: '৩০টিরও বেশি জেলায় দেশব্যাপী প্রচারণা। পরবর্তী প্রজন্মের গণতান্ত্রিক নেতা তৈরির লক্ষ্যে প্রশিক্ষণ।',
+  },
+  {
+    year: '2023',
+    en: 'Active participation in national movements for accountability and transparency in governance.',
+    bn: 'প্রশাসনে জবাবদিহিতা ও স্বচ্ছতার দাবিতে জাতীয় আন্দোলনে সক্রিয় অংশগ্রহণ।',
+  },
+  {
+    year: '2024',
+    en: 'July–August uprising. Our members stand at the forefront of the historic student-led mass movement.',
+    bn: 'জুলাই-আগস্ট অভ্যুত্থান। আমাদের সদস্যরা ঐতিহাসিক ছাত্র-গণআন্দোলনের অগ্রভাগে ছিলেন।',
   },
   {
     year: '2025',
-    en: "Rapid expansion to over 50 universities. Major campaigns on campus democracy, anti-corruption, and students' rights.",
-    bn: '৫০টিরও বেশি বিশ্ববিদ্যালয়ে দ্রুত সম্প্রসারণ। ক্যাম্পাস গণতন্ত্র, দুর্নীতি বিরোধী ও শিক্ষার্থীদের অধিকার নিয়ে বড় আন্দোলন।',
+    en: 'Rapid scaling to 50+ universities. Launch of the "Campus Democracy" initiative across Bangladesh.',
+    bn: '৫০টিরও বেশি বিশ্ববিদ্যালয়ে দ্রুত সম্প্রসারণ। "ক্যাম্পাস গণতন্ত্র" উদ্যোগের সূচনা।',
   },
   {
     year: '2026',
-    en: 'Present across 64 districts with 85+ university chapters and 12,000+ active members. Youth Leadership Summit launched.',
-    bn: '৬৪ জেলায় উপস্থিতি, ৮৫+ বিশ্ববিদ্যালয় শাখা এবং ১২,০০০+ সক্রিয় সদস্য। যুব নেতৃত্ব সম্মেলন চালু।',
+    en: 'Today, we stand as the premier voice for student rights across 64 districts with 12,000+ active members.',
+    bn: 'আজ আমরা ৬৪টি জেলায় ১২,০০০+ সক্রিয় সদস্য নিয়ে ছাত্র অধিকারের প্রধান কণ্ঠস্বর।',
   },
 ];
 
