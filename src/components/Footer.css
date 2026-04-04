@@ -123,6 +123,12 @@
 
 .footer__contact-list li svg { flex-shrink: 0; margin-top: 2px; color: var(--clr-primary); }
 
+.footer__ndm-link {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .8rem;
   color: rgba(255,255,255,.6);
 }
 
@@ -146,6 +152,13 @@
   background: rgba(0,0,0,.2);
 }
 
+.footer__bottom-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: .8rem;
   color: rgba(255,255,255,.6);
 }
 
