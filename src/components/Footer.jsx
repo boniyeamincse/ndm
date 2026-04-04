@@ -59,8 +59,8 @@ export default function Footer() {
             </ul>
             <div className="footer__ndm-link">
               <span>{t('footer_parent')}</span>
-              <a href="https://ndmbd.org" target="_blank" rel="noopener noreferrer">
-                NDM Bangladesh <ExternalLink size={12} />
+              <a href="https://ndmbd.org/" target="_blank" rel="noopener noreferrer">
+                Nationalist Democratic Movement - Main Site <ExternalLink size={12} />
               </a>
             </div>
           </div>
@@ -73,8 +73,8 @@ export default function Footer() {
           <p>{t('footer_rights')}</p>
           <p>
             {t('footer_parent')}{' '}
-            <a href="https://ndmbd.org" target="_blank" rel="noopener noreferrer">
-              National Democratic Movement (NDM)
+            <a href="https://ndmbd.org/" target="_blank" rel="noopener noreferrer">
+              Nationalist Democratic Movement - Main Site
             </a>
           </p>
         </div>
