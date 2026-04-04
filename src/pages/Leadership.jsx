@@ -6,11 +6,12 @@ import './Leadership.css';
 
 const CENTRAL_COMMITTEE = [
   {
-    name_en: 'Mohammad Rafiqul Islam', name_bn: 'মোহাম্মদ রফিকুল ইসলাম',
+    name_en: 'Masud Rana Jewel', name_bn: 'মাসুদ রানা জুয়েল',
     role_en: 'President', role_bn: 'সভাপতি',
     university_en: 'Dhaka University, Law Dept.', university_bn: 'ঢাকা বিশ্ববিদ্যালয়, আইন বিভাগ',
     bio_en: 'Political science scholar and campus activist since 2022. Led student unions in three consecutive terms.',
     bio_bn: '২০২২ সাল থেকে রাজনৈতিক বিজ্ঞান গবেষক ও ক্যাম্পাস কর্মী। টানা তিনবার ছাত্র সংসদে নেতৃত্ব দিয়েছেন।',
+    facebook: 'https://www.facebook.com/masud.rana.jewel.2025',
     img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
   },
   {
@@ -99,7 +100,14 @@ export default function Leadership() {
                   <div className="leader-full-card__overlay">
                     <a href="#" aria-label="Email"><Mail size={16} /></a>
                     <a href="#" aria-label="Phone"><Phone size={16} /></a>
-                    <a href="#" aria-label="LinkedIn"><Link2 size={16} /></a>
+                    <a
+                      href={l.facebook || '#'}
+                      target={l.facebook ? '_blank' : undefined}
+                      rel={l.facebook ? 'noopener noreferrer' : undefined}
+                      aria-label="Facebook"
+                    >
+                      <Link2 size={16} />
+                    </a>
                   </div>
                 </div>
                 <div className="leader-full-card__body">
