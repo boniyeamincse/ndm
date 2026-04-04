@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import './Navbar.css';
 
 export default function Navbar() {
-  const { t, toggle, lang } = useLang();
+  const { t, toggle } = useLang();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
@@ -36,7 +36,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="navbar__logo">
           <div className="navbar__logo-icon">
-            <span>এনডিএম</span>
+            <img src="/images/logo/logo.jpeg" alt="NDM Logo" className="navbar__logo-img" />
           </div>
           <div className="navbar__logo-text">
             <span className="navbar__logo-title">ছাত্র আন্দোলন</span>

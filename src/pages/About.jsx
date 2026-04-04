@@ -133,7 +133,7 @@ export default function About() {
           </div>
           <div className="about-ndm-card reveal">
             <div className="about-ndm-logo">
-              <span>NDM</span>
+              <img src="/images/logo/logo.jpeg" alt="NDM Logo" className="about-ndm-logo-img" />
             </div>
             <h3>{lang === 'en' ? 'National Democratic Movement' : 'জাতীয় গণতান্ত্রিক আন্দোলন'}</h3>
             <p>{lang === 'en' ? 'Bangladesh' : 'বাংলাদেশ'}</p>

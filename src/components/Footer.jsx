@@ -24,7 +24,9 @@ export default function Footer() {
         <div className="container footer__top-inner">
           <div className="footer__brand">
             <div className="footer__logo">
-              <div className="footer__logo-icon">এনডিএম</div>
+              <div className="footer__logo-icon">
+                <img src="/images/logo/logo.jpeg" alt="NDM Logo" className="footer__logo-img" />
+              </div>
               <div>
                 <div className="footer__logo-title">ছাত্র আন্দোলন</div>
                 <div className="footer__logo-sub">Student Movement – NDM</div>

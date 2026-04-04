@@ -151,14 +151,18 @@
 
 .about-ndm-logo {
   width: 72px; height: 72px;
-  background: linear-gradient(135deg, var(--clr-primary), var(--clr-primary-lt));
+  background: var(--clr-white);
   border-radius: var(--radius-md);
   margin: 0 auto 1rem;
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem;
-  font-weight: 900;
-  color: var(--clr-white);
-  box-shadow: var(--shadow-red);
+  box-shadow: 0 8px 28px rgba(0,0,0,.2);
+  overflow: hidden;
+}
+
+.about-ndm-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .about-ndm-card h3 { color: var(--clr-white); font-size: 1.1rem; margin-bottom: .25rem; }
