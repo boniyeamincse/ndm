@@ -184,6 +184,31 @@ export default function Activities() {
             <h2 className="section-title">{t('act_events_title')}</h2>
             <div className="divider" />
           </div>
+          <div className="events-grid">
+            {EVENTS.map((ev, i) => (
+              <div className="event-card card reveal" key={i}>
+                <div className="event-card__date-badge">
+                  {ev.date.split(',')[0].split(' ').slice(0, 2).join(' ')}
+                </div>
+                <div className="event-card__body">
+                  <span
+                    className="badge"
+                    style={{ background: `${categoryColor(ev.category)}18`, color: categoryColor(ev.category), marginBottom: '.5rem' }}
+                  >
+                    {ev.category}
+                  </span>
+                  <h3>{lang === 'en' ? ev.title_en : ev.title_bn}</h3>
+                  <div className="event-card__meta">
+                    <span><Calendar size={13} /> {ev.date}</span>
+                    <span><MapPin size={13} /> {lang === 'en' ? ev.location_en : ev.location_bn}</span>
+                  </div>
+                  <p>{lang === 'en' ? ev.desc_en : ev.desc_bn}</p>
+                  <Link to="/join" className="btn btn-primary btn-sm" style={{ marginTop: '1rem' }}>
+                    {lang === 'en' ? 'Register' : 'নিবন্ধন করুন'} <ArrowRight size={13} />
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -220,8 +245,6 @@ export default function Activities() {
               </article>
             ))}
           </div>
-        </div>
-      </section>
         </div>
       </section>
 
