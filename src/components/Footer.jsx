@@ -58,9 +58,9 @@ export default function Footer() {
               <li><Phone size={15} /><a href={`tel:${t('contact_phone_val')}`}>{t('contact_phone_val')}</a></li>
             </ul>
             <div className="footer__ndm-link">
-              <span>{t('footer_parent')}</span>
+              <span className="footer__parent-text">{t('footer_parent')}</span>
               <a href="https://ndmbd.org/" target="_blank" rel="noopener noreferrer">
-                Nationalist Democratic Movement - Main Site <ExternalLink size={12} />
+                Nationalist Democratic Movement <ExternalLink size={12} />
               </a>
             </div>
           </div>
@@ -71,10 +71,10 @@ export default function Footer() {
       <div className="footer__bottom">
         <div className="container footer__bottom-inner">
           <p>{t('footer_rights')}</p>
-          <p>
-            {t('footer_parent')}{' '}
+          <p className="footer__bottom-parent">
+            <span className="footer__parent-text">{t('footer_parent')}</span>{' '}
             <a href="https://ndmbd.org/" target="_blank" rel="noopener noreferrer">
-              Nationalist Democratic Movement - Main Site
+              Nationalist Democratic Movement
             </a>
           </p>
         </div>

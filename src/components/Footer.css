@@ -123,13 +123,11 @@
 
 .footer__contact-list li svg { flex-shrink: 0; margin-top: 2px; color: var(--clr-primary); }
 
-.footer__ndm-link {
-  margin-top: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  font-size: .8rem;
-  color: rgba(255,255,255,.4);
+  color: rgba(255,255,255,.6);
+}
+
+.footer__parent-text {
+  color: rgba(255,255,255,.6);
 }
 
 .footer__ndm-link a {
@@ -148,14 +146,13 @@
   background: rgba(0,0,0,.2);
 }
 
-.footer__bottom-inner {
+  color: rgba(255,255,255,.6);
+}
+
+.footer__bottom-parent {
   display: flex;
-  justify-content: space-between;
+  gap: .4rem;
   align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  font-size: .8rem;
-  color: rgba(255,255,255,.4);
 }
 
 .footer__bottom-inner a {
