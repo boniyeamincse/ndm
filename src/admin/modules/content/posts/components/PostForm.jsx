@@ -7,9 +7,12 @@ import { slugify } from '../../shared/utils/contentFormatters';
 
 const EMPTY_FORM = {
   title: '',
+  title_bn: '',
   slug: '',
   excerpt: '',
+  excerpt_bn: '',
   content: '',
+  content_bn: '',
   content_type: 'news',
   post_category_id: '',
   committee_id: '',
@@ -55,8 +58,12 @@ export default function PostForm({ initialValues, busy, onCancel, onSubmit }) {
         </div>
         <div className="ndm-form-grid">
           <label className="cnt-form__field cnt-form__field--wide">
-            Title
+            Title (English)
             <input className="ndm-input" value={form.title} onChange={(event) => updateField('title', event.target.value)} required />
+          </label>
+          <label className="cnt-form__field cnt-form__field--wide">
+            Title (Bengali)
+            <input className="ndm-input" value={form.title_bn} onChange={(event) => updateField('title_bn', event.target.value)} />
           </label>
           <label className="cnt-form__field cnt-form__field--wide">
             Slug
@@ -67,11 +74,16 @@ export default function PostForm({ initialValues, busy, onCancel, onSubmit }) {
             <span className="cnt-form__hint">Preview: /news/{slugPreview || 'post-slug'}</span>
           </label>
           <label className="cnt-form__field cnt-form__field--wide">
-            Excerpt
-            <textarea className="ndm-input" rows={3} value={form.excerpt} onChange={(event) => updateField('excerpt', event.target.value)} />
+            Excerpt (English)
+            <textarea className="ndm-input" rows={2} value={form.excerpt} onChange={(event) => updateField('excerpt', event.target.value)} />
+          </label>
+          <label className="cnt-form__field cnt-form__field--wide">
+            Excerpt (Bengali)
+            <textarea className="ndm-input" rows={2} value={form.excerpt_bn} onChange={(event) => updateField('excerpt_bn', event.target.value)} />
           </label>
         </div>
-        <ContentEditorWrapper label="Content" value={form.content} onChange={(value) => updateField('content', value)} required />
+        <ContentEditorWrapper label="Content (English)" value={form.content} onChange={(value) => updateField('content', value)} required />
+        <ContentEditorWrapper label="Content (Bengali)" value={form.content_bn} onChange={(value) => updateField('content_bn', value)} />
       </section>
 
       <section className="cnt-form__section">
