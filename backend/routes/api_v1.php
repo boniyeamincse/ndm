@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminPostController;
 use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\AdminNoticeController;
 use App\Http\Controllers\AdminProfileUpdateRequestController;
+use App\Http\Controllers\AdminMenuController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberNoticeController;
 use App\Http\Controllers\MeProfileController;
@@ -110,6 +111,8 @@ Route::prefix('v1')->group(function () {
 
     // ── Module 02: Admin Membership Application Management ─────────────────
     Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
+
+        Route::get('/menu', [AdminMenuController::class, 'index']);
 
         Route::prefix('membership-applications')->group(function () {
             Route::get('/',                          [AdminMembershipApplicationController::class, 'index']);
