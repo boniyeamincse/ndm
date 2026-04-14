@@ -48,6 +48,22 @@ class PermissionSeeder extends Seeder
         'member.restore',
         'member.export',
         'member.summary.view',
+
+        // Module 04 — Committee type management
+        'committee.type.view',
+        'committee.type.create',
+        'committee.type.update',
+        'committee.type.delete',
+
+        // Module 04 — Committee management
+        'committee.view',
+        'committee.view.detail',
+        'committee.create',
+        'committee.update',
+        'committee.status.update',
+        'committee.delete',
+        'committee.restore',
+        'committee.summary.view',
     ];
 
     public function run(): void

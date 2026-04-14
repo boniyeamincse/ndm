@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Models\Member;
 use App\Models\MembershipApplication;
+use App\Models\Committee;
+use App\Models\CommitteeType;
+use App\Policies\CommitteePolicy;
+use App\Policies\CommitteeTypePolicy;
 use App\Policies\MemberPolicy;
 use App\Policies\MembershipApplicationPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -20,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(MembershipApplication::class, MembershipApplicationPolicy::class);
         Gate::policy(Member::class, MemberPolicy::class);
+        Gate::policy(CommitteeType::class, CommitteeTypePolicy::class);
+        Gate::policy(Committee::class, CommitteePolicy::class);
     }
 }
 

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminMemberController;
+use App\Http\Controllers\AdminCommitteeController;
+use App\Http\Controllers\AdminCommitteeTypeController;
 use App\Http\Controllers\Api\V1\AdminMembershipApplicationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\MembershipApplicationController;
@@ -68,6 +70,30 @@ Route::prefix('v1')->group(function () {
             Route::patch('/{member}/status',         [AdminMemberController::class, 'updateStatus']);
             Route::delete('/{member}',               [AdminMemberController::class, 'destroy']);
             Route::put('/{member}/restore',          [AdminMemberController::class, 'restore']);
+        });
+
+        // ── Module 04: Committee Type Management ──────────────────────────
+        Route::prefix('committee-types')->group(function () {
+            Route::get('/',                          [AdminCommitteeTypeController::class, 'index']);
+            Route::post('/',                         [AdminCommitteeTypeController::class, 'store']);
+            Route::get('/{committeeType}',           [AdminCommitteeTypeController::class, 'show']);
+            Route::put('/{committeeType}',           [AdminCommitteeTypeController::class, 'update']);
+            Route::delete('/{committeeType}',        [AdminCommitteeTypeController::class, 'destroy']);
+            Route::put('/{committeeType}/restore',   [AdminCommitteeTypeController::class, 'restore']);
+        });
+
+        // ── Module 04: Committee Management ───────────────────────────────
+        Route::get('/committees-summary',            [AdminCommitteeController::class, 'summary']);
+        Route::get('/committees-tree',               [AdminCommitteeController::class, 'tree']);
+
+        Route::prefix('committees')->group(function () {
+            Route::get('/',                          [AdminCommitteeController::class, 'index']);
+            Route::post('/',                         [AdminCommitteeController::class, 'store']);
+            Route::get('/{committee}',               [AdminCommitteeController::class, 'show']);
+            Route::put('/{committee}',               [AdminCommitteeController::class, 'update']);
+            Route::patch('/{committee}/status',      [AdminCommitteeController::class, 'updateStatus']);
+            Route::delete('/{committee}',            [AdminCommitteeController::class, 'destroy']);
+            Route::put('/{committee}/restore',       [AdminCommitteeController::class, 'restore']);
         });
 
     });
