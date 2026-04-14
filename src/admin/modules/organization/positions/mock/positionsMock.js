@@ -1,0 +1,15 @@
+export const positionMock = {
+  id: 1,
+  uuid: 'position-uuid-1',
+  name: 'Organizing Secretary',
+  code: 'ORG_SEC',
+  short_name: 'Org. Sec.',
+  hierarchy_rank: 12,
+  display_order: 20,
+  description: 'Coordinates district and unit organizing work.',
+  category: 'leadership',
+  scope: 'committee_specific',
+  is_leadership: true,
+  is_active: true,
+  committee_types: ['District Committee', 'Upazila Committee'],
+};

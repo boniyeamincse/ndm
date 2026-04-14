@@ -73,6 +73,7 @@ export const adminMenuGroups = [
         permission: 'committees.view',
         children: [
           { id: 'committees-all', label: 'All Committees', path: '/admin/committees' },
+          { id: 'committees-tree', label: 'Committees Tree', path: '/admin/committees-tree' },
           { id: 'committee-types', label: 'Committee Types', path: '/admin/committee-types' },
         ],
       },
@@ -82,6 +83,10 @@ export const adminMenuGroups = [
         icon: Shield,
         path: '/admin/positions',
         permission: 'positions.view',
+        children: [
+          { id: 'positions-all', label: 'All Positions', path: '/admin/positions' },
+          { id: 'positions-create', label: 'Create Position', path: '/admin/positions/create' },
+        ],
       },
       {
         id: 'assignments',
@@ -89,6 +94,10 @@ export const adminMenuGroups = [
         icon: Briefcase,
         path: '/admin/committee-assignments',
         permission: 'committee.assignments.view',
+        children: [
+          { id: 'assignments-all', label: 'All Assignments', path: '/admin/committee-assignments' },
+          { id: 'assignments-create', label: 'Create Assignment', path: '/admin/committee-assignments/create' },
+        ],
       },
       {
         id: 'hierarchy',
@@ -96,6 +105,10 @@ export const adminMenuGroups = [
         icon: Network,
         path: '/admin/reporting-hierarchy',
         permission: 'reporting.hierarchy.view',
+        children: [
+          { id: 'hierarchy-all', label: 'All Relations', path: '/admin/reporting-hierarchy' },
+          { id: 'hierarchy-create', label: 'Create Relation', path: '/admin/reporting-hierarchy/create' },
+        ],
       },
     ],
   },

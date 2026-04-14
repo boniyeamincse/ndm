@@ -1,0 +1,17 @@
+export const committeeAssignmentMock = {
+  id: 1,
+  uuid: 'assignment-uuid-1',
+  assignment_no: 'ASN-2026-001',
+  member_name: 'Rafiul Islam',
+  member_no: 'MEM-2026-002',
+  committee_name: 'Dhaka District Committee',
+  committee_id: 5,
+  position_name: 'Organizing Secretary',
+  assignment_type: 'office_bearer',
+  is_primary: true,
+  is_leadership: true,
+  is_active: true,
+  status: 'active',
+  start_date: '2026-02-01',
+  end_date: null,
+};

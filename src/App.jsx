@@ -10,9 +10,27 @@ import MembershipApplicationsPage from './admin/modules/membership/applications/
 import MembershipApplicationDetailPage from './admin/modules/membership/applications/pages/MembershipApplicationDetailPage';
 import MembersPage from './admin/modules/membership/members/pages/MembersPage';
 import MemberDetailPage from './admin/modules/membership/members/pages/MemberDetailPage';
+import CommitteesPage from './admin/modules/organization/committees/pages/CommitteesPage';
+import CommitteeDetailPage from './admin/modules/organization/committees/pages/CommitteeDetailPage';
+import CommitteeFormPage from './admin/modules/organization/committees/pages/CommitteeFormPage';
+import CommitteesTreePage from './admin/modules/organization/committees/pages/CommitteesTreePage';
+import CommitteeMembersPage from './admin/modules/organization/committees/pages/CommitteeMembersPage';
+import CommitteeTypesPage from './admin/modules/organization/committee-types/pages/CommitteeTypesPage';
+import CommitteeTypeDetailPage from './admin/modules/organization/committee-types/pages/CommitteeTypeDetailPage';
+import PositionsPage from './admin/modules/organization/positions/pages/PositionsPage';
+import PositionDetailPage from './admin/modules/organization/positions/pages/PositionDetailPage';
+import PositionFormPage from './admin/modules/organization/positions/pages/PositionFormPage';
+import CommitteeAssignmentsPage from './admin/modules/organization/committee-assignments/pages/CommitteeAssignmentsPage';
+import CommitteeAssignmentDetailPage from './admin/modules/organization/committee-assignments/pages/CommitteeAssignmentDetailPage';
+import CommitteeAssignmentFormPage from './admin/modules/organization/committee-assignments/pages/CommitteeAssignmentFormPage';
+import ReportingHierarchyPage from './admin/modules/organization/reporting-hierarchy/pages/ReportingHierarchyPage';
+import ReportingHierarchyDetailPage from './admin/modules/organization/reporting-hierarchy/pages/ReportingHierarchyDetailPage';
+import ReportingHierarchyFormPage from './admin/modules/organization/reporting-hierarchy/pages/ReportingHierarchyFormPage';
+import CommitteeHierarchyTreePage from './admin/modules/organization/reporting-hierarchy/pages/CommitteeHierarchyTreePage';
 import './admin/admin.css';
 import './admin/admin-shell.css';
 import './admin/modules/membership/membership.css';
+import './admin/modules/organization/organization.css';
 import Home from './pages/Home';
 import About from './pages/About';
 import Leadership from './pages/Leadership';
@@ -113,6 +131,32 @@ export default function App() {
           <Route path="members/new" element={<MembersPage />} />
           <Route path="members/:id" element={<MemberDetailPage />} />
           <Route path="members/:id/edit" element={<MemberDetailPage />} />
+
+          <Route path="committees" element={<CommitteesPage />} />
+          <Route path="committees/create" element={<CommitteeFormPage />} />
+          <Route path="committees/:id" element={<CommitteeDetailPage />} />
+          <Route path="committees/:id/edit" element={<CommitteeFormPage />} />
+          <Route path="committees/:committeeId/members" element={<CommitteeMembersPage />} />
+          <Route path="committees/:committeeId/hierarchy-tree" element={<CommitteeHierarchyTreePage />} />
+          <Route path="committees-tree" element={<CommitteesTreePage />} />
+
+          <Route path="committee-types" element={<CommitteeTypesPage />} />
+          <Route path="committee-types/:id" element={<CommitteeTypeDetailPage />} />
+
+          <Route path="positions" element={<PositionsPage />} />
+          <Route path="positions/create" element={<PositionFormPage />} />
+          <Route path="positions/:id" element={<PositionDetailPage />} />
+          <Route path="positions/:id/edit" element={<PositionFormPage />} />
+
+          <Route path="committee-assignments" element={<CommitteeAssignmentsPage />} />
+          <Route path="committee-assignments/create" element={<CommitteeAssignmentFormPage />} />
+          <Route path="committee-assignments/:id" element={<CommitteeAssignmentDetailPage />} />
+          <Route path="committee-assignments/:id/edit" element={<CommitteeAssignmentFormPage />} />
+
+          <Route path="reporting-hierarchy" element={<ReportingHierarchyPage />} />
+          <Route path="reporting-hierarchy/create" element={<ReportingHierarchyFormPage />} />
+          <Route path="reporting-hierarchy/:id" element={<ReportingHierarchyDetailPage />} />
+          <Route path="reporting-hierarchy/:id/edit" element={<ReportingHierarchyFormPage />} />
         </Route>
       </Routes>
     </>
