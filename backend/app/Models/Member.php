@@ -6,6 +6,7 @@ use App\Enum\MemberStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -41,6 +42,9 @@ class Member extends Model
         'emergency_contact_name',
         'emergency_contact_phone',
         'status',
+        'bio',
+        'last_status_changed_at',
+        'status_note',
         'joined_at',
         'approved_at',
         'created_by',
@@ -50,10 +54,11 @@ class Member extends Model
     protected function casts(): array
     {
         return [
-            'status'        => MemberStatus::class,
-            'date_of_birth' => 'date',
-            'joined_at'     => 'datetime',
-            'approved_at'   => 'datetime',
+            'status'                 => MemberStatus::class,
+            'date_of_birth'          => 'date',
+            'last_status_changed_at' => 'datetime',
+            'joined_at'              => 'datetime',
+            'approved_at'            => 'datetime',
         ];
     }
 
@@ -88,5 +93,10 @@ class Member extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function statusHistories(): HasMany
+    {
+        return $this->hasMany(MemberStatusHistory::class, 'member_id')->latest('created_at');
     }
 }

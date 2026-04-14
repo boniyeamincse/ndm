@@ -41,6 +41,13 @@ class PermissionSeeder extends Seeder
         'member.create',
         'member.update',
         'member.status.update',
+
+        // Module 03 — Extended member management
+        'member.view.detail',
+        'member.delete',
+        'member.restore',
+        'member.export',
+        'member.summary.view',
     ];
 
     public function run(): void

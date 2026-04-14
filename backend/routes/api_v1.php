@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\Api\V1\AdminMembershipApplicationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\MembershipApplicationController;
@@ -55,6 +56,18 @@ Route::prefix('v1')->group(function () {
             Route::put('/{id}/hold',                 [AdminMembershipApplicationController::class, 'hold']);
             Route::delete('/{id}',                   [AdminMembershipApplicationController::class, 'destroy']);
             Route::put('/{id}/restore',              [AdminMembershipApplicationController::class, 'restore']);
+        });
+
+        // ── Module 03: Member Management ──────────────────────────────────
+        Route::get('/members-summary',               [AdminMemberController::class, 'summary']);
+
+        Route::prefix('members')->group(function () {
+            Route::get('/',                          [AdminMemberController::class, 'index']);
+            Route::get('/{member}',                  [AdminMemberController::class, 'show']);
+            Route::put('/{member}',                  [AdminMemberController::class, 'update']);
+            Route::patch('/{member}/status',         [AdminMemberController::class, 'updateStatus']);
+            Route::delete('/{member}',               [AdminMemberController::class, 'destroy']);
+            Route::put('/{member}/restore',          [AdminMemberController::class, 'restore']);
         });
 
     });
