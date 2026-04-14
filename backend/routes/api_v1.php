@@ -10,11 +10,13 @@ use App\Http\Controllers\AdminPostController;
 use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\AdminNoticeController;
 use App\Http\Controllers\AdminProfileUpdateRequestController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberNoticeController;
 use App\Http\Controllers\MeProfileController;
 use App\Http\Controllers\MeProfileUpdateRequestController;
 use App\Http\Controllers\PublicPostController;
 use App\Http\Controllers\PublicNoticeController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Api\V1\AdminMembershipApplicationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\MembershipApplicationController;
@@ -252,6 +254,37 @@ Route::prefix('v1')->group(function () {
             Route::get('/{id}', [AdminProfileUpdateRequestController::class, 'show']);
             Route::patch('/{id}/approve', [AdminProfileUpdateRequestController::class, 'approve']);
             Route::patch('/{id}/reject', [AdminProfileUpdateRequestController::class, 'reject']);
+        });
+
+    });
+
+    // ── Module 11: Dashboard ───────────────────────────────────────────────────
+    Route::middleware('auth:sanctum')->group(function () {
+
+        Route::prefix('dashboard')->group(function () {
+            Route::get('/',                  [DashboardController::class, 'index']);
+            Route::get('/superadmin',        [DashboardController::class, 'superadmin']);
+            Route::get('/admin',             [DashboardController::class, 'admin']);
+            Route::get('/member',            [DashboardController::class, 'member']);
+            Route::get('/stats',             [DashboardController::class, 'stats']);
+            Route::get('/charts',            [DashboardController::class, 'charts']);
+            Route::get('/recent-activities', [DashboardController::class, 'recentActivities']);
+            Route::get('/pending-items',     [DashboardController::class, 'pendingItems']);
+            Route::get('/latest-content',    [DashboardController::class, 'latestContent']);
+        });
+
+        // ── Module 11: Reports ─────────────────────────────────────────────────
+        Route::prefix('reports')->group(function () {
+            Route::get('/overview',                   [ReportController::class, 'overview']);
+            Route::get('/membership-applications',   [ReportController::class, 'membershipApplications']);
+            Route::get('/members',                   [ReportController::class, 'members']);
+            Route::get('/committees',                [ReportController::class, 'committees']);
+            Route::get('/committee-assignments',     [ReportController::class, 'committeeAssignments']);
+            Route::get('/reporting-hierarchy',       [ReportController::class, 'reportingHierarchy']);
+            Route::get('/posts',                     [ReportController::class, 'posts']);
+            Route::get('/notices',                   [ReportController::class, 'notices']);
+            Route::get('/profile-update-requests',   [ReportController::class, 'profileUpdateRequests']);
+            Route::get('/activity-summary',          [ReportController::class, 'activitySummary']);
         });
 
     });

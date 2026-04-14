@@ -145,6 +145,22 @@ class PermissionSeeder extends Seeder
         'profile.request.review',
         'profile.request.approve',
         'profile.request.reject',
+
+        // Module 11 — Dashboard & Reporting
+        'dashboard.view',
+        'dashboard.superadmin.view',
+        'dashboard.admin.view',
+        'dashboard.member.view',
+        'report.view',
+        'report.membership.view',
+        'report.members.view',
+        'report.committees.view',
+        'report.assignments.view',
+        'report.hierarchy.view',
+        'report.posts.view',
+        'report.notices.view',
+        'report.profile-requests.view',
+        'report.activity.view',
     ];
 
     public function run(): void

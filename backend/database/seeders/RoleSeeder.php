@@ -119,6 +119,29 @@ class RoleSeeder extends Seeder
         ];
         $admin->givePermissionTo($adminProfileRequestReviewPermissions);
 
+        // Module 11 — Dashboard & Reporting permissions
+        $adminDashboardReportPermissions = [
+            'dashboard.view',
+            'dashboard.admin.view',
+            'report.view',
+            'report.membership.view',
+            'report.members.view',
+            'report.committees.view',
+            'report.assignments.view',
+            'report.hierarchy.view',
+            'report.posts.view',
+            'report.notices.view',
+            'report.profile-requests.view',
+            'report.activity.view',
+        ];
+        $admin->givePermissionTo($adminDashboardReportPermissions);
+
+        $memberDashboardPermissions = [
+            'dashboard.view',
+            'dashboard.member.view',
+        ];
+        $member->givePermissionTo($memberDashboardPermissions);
+
         $this->command->info('Roles seeded: superadmin, admin, member.');
         $this->command->info('Superadmin assigned '.count($allPermissions).' permissions.');
     }
