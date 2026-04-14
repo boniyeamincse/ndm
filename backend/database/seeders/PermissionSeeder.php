@@ -87,6 +87,17 @@ class PermissionSeeder extends Seeder
         'committee.member.assignment.transfer',
         'committee.member.assignment.summary.view',
         'committee.office-bearer.view',
+
+        // Module 07 — Member reporting hierarchy management
+        'hierarchy.view',
+        'hierarchy.view.detail',
+        'hierarchy.create',
+        'hierarchy.update',
+        'hierarchy.status.update',
+        'hierarchy.delete',
+        'hierarchy.restore',
+        'hierarchy.summary.view',
+        'hierarchy.tree.view',
     ];
 
     public function run(): void

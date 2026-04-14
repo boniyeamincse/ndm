@@ -108,6 +108,16 @@ class CommitteeMemberAssignment extends Model
         return $this->hasMany(CommitteeMemberPositionHistory::class, 'committee_member_assignment_id')->latest('created_at');
     }
 
+    public function reportingToRelations(): HasMany
+    {
+        return $this->hasMany(MemberReportingRelation::class, 'subordinate_assignment_id');
+    }
+
+    public function reportedByRelations(): HasMany
+    {
+        return $this->hasMany(MemberReportingRelation::class, 'superior_assignment_id');
+    }
+
     // Future placeholder: reportingManager()
     // Future placeholder: subordinateAssignments()
     // Future placeholder: publicOfficeBearerCards()

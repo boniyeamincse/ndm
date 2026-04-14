@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\AdminCommitteeController;
 use App\Http\Controllers\AdminCommitteeMemberAssignmentController;
 use App\Http\Controllers\AdminCommitteeTypeController;
+use App\Http\Controllers\AdminMemberReportingRelationController;
 use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\Api\V1\AdminMembershipApplicationController;
 use App\Http\Controllers\Api\V1\AuthController;
@@ -128,6 +129,23 @@ Route::prefix('v1')->group(function () {
         Route::get('/committees/{committeeId}/members', [AdminCommitteeMemberAssignmentController::class, 'committeeMembers']);
         Route::get('/committees/{committeeId}/office-bearers', [AdminCommitteeMemberAssignmentController::class, 'committeeOfficeBearers']);
         Route::get('/members/{memberId}/committee-assignments', [AdminCommitteeMemberAssignmentController::class, 'memberAssignments']);
+
+        // ── Module 07: Member Hierarchy / Reporting Structure ───────────
+        Route::get('/member-reporting-relations-summary', [AdminMemberReportingRelationController::class, 'summary']);
+
+        Route::prefix('member-reporting-relations')->group(function () {
+            Route::get('/',                               [AdminMemberReportingRelationController::class, 'index']);
+            Route::post('/',                              [AdminMemberReportingRelationController::class, 'store']);
+            Route::get('/{id}',                           [AdminMemberReportingRelationController::class, 'show']);
+            Route::put('/{id}',                           [AdminMemberReportingRelationController::class, 'update']);
+            Route::patch('/{id}/status',                  [AdminMemberReportingRelationController::class, 'updateStatus']);
+            Route::delete('/{id}',                        [AdminMemberReportingRelationController::class, 'destroy']);
+            Route::put('/{id}/restore',                   [AdminMemberReportingRelationController::class, 'restore']);
+        });
+
+        Route::get('/committee-member-assignments/{assignmentId}/leader', [AdminMemberReportingRelationController::class, 'leader']);
+        Route::get('/committee-member-assignments/{assignmentId}/subordinates', [AdminMemberReportingRelationController::class, 'subordinates']);
+        Route::get('/committees/{committeeId}/hierarchy-tree', [AdminMemberReportingRelationController::class, 'hierarchyTree']);
 
     });
 

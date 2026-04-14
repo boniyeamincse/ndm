@@ -111,6 +111,11 @@ class Committee extends Model
         return $this->hasMany(CommitteeMemberAssignment::class, 'committee_id');
     }
 
+    public function memberReportingRelations(): HasMany
+    {
+        return $this->hasMany(MemberReportingRelation::class, 'committee_id');
+    }
+
     // Future placeholder: committeeMembers()
     // Future placeholder: committeeLeaders()
     // Future placeholder: notices()
