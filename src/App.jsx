@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Routes, Route, useLocation, Outlet } from 'react-router-dom';
+import { Navigate, Routes, Route, useLocation, Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import FloatingJoin from './components/FloatingJoin';
@@ -34,11 +34,28 @@ import PostCategoriesPage from './admin/modules/content/post-categories/pages/Po
 import NoticesPage from './admin/modules/content/notices/pages/NoticesPage';
 import NoticeDetailPage from './admin/modules/content/notices/pages/NoticeDetailPage';
 import NoticeFormPage from './admin/modules/content/notices/pages/NoticeFormPage';
+import OverviewReportPage from './admin/modules/reports/overview/pages/OverviewReportPage';
+import MembershipReportPage from './admin/modules/reports/membership/pages/MembershipReportPage';
+import CommitteeReportPage from './admin/modules/reports/committees/pages/CommitteeReportPage';
+import AssignmentReportPage from './admin/modules/reports/assignments/pages/AssignmentReportPage';
+import ContentReportPage from './admin/modules/reports/content/pages/ContentReportPage';
+import NoticeReportPage from './admin/modules/reports/notices/pages/NoticeReportPage';
+import ActivityReportPage from './admin/modules/reports/activity/pages/ActivityReportPage';
+import GeneralSettingsPage from './admin/modules/settings/general/pages/GeneralSettingsPage';
+import OrganizationSettingsPage from './admin/modules/settings/organization/pages/OrganizationSettingsPage';
+import EmailSettingsPage from './admin/modules/settings/email/pages/EmailSettingsPage';
+import NotificationSettingsPage from './admin/modules/settings/notifications/pages/NotificationSettingsPage';
+import SecuritySettingsPage from './admin/modules/settings/security/pages/SecuritySettingsPage';
+import ProfileUpdateRequestsPage from './admin/modules/profile-update-requests/pages/ProfileUpdateRequestsPage';
+import ProfileUpdateRequestDetailPage from './admin/modules/profile-update-requests/pages/ProfileUpdateRequestDetailPage';
 import './admin/admin.css';
 import './admin/admin-shell.css';
 import './admin/modules/membership/membership.css';
 import './admin/modules/organization/organization.css';
 import './admin/modules/content/content.css';
+import './admin/modules/reports/reports.css';
+import './admin/modules/settings/settings.css';
+import './admin/modules/profile-update-requests/profile-requests.css';
 import Home from './pages/Home';
 import About from './pages/About';
 import Leadership from './pages/Leadership';
@@ -176,6 +193,28 @@ export default function App() {
           <Route path="notices/create" element={<NoticeFormPage />} />
           <Route path="notices/:id" element={<NoticeDetailPage />} />
           <Route path="notices/:id/edit" element={<NoticeFormPage />} />
+
+          <Route path="reports" element={<Navigate to="/admin/reports/overview" replace />} />
+          <Route path="reports/overview" element={<OverviewReportPage />} />
+          <Route path="reports/membership" element={<MembershipReportPage />} />
+          <Route path="reports/committees" element={<CommitteeReportPage />} />
+          <Route path="reports/assignments" element={<AssignmentReportPage />} />
+          <Route path="reports/content" element={<ContentReportPage />} />
+          <Route path="reports/notices" element={<NoticeReportPage />} />
+          <Route path="reports/activity" element={<ActivityReportPage />} />
+
+          <Route path="settings" element={<Navigate to="/admin/settings/general" replace />} />
+          <Route path="settings/general" element={<GeneralSettingsPage />} />
+          <Route path="settings/organization" element={<OrganizationSettingsPage />} />
+          <Route path="settings/email" element={<EmailSettingsPage />} />
+          <Route path="settings/notifications" element={<NotificationSettingsPage />} />
+          <Route path="settings/security" element={<SecuritySettingsPage />} />
+
+          <Route path="profile-update-requests" element={<ProfileUpdateRequestsPage />} />
+          <Route path="profile-update-requests/pending" element={<ProfileUpdateRequestsPage />} />
+          <Route path="profile-update-requests/approved" element={<ProfileUpdateRequestsPage />} />
+          <Route path="profile-update-requests/rejected" element={<ProfileUpdateRequestsPage />} />
+          <Route path="profile-update-requests/:id" element={<ProfileUpdateRequestDetailPage />} />
         </Route>
       </Routes>
     </>

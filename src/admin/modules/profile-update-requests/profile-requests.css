@@ -1,0 +1,41 @@
+.prf-change-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.prf-change-card {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148,163,184,0.2);
+  background: linear-gradient(180deg, rgba(255,255,255,1), rgba(248,250,252,0.92));
+}
+
+.prf-change-card header {
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: capitalize;
+}
+
+.prf-change-card__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.prf-change-card__grid span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #64748b;
+  font-size: 0.84rem;
+}
+
+.prf-change-card__grid strong {
+  color: #0f172a;
+}
+
+@media (max-width: 640px) {
+  .prf-change-card__grid {
+    grid-template-columns: 1fr;
+  }
+}
