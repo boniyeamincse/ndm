@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { LogIn, Eye, EyeOff, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
@@ -19,6 +19,36 @@ export default function Login() {
   const [success, setSuccess] = useState(false);
 
   const from = location.state?.from?.pathname || '/member/dashboard';
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token = params.get('token');
+    const socialError = params.get('social_error');
+    const next = params.get('next');
+
+    if (socialError) {
+      setApiError(lang === 'en' ? 'Social login failed. Please try again.' : 'সোশ্যাল লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।');
+      return;
+    }
+
+    if (!token) {
+      return;
+    }
+
+    localStorage.setItem('ndm_token', token);
+    window.dispatchEvent(new Event('auth-changed'));
+
+    if (next === 'profile-setup') {
+      navigate('/member/profile-setup', { replace: true });
+      return;
+    }
+
+    navigate('/member/dashboard', { replace: true });
+  }, [location.search, navigate, lang]);
+
+  const handleSocialLogin = provider => {
+    window.location.href = `/api/v1/auth/social/${provider.toLowerCase()}/redirect`;
+  };
 
   const handleChange = e => {
     setFieldErrors(fe => ({ ...fe, [e.target.name]: undefined }));
@@ -51,6 +81,7 @@ export default function Login() {
       } else if (res.status === 422) {
         const errs = json.errors || {};
         const mapped = {};
+        if (errs.login) mapped.email = errs.login[0];
         if (errs.email) mapped.email = errs.email[0];
         if (errs.password) mapped.password = errs.password[0];
         setFieldErrors(mapped);
@@ -176,6 +207,18 @@ export default function Login() {
                       : <>{t('login_submit')} <LogIn size={18} /></>}
                   </button>
                 </form>
+
+                <div className="join-simple-divider" style={{ marginTop: '1rem' }}>
+                  <span>{lang === 'en' ? 'or continue with' : 'অথবা চালিয়ে যান'}</span>
+                </div>
+                <div className="social-login-grid">
+                  <button type="button" className="btn btn-outline social-btn" onClick={() => handleSocialLogin('Google')}>
+                    Google
+                  </button>
+                  <button type="button" className="btn btn-outline social-btn" onClick={() => handleSocialLogin('Facebook')}>
+                    Facebook
+                  </button>
+                </div>
 
                 <p className="login-signup">
                   {t('login_no_account')}{' '}

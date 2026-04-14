@@ -22,11 +22,7 @@ export default function Join() {
   };
 
   const handleSocialLogin = provider => {
-    setApiError(
-      lang === 'en'
-        ? `${provider} login will be enabled soon.`
-        : `${provider} লগইন খুব শিগগিরই চালু হবে।`,
-    );
+    window.location.href = `/api/v1/auth/social/${provider.toLowerCase()}/redirect`;
   };
 
   const handleSubmit = async e => {

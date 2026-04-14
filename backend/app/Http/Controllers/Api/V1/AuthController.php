@@ -11,7 +11,9 @@ use App\Http\Requests\Api\V1\ResetPasswordRequest;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -38,6 +40,41 @@ class AuthController extends Controller
             message: 'Account created successfully.',
             status: 201,
         );
+    }
+
+    /**
+     * GET /api/v1/auth/social/{provider}/redirect
+     */
+    public function socialRedirect(string $provider): RedirectResponse
+    {
+        abort_unless(in_array($provider, ['google', 'facebook'], true), 404);
+
+        return Socialite::driver($provider)->stateless()->redirect();
+    }
+
+    /**
+     * GET /api/v1/auth/social/{provider}/callback
+     */
+    public function socialCallback(string $provider): RedirectResponse
+    {
+        abort_unless(in_array($provider, ['google', 'facebook'], true), 404);
+
+        try {
+            $socialUser = Socialite::driver($provider)->stateless()->user();
+            $result = $this->authService->socialLogin($provider, $socialUser);
+
+            $frontend = rtrim(config('services.frontend.url', 'http://localhost:5173'), '/');
+            $token = urlencode($result['token']);
+            $requiresProfile = $result['requires_profile_completion'] ? '1' : '0';
+
+            $next = $requiresProfile === '1' ? 'profile-setup' : 'dashboard';
+            $target = "{$frontend}/login?token={$token}&social=1&next={$next}";
+
+            return redirect()->away($target);
+        } catch (\Throwable $e) {
+            $frontend = rtrim(config('services.frontend.url', 'http://localhost:5173'), '/');
+            return redirect()->away("{$frontend}/login?social_error=1");
+        }
     }
 
     /**

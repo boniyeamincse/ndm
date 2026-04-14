@@ -37,6 +37,9 @@ Route::prefix('v1')->group(function () {
             Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         });
 
+        Route::get('/social/{provider}/redirect', [AuthController::class, 'socialRedirect']);
+        Route::get('/social/{provider}/callback', [AuthController::class, 'socialCallback']);
+
         Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
         // Protected

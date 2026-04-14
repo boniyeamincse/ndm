@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Spatie\Permission\Models\Role;
 
 class AuthService
@@ -46,6 +47,63 @@ class AuthService
         $token = $user->createToken('api-token')->plainTextToken;
 
         return ['token' => $token, 'user' => $user];
+    }
+
+    /**
+     * Login or create account from social provider.
+     */
+    public function socialLogin(string $provider, SocialiteUser $socialUser): array
+    {
+        $providerId = (string) $socialUser->getId();
+        $email = $socialUser->getEmail();
+
+        if (! $email) {
+            $email = sprintf('%s_%s@social.local', $provider, $providerId);
+        }
+
+        $user = User::query()->where('email', $email)->first();
+        $requiresProfileCompletion = false;
+
+        if (! $user) {
+            $baseName = trim((string) ($socialUser->getName() ?: $socialUser->getNickname() ?: 'New Member'));
+            $baseUsername = Str::slug(explode('@', $email)[0] ?: ($provider.'_'.$providerId), '_') ?: 'member';
+            $username = $baseUsername;
+            $suffix = 1;
+
+            while (User::withTrashed()->where('username', $username)->exists()) {
+                $suffix++;
+                $username = $baseUsername.'_'.$suffix;
+            }
+
+            $user = User::create([
+                'name' => $baseName,
+                'username' => $username,
+                'email' => $email,
+                'password' => Hash::make(Str::random(32)),
+                'role_type' => 'member',
+                'status' => UserStatus::Active,
+                'email_verified_at' => now(),
+            ]);
+
+            if (Role::query()->where('name', 'member')->exists()) {
+                $user->assignRole('member');
+            }
+
+            $requiresProfileCompletion = true;
+        }
+
+        $user->update([
+            'last_login_at' => now(),
+            'last_login_ip' => request()->ip(),
+        ]);
+
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return [
+            'token' => $token,
+            'user' => $user,
+            'requires_profile_completion' => $requiresProfileCompletion,
+        ];
     }
 
     /**

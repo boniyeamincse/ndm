@@ -140,6 +140,23 @@
   text-decoration: underline;
 }
 
+.join-simple-divider {
+  text-align: center;
+  margin: 1rem 0;
+  color: var(--clr-text-muted);
+  font-size: .88rem;
+}
+
+.social-login-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+}
+
+.social-btn {
+  justify-content: center;
+}
+
 /* Success state */
 .login-success {
   display: flex;
@@ -162,5 +179,9 @@
   .login-card {
     padding: 2rem 1.25rem;
     margin: 0 1rem;
+  }
+
+  .social-login-grid {
+    grid-template-columns: 1fr;
   }
 }
