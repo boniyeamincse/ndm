@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogIn } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import './Navbar.css';
 
@@ -65,6 +65,10 @@ export default function Navbar() {
           <button className="navbar__lang-btn" onClick={toggle} aria-label="Toggle language">
             {t('lang_toggle')}
           </button>
+                    <Link to="/login" className="btn btn-outline btn-sm navbar__login-btn">
+                      <LogIn size={15} />
+                      {t('nav_login')}
+                    </Link>
           <Link to="/join" className="btn btn-primary btn-sm">
             {t('nav_join_btn')}
           </Link>
@@ -104,3 +108,7 @@ export default function Navbar() {
     </header>
   );
 }
+          <Link to="/login" className="btn btn-outline" style={{ marginTop: '1rem' }}>
+            <LogIn size={15} />
+            {t('nav_login')}
+          </Link>

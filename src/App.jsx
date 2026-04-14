@@ -12,6 +12,7 @@ import Publications from './pages/Publications';
 import Constitution from './pages/Constitution';
 import Join from './pages/Join';
 import Contact from './pages/Contact';
+import Login from './pages/Login';
 import { useLang } from './context/LanguageContext';
 
 function ScrollToTop() {
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/constitution" element={<Constitution />} />
         <Route path="/join" element={<Join />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <Footer />
       <FloatingJoin />

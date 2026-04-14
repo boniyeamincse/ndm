@@ -15,6 +15,7 @@ export const translations = {
     nav_contact: 'Contact',
     nav_join_btn: 'Join the Movement',
     lang_toggle: 'বাংলা',
+  nav_login: 'Login',
 
     // HOME HERO
     hero_label: 'Student Wing of NDM Bangladesh',
@@ -161,6 +162,17 @@ export const translations = {
 
     // CONTACT
     contact_hero_title: 'Contact Us',
+      // LOGIN
+      login_title: 'Member Login',
+      login_sub: 'Sign in to access your member account',
+      login_desc: 'Enter your registered email and password to continue.',
+      login_email: 'Email Address',
+      login_password: 'Password',
+      login_forgot: 'Forgot password?',
+      login_submit: 'Sign In',
+      login_no_account: "Don't have an account?",
+      login_join_link: 'Apply for membership',
+
     contact_hero_sub: 'Get in touch with Student Movement – NDM',
     contact_office: 'Central Office',
     contact_address_val: 'NDM Central Office, Dhaka, Bangladesh',
@@ -195,6 +207,7 @@ export const translations = {
     nav_contact: 'যোগাযোগ',
     nav_join_btn: 'আন্দোলনে যোগ দিন',
     lang_toggle: 'English',
+  nav_login: 'লগইন',
 
     // HOME HERO
     hero_label: 'জাতীয় গণতান্ত্রিক আন্দোলনের ছাত্র শাখা',
@@ -338,6 +351,17 @@ export const translations = {
     join_submit: 'আবেদন জমা দিন',
     join_vol_title: 'স্বেচ্ছাসেবক সুযোগ',
     join_success: 'ধন্যবাদ! আপনার আবেদন জমা হয়েছে।',
+  // LOGIN
+  login_title: 'সদস্য লগইন',
+  login_sub: 'আপনার সদস্য অ্যাকাউন্টে প্রবেশ করুন',
+  login_desc: 'চালিয়ে যেতে আপনার নিবন্ধিত ইমেইল ও পাসওয়ার্ড দিন।',
+  login_email: 'ইমেইল ঠিকানা',
+  login_password: 'পাসওয়ার্ড',
+  login_forgot: 'পাসওয়ার্ড ভুলে গেছেন?',
+  login_submit: 'সাইন ইন',
+  login_no_account: 'অ্যাকাউন্ট নেই?',
+  login_join_link: 'সদস্যপদের জন্য আবেদন করুন',
+
 
     // CONTACT
     contact_hero_title: 'যোগাযোগ',

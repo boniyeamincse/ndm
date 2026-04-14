@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, Users, Lightbulb, Globe, Award, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Users, Lightbulb, Globe, Award, ArrowRight, AlertCircle } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import './Join.css';
@@ -38,18 +38,72 @@ export default function Join() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
 
-  const handleChange = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = e => {
+    setFieldErrors(fe => ({ ...fe, [e.target.name]: undefined }));
+    setApiError(null);
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
-    // Simulate submission
-    setTimeout(() => {
+    setApiError(null);
+    setFieldErrors({});
+    try {
+      const body = {
+        full_name: form.name.trim(),
+        email: form.email.trim() || undefined,
+        mobile: form.phone.trim() || undefined,
+        educational_institution: form.university.trim() || undefined,
+        department: form.dept.trim() || undefined,
+        academic_year: form.year || undefined,
+        district_name: form.district || undefined,
+        motivation: form.why.trim() || undefined,
+      };
+      const res = await fetch('/api/v1/membership/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const json = await res.json();
+      if (res.ok && json.success !== false) {
+        setSubmitted(true);
+        setForm({ name: '', email: '', phone: '', university: '', dept: '', year: '', district: '', why: '' });
+      } else if (res.status === 422) {
+        const errs = json.errors || {};
+        const mapped = {};
+        if (errs.full_name) mapped.name = errs.full_name[0];
+        if (errs.email) mapped.email = errs.email[0];
+        if (errs.mobile) mapped.phone = errs.mobile[0];
+        if (errs.educational_institution) mapped.university = errs.educational_institution[0];
+        if (errs.department) mapped.dept = errs.department[0];
+        if (errs.academic_year) mapped.year = errs.academic_year[0];
+        if (errs.district_name) mapped.district = errs.district_name[0];
+        if (errs.motivation) mapped.why = errs.motivation[0];
+        if (errs.contact) mapped._contact = errs.contact[0];
+        setFieldErrors(mapped);
+        setApiError(
+          json.message ||
+          (lang === 'en' ? 'Please correct the errors below.' : 'নিচের ত্রুটিগুলি সংশোধন করুন।'),
+        );
+      } else {
+        setApiError(
+          json.message ||
+          (lang === 'en' ? 'Something went wrong. Please try again.' : 'কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।'),
+        );
+      }
+    } catch {
+      setApiError(
+        lang === 'en'
+          ? 'Network error. Please check your connection and try again.'
+          : 'নেটওয়ার্ক ত্রুটি। আপনার সংযোগ পরীক্ষা করুন এবং আবার চেষ্টা করুন।',
+      );
+    } finally {
       setLoading(false);
-      setSubmitted(true);
-      setForm({ name: '', email: '', phone: '', university: '', dept: '', year: '', district: '', why: '' });
-    }, 1200);
+    }
   };
 
   return (
@@ -97,7 +151,7 @@ export default function Join() {
                 <CheckCircle2 size={48} color="var(--clr-primary)" />
                 <h3>{t('join_success')}</h3>
                 <p>{lang === 'en'
-                  ? 'We will contact you within 48 hours with next steps.'
+                  ? 'Your application has been recorded. We will contact you within 48 hours with next steps.'
                   : 'আমরা ৪৮ ঘণ্টার মধ্যে পরবর্তী পদক্ষেপ নিয়ে আপনার সাথে যোগাযোগ করব।'}
                 </p>
                 <button className="btn btn-outline" onClick={() => setSubmitted(false)}>
@@ -106,18 +160,26 @@ export default function Join() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="join-form" noValidate>
+                                {(apiError || fieldErrors._contact) && (
+                                  <div className="form-alert form-alert--error">
+                                    <AlertCircle size={16} />
+                                    <span>{fieldErrors._contact || apiError}</span>
+                                  </div>
+                                )}
                 <div className="form-row">
                   <div className="form-group">
                     <label htmlFor="join-name">{t('join_fname')} *</label>
                     <input id="join-name" name="name" type="text" className="form-control"
                       value={form.name} onChange={handleChange} required
                       placeholder={lang === 'en' ? 'Your full name' : 'আপনার পূর্ণ নাম'} />
+                                      {fieldErrors.name && <span className="field-error">{fieldErrors.name}</span>}
                   </div>
                   <div className="form-group">
                     <label htmlFor="join-email">{t('join_email')} *</label>
                     <input id="join-email" name="email" type="email" className="form-control"
                       value={form.email} onChange={handleChange} required
                       placeholder="example@email.com" />
+                                      {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
                   </div>
                 </div>
                 <div className="form-row">
@@ -126,12 +188,14 @@ export default function Join() {
                     <input id="join-phone" name="phone" type="tel" className="form-control"
                       value={form.phone} onChange={handleChange} required
                       placeholder="+880 17XX-XXXXXX" />
+                                      {fieldErrors.phone && <span className="field-error">{fieldErrors.phone}</span>}
                   </div>
                   <div className="form-group">
                     <label htmlFor="join-uni">{t('join_university')} *</label>
                     <input id="join-uni" name="university" type="text" className="form-control"
                       value={form.university} onChange={handleChange} required
                       placeholder={lang === 'en' ? 'University / College name' : 'বিশ্ববিদ্যালয় / কলেজের নাম'} />
+                                      {fieldErrors.university && <span className="field-error">{fieldErrors.university}</span>}
                   </div>
                 </div>
                 <div className="form-row">
