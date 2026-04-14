@@ -1,3 +1,84 @@
+.lead-submenu-wrap {
+  position: sticky;
+  top: 82px;
+  z-index: 20;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.lead-submenu {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: .85rem 0;
+}
+
+.lead-submenu a {
+  padding: .45rem .95rem;
+  border-radius: 999px;
+  font-size: .86rem;
+  font-weight: 700;
+  color: var(--clr-dark);
+  border: 1px solid var(--clr-border);
+  background: var(--clr-white);
+  transition: all var(--transition);
+}
+
+.lead-submenu a:hover {
+  color: var(--clr-primary);
+  border-color: rgba(192,57,43,.35);
+  background: rgba(192,57,43,.05);
+}
+
+.lead-highlight {
+  margin-top: 1.8rem;
+  padding: 1.6rem;
+  border: 1px solid var(--clr-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.lead-highlight p {
+  color: var(--clr-text-muted);
+  line-height: 1.8;
+  margin: 0;
+  max-width: 860px;
+}
+
+.strategy-grid {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.strategy-card {
+  border: 1px solid var(--clr-border);
+  padding: 1.1rem;
+}
+
+.strategy-card__no {
+  display: inline-block;
+  margin-bottom: .45rem;
+  font-size: .78rem;
+  font-weight: 800;
+  color: var(--clr-primary);
+  background: rgba(192,57,43,.08);
+  border-radius: 999px;
+  padding: .22rem .55rem;
+}
+
+.strategy-card p {
+  color: var(--clr-text-muted);
+  line-height: 1.7;
+  font-size: .92rem;
+}
+
 .leader-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -96,14 +177,62 @@
 .district-card h4 { font-size: .95rem; font-weight: 700; margin-bottom: .15rem; }
 .district-card p { font-size: .83rem; color: var(--clr-text-muted); }
 
+.department-grid {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.department-card {
+  border: 1px solid var(--clr-border);
+  padding: 1.1rem;
+}
+
+.department-card h4 {
+  margin: 0;
+  font-size: .96rem;
+  line-height: 1.5;
+}
+
 @media (max-width: 1000px) {
+  .lead-highlight {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .strategy-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .leader-grid { grid-template-columns: repeat(2, 1fr); }
   .district-grid { grid-template-columns: repeat(3, 1fr); }
+  .department-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 640px) {
+  .lead-submenu-wrap {
+    top: 68px;
+  }
+
+  .lead-submenu {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+  }
+
+  .lead-submenu a {
+    white-space: nowrap;
+  }
+
+  .strategy-grid {
+    grid-template-columns: 1fr;
+  }
+
   .leader-grid { grid-template-columns: 1fr; }
   .district-grid { grid-template-columns: repeat(2, 1fr); }
+  .department-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 420px) {
