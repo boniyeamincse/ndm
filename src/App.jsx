@@ -15,6 +15,7 @@ import Join from './pages/Join';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
 import MemberDashboard from './pages/MemberDashboard';
+import ProfileSetup from './pages/ProfileSetup';
 import { useLang } from './context/LanguageContext';
 
 function ScrollToTop() {
@@ -46,6 +47,14 @@ export default function App() {
         <Route path="/join" element={<Join />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/member/profile-setup"
+          element={(
+            <ProtectedRoute>
+              <ProfileSetup />
+            </ProtectedRoute>
+          )}
+        />
         <Route
           path="/member/dashboard"
           element={(

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\ChangePasswordRequest;
 use App\Http\Requests\Api\V1\ForgotPasswordRequest;
 use App\Http\Requests\Api\V1\LoginRequest;
+use App\Http\Requests\Api\V1\RegisterRequest;
 use App\Http\Requests\Api\V1\ResetPasswordRequest;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Services\AuthService;
@@ -19,6 +20,25 @@ class AuthController extends Controller
     }
 
     // ─── Public Endpoints ─────────────────────────────────────────────────────
+
+    /**
+     * POST /api/v1/auth/register
+     * Register via minimal email+password flow.
+     */
+    public function register(RegisterRequest $request): JsonResponse
+    {
+        $result = $this->authService->register($request->validated());
+
+        return $this->success(
+            data: [
+                'token' => $result['token'],
+                'user' => new UserResource($result['user']),
+                'requires_profile_completion' => true,
+            ],
+            message: 'Account created successfully.',
+            status: 201,
+        );
+    }
 
     /**
      * POST /api/v1/auth/login

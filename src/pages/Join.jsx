@@ -1,42 +1,16 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { CheckCircle2, Users, Lightbulb, Globe, Award, ArrowRight, AlertCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowRight, AlertCircle, Mail, Lock, UserPlus } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import './Join.css';
 
-const BENEFITS = [
-  { icon: <Users size={24} />, en: 'Connect with 12,000+ like-minded student activists', bn: '১২,০০০+ সমমনা ছাত্র কর্মীর সাথে সংযুক্ত হন' },
-  { icon: <Lightbulb size={24} />, en: 'Access leadership training, workshops & seminars', bn: 'নেতৃত্ব প্রশিক্ষণ, কর্মশালা ও সেমিনারে অ্যাক্সেস পান' },
-  { icon: <Globe size={24} />, en: 'Participate in national campaigns & rallies', bn: 'জাতীয় আন্দোলন ও সমাবেশে অংশগ্রহণ করুন' },
-  { icon: <Award size={24} />, en: 'Build your leadership portfolio for your career', bn: 'আপনার ক্যারিয়ারের জন্য নেতৃত্বের পোর্টফোলিও তৈরি করুন' },
-  { icon: <CheckCircle2 size={24} />, en: 'Be part of building a democratic Bangladesh', bn: 'গণতান্ত্রিক বাংলাদেশ গড়ার অংশ হন' },
-  { icon: <Globe size={24} />, en: 'Network with lawyers, journalists, and civil society', bn: 'আইনজীবী, সাংবাদিক ও সুশীল সমাজের সাথে নেটওয়ার্ক করুন' },
-];
-
-const VOLUNTEER_ROLES = [
-  { en: 'Campus Organizer', bn: 'ক্যাম্পাস সংগঠক' },
-  { en: 'Social Media Manager', bn: 'সোশ্যাল মিডিয়া ম্যানেজার' },
-  { en: 'Graphic Designer', bn: 'গ্রাফিক ডিজাইনার' },
-  { en: 'Content Writer', bn: 'কন্টেন্ট রাইটার' },
-  { en: 'Event Coordinator', bn: 'ইভেন্ট কোঅর্ডিনেটর' },
-  { en: 'Legal Advocate', bn: 'আইন প্রবর্তক' },
-];
-
-const DISTRICTS = [
-  'Dhaka','Chittagong','Rajshahi','Khulna','Sylhet','Barisal','Mymensingh','Rangpur',
-  'Comilla','Noakhali','Jessore','Bogra','Dinajpur','Faridpur','Tangail','Pabna',
-];
-
 export default function Join() {
   const { t, lang } = useLang();
+  const navigate = useNavigate();
   useScrollReveal();
 
-  const [form, setForm] = useState({
-    name: '', email: '', phone: '',
-    university: '', dept: '', year: '', district: '', why: '',
-  });
-  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ email: '', password: '', password_confirmation: '' });
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
@@ -47,54 +21,56 @@ export default function Join() {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   };
 
+  const handleSocialLogin = provider => {
+    setApiError(
+      lang === 'en'
+        ? `${provider} login will be enabled soon.`
+        : `${provider} লগইন খুব শিগগিরই চালু হবে।`,
+    );
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
     setApiError(null);
     setFieldErrors({});
+
     try {
-      const body = {
-        full_name: form.name.trim(),
-        email: form.email.trim() || undefined,
-        mobile: form.phone.trim() || undefined,
-        educational_institution: form.university.trim() || undefined,
-        department: form.dept.trim() || undefined,
-        academic_year: form.year || undefined,
-        district_name: form.district || undefined,
-        motivation: form.why.trim() || undefined,
-      };
-      const res = await fetch('/api/v1/membership/apply', {
+      const res = await fetch('/api/v1/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          email: form.email.trim(),
+          password: form.password,
+          password_confirmation: form.password_confirmation,
+        }),
       });
+
       const json = await res.json();
+
       if (res.ok && json.success !== false) {
-        setSubmitted(true);
-        setForm({ name: '', email: '', phone: '', university: '', dept: '', year: '', district: '', why: '' });
-      } else if (res.status === 422) {
-        const errs = json.errors || {};
-        const mapped = {};
-        if (errs.full_name) mapped.name = errs.full_name[0];
-        if (errs.email) mapped.email = errs.email[0];
-        if (errs.mobile) mapped.phone = errs.mobile[0];
-        if (errs.educational_institution) mapped.university = errs.educational_institution[0];
-        if (errs.department) mapped.dept = errs.department[0];
-        if (errs.academic_year) mapped.year = errs.academic_year[0];
-        if (errs.district_name) mapped.district = errs.district_name[0];
-        if (errs.motivation) mapped.why = errs.motivation[0];
-        if (errs.contact) mapped._contact = errs.contact[0];
-        setFieldErrors(mapped);
-        setApiError(
-          json.message ||
-          (lang === 'en' ? 'Please correct the errors below.' : 'নিচের ত্রুটিগুলি সংশোধন করুন।'),
-        );
-      } else {
-        setApiError(
-          json.message ||
-          (lang === 'en' ? 'Something went wrong. Please try again.' : 'কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।'),
-        );
+        localStorage.setItem('ndm_token', json.data?.token || '');
+        localStorage.setItem('ndm_user', JSON.stringify(json.data?.user || {}));
+        window.dispatchEvent(new Event('auth-changed'));
+        navigate('/member/profile-setup', { replace: true });
+        return;
       }
+
+      if (res.status === 422) {
+        const errs = json.errors || {};
+        setFieldErrors({
+          email: errs.email?.[0],
+          password: errs.password?.[0],
+          password_confirmation: errs.password_confirmation?.[0],
+        });
+      }
+
+      setApiError(
+        json.message ||
+          (lang === 'en'
+            ? 'Could not create account. Please try again.'
+            : 'অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।'),
+      );
     } catch {
       setApiError(
         lang === 'en'
@@ -114,154 +90,118 @@ export default function Join() {
             <Link to="/">{t('nav_home')}</Link><span>/</span>
             <span>{t('nav_join')}</span>
           </div>
-          <h1>{t('join_hero_title')}</h1>
-          <p>{t('join_hero_sub')}</p>
+          <h1>{lang === 'en' ? 'Create Your Account' : 'আপনার অ্যাকাউন্ট তৈরি করুন'}</h1>
+          <p>
+            {lang === 'en'
+              ? 'Easy registration: email and password first, profile details later.'
+              : 'সহজ রেজিস্ট্রেশন: আগে ইমেইল ও পাসওয়ার্ড, পরে প্রোফাইল তথ্য পূরণ করুন।'}
+          </p>
         </div>
       </section>
 
-      {/* Why Join */}
-      <section className="section-pad">
+      <section className="section-pad join-simple-section">
         <div className="container">
-          <div className="text-center reveal">
-            <span className="section-label">{t('join_why_label')}</span>
-            <h2 className="section-title">{t('join_why_title')}</h2>
-            <div className="divider" />
-          </div>
-          <div className="benefits-grid">
-            {BENEFITS.map((b, i) => (
-              <div className="benefit-card card reveal" key={i} style={{ transitionDelay: `${i * 0.07}s` }}>
-                <div className="benefit-card__icon">{b.icon}</div>
-                <p>{lang === 'en' ? b.en : b.bn}</p>
+          <div className="join-simple-card card reveal">
+            <div className="join-simple-head">
+              <div className="join-simple-icon">
+                <UserPlus size={28} />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Form & Volunteer */}
-      <section className="section-pad" style={{ background: 'var(--clr-light)' }}>
-        <div className="container join-layout">
-          {/* Membership Form */}
-          <div className="join-form-wrap reveal">
-            <h2>{t('join_form_title')}</h2>
-            <div className="divider divider-left" style={{ marginBottom: '2rem' }} />
-
-            {submitted ? (
-              <div className="join-success">
-                <CheckCircle2 size={48} color="var(--clr-primary)" />
-                <h3>{t('join_success')}</h3>
-                <p>{lang === 'en'
-                  ? 'Your application has been recorded. We will contact you within 48 hours with next steps.'
-                  : 'আমরা ৪৮ ঘণ্টার মধ্যে পরবর্তী পদক্ষেপ নিয়ে আপনার সাথে যোগাযোগ করব।'}
-                </p>
-                <button className="btn btn-outline" onClick={() => setSubmitted(false)}>
-                  {lang === 'en' ? 'Submit Another' : 'আরও একটি জমা দিন'}
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="join-form" noValidate>
-                                {(apiError || fieldErrors._contact) && (
-                                  <div className="form-alert form-alert--error">
-                                    <AlertCircle size={16} />
-                                    <span>{fieldErrors._contact || apiError}</span>
-                                  </div>
-                                )}
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="join-name">{t('join_fname')} *</label>
-                    <input id="join-name" name="name" type="text" className="form-control"
-                      value={form.name} onChange={handleChange} required
-                      placeholder={lang === 'en' ? 'Your full name' : 'আপনার পূর্ণ নাম'} />
-                                      {fieldErrors.name && <span className="field-error">{fieldErrors.name}</span>}
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="join-email">{t('join_email')} *</label>
-                    <input id="join-email" name="email" type="email" className="form-control"
-                      value={form.email} onChange={handleChange} required
-                      placeholder="example@email.com" />
-                                      {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="join-phone">{t('join_phone')} *</label>
-                    <input id="join-phone" name="phone" type="tel" className="form-control"
-                      value={form.phone} onChange={handleChange} required
-                      placeholder="+880 17XX-XXXXXX" />
-                                      {fieldErrors.phone && <span className="field-error">{fieldErrors.phone}</span>}
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="join-uni">{t('join_university')} *</label>
-                    <input id="join-uni" name="university" type="text" className="form-control"
-                      value={form.university} onChange={handleChange} required
-                      placeholder={lang === 'en' ? 'University / College name' : 'বিশ্ববিদ্যালয় / কলেজের নাম'} />
-                                      {fieldErrors.university && <span className="field-error">{fieldErrors.university}</span>}
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="join-dept">{t('join_dept')}</label>
-                    <input id="join-dept" name="dept" type="text" className="form-control"
-                      value={form.dept} onChange={handleChange}
-                      placeholder={lang === 'en' ? 'e.g. Computer Science' : 'যেমন: কম্পিউটার বিজ্ঞান'} />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="join-year">{t('join_year')} *</label>
-                    <select id="join-year" name="year" className="form-control" value={form.year} onChange={handleChange} required>
-                      <option value="">{lang === 'en' ? 'Select year' : 'বছর বেছে নিন'}</option>
-                      {['join_year_1','join_year_2','join_year_3','join_year_4','join_year_masters'].map(k => (
-                        <option key={k} value={k}>{t(k)}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="join-district">{t('join_district')} *</label>
-                  <select id="join-district" name="district" className="form-control" value={form.district} onChange={handleChange} required>
-                    <option value="">{lang === 'en' ? 'Select district' : 'জেলা বেছে নিন'}</option>
-                    {DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="join-why">{t('join_why_join')}</label>
-                  <textarea id="join-why" name="why" className="form-control"
-                    value={form.why} onChange={handleChange}
-                    placeholder={lang === 'en' ? 'Tell us why...' : 'আমাদের বলুন কেন...'} />
-                </div>
-                <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%' }}>
-                  {loading
-                    ? (lang === 'en' ? 'Submitting...' : 'জমা হচ্ছে...')
-                    : <>{t('join_submit')} <ArrowRight size={18} /></>}
-                </button>
-              </form>
-            )}
-          </div>
-
-          {/* Volunteer Sidebar */}
-          <div className="volunteer-sidebar reveal">
-            <h3>{t('join_vol_title')}</h3>
-            <div className="divider divider-left" style={{ marginBottom: '1.5rem' }} />
-            <div className="vol-roles">
-              {VOLUNTEER_ROLES.map((r, i) => (
-                <div className="vol-role" key={i}>
-                  <ArrowRight size={14} style={{ color: 'var(--clr-primary)', flexShrink: 0 }} />
-                  <span>{lang === 'en' ? r.en : r.bn}</span>
-                </div>
-              ))}
-            </div>
-            <p style={{ marginTop: '1.5rem', fontSize: '.9rem', color: 'var(--clr-text-muted)', lineHeight: 1.7 }}>
-              {lang === 'en'
-                ? 'Fill out the membership form and indicate your interest in volunteering in the "Why do you want to join?" field.'
-                : '"কেন যোগ দিতে চান?" ক্ষেত্রে স্বেচ্ছাসেবক হওয়ার আগ্রহ উল্লেখ করে সদস্যপদ ফর্ম পূরণ করুন।'}
-            </p>
-            <div className="volunteer-cta">
-              <p className="text-white" style={{ fontWeight: 700, marginBottom: '.5rem' }}>
-                {lang === 'en' ? 'Already a member?' : 'ইতিমধ্যে সদস্য?'}
+              <h2>{lang === 'en' ? 'Quick Registration' : 'দ্রুত রেজিস্ট্রেশন'}</h2>
+              <p>
+                {lang === 'en'
+                  ? 'Create account now. Complete your full member profile right after signup.'
+                  : 'এখন অ্যাকাউন্ট তৈরি করুন। সাইনআপের পরেই পূর্ণ প্রোফাইল সম্পন্ন করুন।'}
               </p>
-              <a href="mailto:studentmovement@ndmbd.org" className="btn btn-white btn-sm">
-                {lang === 'en' ? 'Contact Us' : 'যোগাযোগ করুন'}
-              </a>
             </div>
+
+            {(apiError || fieldErrors._form) && (
+              <div className="form-alert form-alert--error">
+                <AlertCircle size={16} />
+                <span>{fieldErrors._form || apiError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="join-simple-form" noValidate>
+              <div className="form-group">
+                <label htmlFor="join-email">{t('join_email')} *</label>
+                <div className="input-icon-wrap">
+                  <Mail size={16} />
+                  <input
+                    id="join-email"
+                    name="email"
+                    type="email"
+                    className="form-control"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    placeholder="example@email.com"
+                  />
+                </div>
+                {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="join-password">{lang === 'en' ? 'Password' : 'পাসওয়ার্ড'} *</label>
+                <div className="input-icon-wrap">
+                  <Lock size={16} />
+                  <input
+                    id="join-password"
+                    name="password"
+                    type="password"
+                    className="form-control"
+                    value={form.password}
+                    onChange={handleChange}
+                    required
+                    placeholder={lang === 'en' ? 'Minimum 8 characters' : 'কমপক্ষে ৮ অক্ষর'}
+                  />
+                </div>
+                {fieldErrors.password && <span className="field-error">{fieldErrors.password}</span>}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="join-password-confirm">{lang === 'en' ? 'Confirm Password' : 'পাসওয়ার্ড নিশ্চিত করুন'} *</label>
+                <div className="input-icon-wrap">
+                  <Lock size={16} />
+                  <input
+                    id="join-password-confirm"
+                    name="password_confirmation"
+                    type="password"
+                    className="form-control"
+                    value={form.password_confirmation}
+                    onChange={handleChange}
+                    required
+                    placeholder={lang === 'en' ? 'Re-enter password' : 'পাসওয়ার্ড আবার লিখুন'}
+                  />
+                </div>
+                {fieldErrors.password_confirmation && (
+                  <span className="field-error">{fieldErrors.password_confirmation}</span>
+                )}
+              </div>
+
+              <button type="submit" className="btn btn-primary btn-lg" disabled={loading} style={{ width: '100%' }}>
+                {loading
+                  ? (lang === 'en' ? 'Creating account...' : 'অ্যাকাউন্ট তৈরি হচ্ছে...')
+                  : <>{lang === 'en' ? 'Create Account' : 'অ্যাকাউন্ট তৈরি করুন'} <ArrowRight size={18} /></>}
+              </button>
+            </form>
+
+            <div className="join-simple-divider">
+              <span>{lang === 'en' ? 'or continue with' : 'অথবা চালিয়ে যান'}</span>
+            </div>
+
+            <div className="social-login-grid">
+              <button type="button" className="btn btn-outline social-btn" onClick={() => handleSocialLogin('Google')}>
+                Google
+              </button>
+              <button type="button" className="btn btn-outline social-btn" onClick={() => handleSocialLogin('Facebook')}>
+                Facebook
+              </button>
+            </div>
+
+            <p className="join-simple-foot">
+              {lang === 'en' ? 'Already have an account?' : 'ইতিমধ্যে অ্যাকাউন্ট আছে?'}{' '}
+              <Link to="/login">{t('nav_login')}</Link>
+            </p>
           </div>
         </div>
       </section>

@@ -11,9 +11,43 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 
 class AuthService
 {
+    /**
+     * Register a lightweight member account (email + password only).
+     */
+    public function register(array $data): array
+    {
+        $localPart = explode('@', $data['email'])[0] ?? 'member';
+        $baseUsername = Str::slug($localPart, '_') ?: 'member';
+        $username = $baseUsername;
+        $suffix = 1;
+
+        while (User::withTrashed()->where('username', $username)->exists()) {
+            $suffix++;
+            $username = $baseUsername.'_'.$suffix;
+        }
+
+        $user = User::create([
+            'name' => 'New Member',
+            'username' => $username,
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'role_type' => 'member',
+            'status' => UserStatus::Active,
+        ]);
+
+        if (Role::query()->where('name', 'member')->exists()) {
+            $user->assignRole('member');
+        }
+
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return ['token' => $token, 'user' => $user];
+    }
+
     /**
      * Attempt to authenticate a user and issue a Sanctum token.
      *

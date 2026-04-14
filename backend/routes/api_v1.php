@@ -32,6 +32,7 @@ Route::prefix('v1')->group(function () {
 
         // Public — rate-limited
         Route::middleware('throttle:10,1')->group(function () {
+            Route::post('/register',        [AuthController::class, 'register']);
             Route::post('/login',           [AuthController::class, 'login']);
             Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
         });
