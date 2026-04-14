@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import FloatingJoin from './components/FloatingJoin';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './admin/pages/AdminDashboard';
+import MembershipApplications from './admin/pages/MembershipApplications';
 import AdminLayout from './admin/layouts/AdminLayout';
 import './admin/admin.css';
 import './admin/admin-shell.css';
@@ -92,6 +93,7 @@ export default function App() {
           )}
         >
           <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="membership-applications" element={<MembershipApplications />} />
         </Route>
       </Routes>
     </>
