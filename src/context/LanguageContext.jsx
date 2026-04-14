@@ -16,6 +16,8 @@ export const translations = {
     nav_join_btn: 'Join the Movement',
     lang_toggle: 'বাংলা',
   nav_login: 'Login',
+  nav_dashboard: 'Dashboard',
+  nav_logout: 'Logout',
 
     // HOME HERO
     hero_label: 'Student Wing of NDM Bangladesh',
@@ -173,6 +175,16 @@ export const translations = {
       login_no_account: "Don't have an account?",
       login_join_link: 'Apply for membership',
 
+      // MEMBER DASHBOARD
+      dash_title: 'Member Dashboard',
+      dash_sub: 'Your personal member area',
+      dash_welcome: 'Welcome back,',
+      dash_member: 'Member',
+      dash_quick_links: 'Quick Links',
+      dash_quick_news: 'Latest News',
+      dash_quick_events: 'Upcoming Activities',
+      dash_quick_publications: 'Publications',
+
     contact_hero_sub: 'Get in touch with Student Movement – NDM',
     contact_office: 'Central Office',
     contact_address_val: 'NDM Central Office, Dhaka, Bangladesh',
@@ -208,6 +220,8 @@ export const translations = {
     nav_join_btn: 'আন্দোলনে যোগ দিন',
     lang_toggle: 'English',
   nav_login: 'লগইন',
+  nav_dashboard: 'ড্যাশবোর্ড',
+  nav_logout: 'লগআউট',
 
     // HOME HERO
     hero_label: 'জাতীয় গণতান্ত্রিক আন্দোলনের ছাত্র শাখা',
@@ -361,6 +375,16 @@ export const translations = {
   login_submit: 'সাইন ইন',
   login_no_account: 'অ্যাকাউন্ট নেই?',
   login_join_link: 'সদস্যপদের জন্য আবেদন করুন',
+
+  // MEMBER DASHBOARD
+  dash_title: 'সদস্য ড্যাশবোর্ড',
+  dash_sub: 'আপনার ব্যক্তিগত সদস্য এলাকা',
+  dash_welcome: 'স্বাগতম,',
+  dash_member: 'সদস্য',
+  dash_quick_links: 'দ্রুত লিংক',
+  dash_quick_news: 'সর্বশেষ সংবাদ',
+  dash_quick_events: 'আসন্ন কার্যক্রম',
+  dash_quick_publications: 'প্রকাশনা',
 
 
     // CONTACT

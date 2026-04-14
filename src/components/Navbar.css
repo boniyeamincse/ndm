@@ -100,16 +100,16 @@
 
 /* Actions */
 .navbar__actions {
-
-  .navbar__login-btn {
-    display: flex;
-    align-items: center;
-    gap: .35rem;
-  }
   display: flex;
   align-items: center;
   gap: .75rem;
   flex-shrink: 0;
+}
+
+.navbar__icon-btn {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
 }
 
 .navbar__lang-btn {

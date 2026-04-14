@@ -18,7 +18,7 @@ export default function Login() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [success, setSuccess] = useState(false);
 
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || '/member/dashboard';
 
   const handleChange = e => {
     setFieldErrors(fe => ({ ...fe, [e.target.name]: undefined }));
@@ -45,6 +45,7 @@ export default function Login() {
         // Persist token
         localStorage.setItem('ndm_token', json.data?.token || json.token || '');
         localStorage.setItem('ndm_user', JSON.stringify(json.data?.user || json.user || {}));
+        window.dispatchEvent(new Event('auth-changed'));
         setSuccess(true);
         setTimeout(() => navigate(from, { replace: true }), 800);
       } else if (res.status === 422) {

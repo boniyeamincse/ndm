@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import FloatingJoin from './components/FloatingJoin';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import About from './pages/About';
 import Leadership from './pages/Leadership';
@@ -13,6 +14,7 @@ import Constitution from './pages/Constitution';
 import Join from './pages/Join';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
+import MemberDashboard from './pages/MemberDashboard';
 import { useLang } from './context/LanguageContext';
 
 function ScrollToTop() {
@@ -44,6 +46,14 @@ export default function App() {
         <Route path="/join" element={<Join />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/member/dashboard"
+          element={(
+            <ProtectedRoute>
+              <MemberDashboard />
+            </ProtectedRoute>
+          )}
+        />
       </Routes>
       <Footer />
       <FloatingJoin />
