@@ -72,12 +72,21 @@ export default function Login() {
       const json = await res.json();
 
       if (res.ok && json.success !== false) {
-        // Persist token
+        // Persist token and user
+        const user = json.data?.user || json.user || {};
         localStorage.setItem('ndm_token', json.data?.token || json.token || '');
-        localStorage.setItem('ndm_user', JSON.stringify(json.data?.user || json.user || {}));
+        localStorage.setItem('ndm_user', JSON.stringify(user));
         window.dispatchEvent(new Event('auth-changed'));
         setSuccess(true);
-        setTimeout(() => navigate(from, { replace: true }), 800);
+
+        // Route admins to the admin dashboard, members to member dashboard
+        const adminRoles = ['superadmin', 'admin', 'moderator'];
+        const userRoles = Array.isArray(user.roles) ? user.roles : [user.role_type].filter(Boolean);
+        const isAdmin = userRoles.some(r => adminRoles.includes(r));
+        const destination = isAdmin
+          ? '/admin/dashboard'
+          : from === '/admin/dashboard' ? '/member/dashboard' : from;
+        setTimeout(() => navigate(destination, { replace: true }), 800);
       } else if (res.status === 422) {
         const errs = json.errors || {};
         const mapped = {};

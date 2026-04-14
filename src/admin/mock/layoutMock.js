@@ -38,8 +38,9 @@ export function getStoredAdminUser() {
     return {
       ...mockAdminUser,
       ...parsed,
-      role: parsed?.role || parsed?.role_name || mockAdminUser.role,
-      roleKey: parsed?.roleKey || parsed?.role || mockAdminUser.roleKey,
+      // API returns roles[] array; normalise to a display-friendly label
+      role: parsed?.role_name || (Array.isArray(parsed?.roles) ? parsed.roles[0] : null) || parsed?.role || mockAdminUser.role,
+      roleKey: parsed?.roleKey || (Array.isArray(parsed?.roles) ? parsed.roles[0] : null) || parsed?.role_type || mockAdminUser.roleKey,
     };
   } catch {
     return mockAdminUser;
