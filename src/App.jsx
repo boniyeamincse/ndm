@@ -5,7 +5,9 @@ import Footer from './components/Footer';
 import FloatingJoin from './components/FloatingJoin';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './admin/pages/AdminDashboard';
+import AdminLayout from './admin/layouts/AdminLayout';
 import './admin/admin.css';
+import './admin/admin-shell.css';
 import Home from './pages/Home';
 import About from './pages/About';
 import Leadership from './pages/Leadership';
@@ -82,13 +84,15 @@ export default function App() {
 
         {/* Admin routes — no public Navbar/Footer, AdminLayout handles its own shell */}
         <Route
-          path="/admin/dashboard"
+          path="/admin"
           element={(
             <ProtectedRoute>
-              <AdminDashboard />
+              <AdminLayout />
             </ProtectedRoute>
           )}
-        />
+        >
+          <Route path="dashboard" element={<AdminDashboard />} />
+        </Route>
       </Routes>
     </>
   );

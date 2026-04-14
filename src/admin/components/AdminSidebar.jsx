@@ -1,71 +1,74 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import {
-  LayoutDashboard, Users, FileText, Building2, Layers, Briefcase,
-  Network, Newspaper, Bell, UserCog, BarChart2, Settings, LogOut,
-  ChevronLeft, ChevronRight, Shield,
-} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { X } from 'lucide-react';
+import SidebarLogo from './SidebarLogo';
+import SidebarMenu from './SidebarMenu';
+import SidebarToggleButton from './SidebarToggleButton';
+import { adminUtilityItems } from '../config/menuConfig';
 
-const NAV_ITEMS = [
-  { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/admin/membership-applications', icon: FileText,    label: 'Applications' },
-  { to: '/admin/members',                 icon: Users,       label: 'Members' },
-  { to: '/admin/committees',              icon: Building2,   label: 'Committees' },
-  { to: '/admin/committee-types',         icon: Layers,      label: 'Committee Types' },
-  { to: '/admin/positions',              icon: Shield,       label: 'Positions' },
-  { to: '/admin/committee-assignments',   icon: Briefcase,   label: 'Assignments' },
-  { to: '/admin/reporting-hierarchy',     icon: Network,     label: 'Hierarchy' },
-  { to: '/admin/posts',                   icon: Newspaper,   label: 'Blog / News' },
-  { to: '/admin/notices',                 icon: Bell,        label: 'Notices' },
-  { to: '/admin/profile-update-requests', icon: UserCog,     label: 'Profile Requests' },
-  { to: '/admin/reports',                 icon: BarChart2,   label: 'Reports' },
-  { to: '/admin/settings',               icon: Settings,    label: 'Settings' },
-];
-
-export default function AdminSidebar({ collapsed, onToggle }) {
+export default function AdminSidebar({
+  groups,
+  collapsed,
+  isMobile,
+  isOpen,
+  organizationName,
+  openSubmenus,
+  onToggleSubmenu,
+  onToggleSidebar,
+  onCloseMobile,
+}) {
   const navigate = useNavigate();
 
-  function handleLogout() {
+  function handleAction(action) {
+    if (action !== 'logout') return;
     localStorage.removeItem('ndm_token');
     localStorage.removeItem('ndm_user');
     navigate('/login');
   }
 
+  const className = [
+    'adm-sidebar',
+    collapsed ? 'adm-sidebar--collapsed' : '',
+    isMobile ? 'adm-sidebar--mobile' : '',
+    isOpen ? 'adm-sidebar--open' : '',
+  ].filter(Boolean).join(' ');
+
   return (
-    <aside className={`adm-sidebar ${collapsed ? 'adm-sidebar--collapsed' : ''}`}>
-      {/* Logo */}
-      <div className="adm-sidebar__brand">
-        <div className="adm-sidebar__logo">
-          <span className="adm-sidebar__logo-mark">NDM</span>
-          {!collapsed && <span className="adm-sidebar__logo-text">Admin Panel</span>}
-        </div>
-        <button className="adm-sidebar__toggle" onClick={onToggle} aria-label="Toggle sidebar">
-          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-        </button>
+    <aside className={className} aria-label="Admin navigation">
+      <div className="adm-sidebar__header">
+        <SidebarLogo collapsed={collapsed && !isMobile} organizationName={organizationName} />
+        {isMobile ? (
+          <button type="button" className="adm-icon-button" onClick={onCloseMobile} aria-label="Close navigation drawer">
+            <X size={18} />
+          </button>
+        ) : (
+          <SidebarToggleButton
+            collapsed={collapsed}
+            onClick={onToggleSidebar}
+            label="Collapse navigation menu"
+          />
+        )}
       </div>
 
-      {/* Navigation */}
-      <nav className="adm-sidebar__nav">
-        {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
-          <NavLink
-            key={to}
-            to={to}
-            className={({ isActive }) =>
-              `adm-sidebar__link ${isActive ? 'adm-sidebar__link--active' : ''}`
-            }
-            title={collapsed ? label : undefined}
-          >
-            <Icon size={18} strokeWidth={1.8} className="adm-sidebar__link-icon" />
-            {!collapsed && <span className="adm-sidebar__link-label">{label}</span>}
-          </NavLink>
-        ))}
+      <nav className="adm-sidebar__body">
+        <SidebarMenu
+          groups={groups}
+          collapsed={collapsed && !isMobile}
+          openSubmenus={openSubmenus}
+          onToggleSubmenu={onToggleSubmenu}
+          onAction={handleAction}
+          onItemClick={isMobile ? onCloseMobile : undefined}
+        />
       </nav>
 
-      {/* Logout */}
       <div className="adm-sidebar__footer">
-        <button className="adm-sidebar__link adm-sidebar__logout" onClick={handleLogout} title={collapsed ? 'Logout' : undefined}>
-          <LogOut size={18} strokeWidth={1.8} className="adm-sidebar__link-icon" />
-          {!collapsed && <span className="adm-sidebar__link-label">Logout</span>}
-        </button>
+        <SidebarMenu
+          groups={[{ id: 'utility', label: 'Utility', items: adminUtilityItems }]}
+          collapsed={collapsed && !isMobile}
+          openSubmenus={openSubmenus}
+          onToggleSubmenu={onToggleSubmenu}
+          onAction={handleAction}
+          onItemClick={isMobile ? onCloseMobile : undefined}
+        />
       </div>
     </aside>
   );

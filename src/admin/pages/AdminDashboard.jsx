@@ -1,5 +1,4 @@
-import { Users, UserCheck, FileText, Building2, Briefcase, Newspaper, Bell, UserCog } from 'lucide-react';
-import AdminLayout from '../layouts/AdminLayout';
+import { Users, FileText, Building2, Newspaper, Bell, UserCog, Download, RefreshCw } from 'lucide-react';
 import WelcomeBanner from '../components/WelcomeBanner';
 import StatCard from '../components/StatCard';
 import SectionHeader from '../components/SectionHeader';
@@ -9,6 +8,8 @@ import RecentActivityList from '../components/RecentActivityList';
 import NoticeListCard from '../components/NoticeListCard';
 import LatestPostsCard from '../components/LatestPostsCard';
 import QuickActionGrid from '../components/QuickActionGrid';
+import AdminPageHeader from '../components/AdminPageHeader';
+import AdminContentWrapper, { PageContainer, PageSection } from '../components/AdminContentWrapper';
 import { SkeletonStatCards } from '../components/Skeleton';
 import {
   useDashboardStats,
@@ -42,86 +43,96 @@ export default function AdminDashboard() {
   const posts   = content.data?.latest_posts   || [];
 
   return (
-    <AdminLayout>
-      <div className="adm-dashboard">
-
-        {/* Welcome banner */}
-        <WelcomeBanner />
-
-        {/* ── Stats Grid ─────────────────────────────────────────── */}
-        <section className="adm-section">
-          <SectionHeader title="Overview" subtitle="Key metrics at a glance" />
-          {stats.loading ? (
-            <SkeletonStatCards />
-          ) : (
-            <div className="adm-stats-grid">
-              <StatCard statKey="total_members"                   value={stats.data?.total_members} />
-              <StatCard statKey="active_members"                  value={stats.data?.active_members} />
-              <StatCard statKey="pending_applications"            value={stats.data?.pending_applications} />
-              <StatCard statKey="total_committees"                value={stats.data?.total_committees} />
-              <StatCard statKey="published_posts"                 value={stats.data?.published_posts} />
-              <StatCard statKey="profile_update_requests_pending" value={stats.data?.profile_update_requests_pending} />
-            </div>
+    <AdminContentWrapper>
+      <PageContainer>
+        <AdminPageHeader
+          title="Dashboard"
+          subtitle="High-level visibility into membership, committees, publishing, and admin workload."
+          breadcrumbs={[
+            { label: 'Admin', path: '/admin/dashboard' },
+            { label: 'Main' },
+            { label: 'Dashboard' },
+          ]}
+          actions={(
+            <>
+              <button type="button" className="adm-page-action adm-page-action--ghost">
+                <RefreshCw size={16} />
+                <span>Refresh</span>
+              </button>
+              <button type="button" className="adm-page-action">
+                <Download size={16} />
+                <span>Export</span>
+              </button>
+            </>
           )}
-        </section>
+        />
 
-        {/* ── Charts Row 1 ───────────────────────────────────────── */}
-        <section className="adm-section">
-          <SectionHeader title="Analytics" subtitle="Member growth & application breakdown" />
-          <div className="adm-charts-row">
-            <MembershipTrendChart   data={membershipTrend}   />
-            <ApplicationStatusChart data={applicationStatus} />
-          </div>
-        </section>
+        <div className="adm-dashboard">
 
-        {/* ── Charts Row 2 ───────────────────────────────────────── */}
-        <section className="adm-section">
-          <div className="adm-charts-row">
-            <CommitteeTypesChart data={committeeTypes} />
-          </div>
-        </section>
+          <WelcomeBanner />
 
-        {/* ── Pending Work + Recent Activity ─────────────────────── */}
-        <section className="adm-section">
-          <div className="adm-two-col">
-            <div className="adm-widget">
-              <SectionHeader
-                title="Pending Tasks"
-                subtitle="Items needing your attention"
-              />
-              <PendingTaskCard data={pending.data || []} loading={pending.loading} />
+          <PageSection>
+            <SectionHeader title="Overview" subtitle="Key metrics at a glance" />
+            {stats.loading ? (
+              <SkeletonStatCards />
+            ) : (
+              <div className="adm-stats-grid">
+                <StatCard statKey="total_members" value={stats.data?.total_members} />
+                <StatCard statKey="active_members" value={stats.data?.active_members} />
+                <StatCard statKey="pending_applications" value={stats.data?.pending_applications} />
+                <StatCard statKey="total_committees" value={stats.data?.total_committees} />
+                <StatCard statKey="published_posts" value={stats.data?.published_posts} />
+                <StatCard statKey="profile_update_requests_pending" value={stats.data?.profile_update_requests_pending} />
+              </div>
+            )}
+          </PageSection>
+
+          <PageSection>
+            <SectionHeader title="Analytics" subtitle="Member growth and application breakdown" />
+            <div className="adm-charts-row">
+              <MembershipTrendChart data={membershipTrend} />
+              <ApplicationStatusChart data={applicationStatus} />
             </div>
-            <div className="adm-widget">
-              <SectionHeader
-                title="Recent Activity"
-                subtitle="Latest actions across the system"
-              />
-              <RecentActivityList data={activity.data || []} loading={activity.loading} />
-            </div>
-          </div>
-        </section>
+          </PageSection>
 
-        {/* ── Latest Content ─────────────────────────────────────── */}
-        <section className="adm-section">
-          <div className="adm-two-col">
-            <div className="adm-widget">
-              <SectionHeader title="Latest Notices" subtitle="Recently published" />
-              <NoticeListCard data={notices} loading={content.loading} />
+          <PageSection>
+            <div className="adm-charts-row">
+              <CommitteeTypesChart data={committeeTypes} />
             </div>
-            <div className="adm-widget">
-              <SectionHeader title="Latest Posts" subtitle="Recently published" />
-              <LatestPostsCard data={posts} loading={content.loading} />
+          </PageSection>
+
+          <PageSection>
+            <div className="adm-two-col">
+              <div className="adm-widget">
+                <SectionHeader title="Pending Tasks" subtitle="Items needing your attention" />
+                <PendingTaskCard data={pending.data || []} loading={pending.loading} />
+              </div>
+              <div className="adm-widget">
+                <SectionHeader title="Recent Activity" subtitle="Latest actions across the system" />
+                <RecentActivityList data={activity.data || []} loading={activity.loading} />
+              </div>
             </div>
-          </div>
-        </section>
+          </PageSection>
 
-        {/* ── Quick Actions ──────────────────────────────────────── */}
-        <section className="adm-section">
-          <SectionHeader title="Quick Actions" subtitle="Common tasks, one click away" />
-          <QuickActionGrid actions={QUICK_ACTIONS} />
-        </section>
+          <PageSection>
+            <div className="adm-two-col">
+              <div className="adm-widget">
+                <SectionHeader title="Latest Notices" subtitle="Recently published" />
+                <NoticeListCard data={notices} loading={content.loading} />
+              </div>
+              <div className="adm-widget">
+                <SectionHeader title="Latest Posts" subtitle="Recently published" />
+                <LatestPostsCard data={posts} loading={content.loading} />
+              </div>
+            </div>
+          </PageSection>
 
-      </div>
-    </AdminLayout>
+          <PageSection>
+            <SectionHeader title="Quick Actions" subtitle="Common tasks, one click away" />
+            <QuickActionGrid actions={QUICK_ACTIONS} />
+          </PageSection>
+        </div>
+      </PageContainer>
+    </AdminContentWrapper>
   );
 }
