@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import FloatingJoin from './components/FloatingJoin';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminDashboard from './admin/pages/AdminDashboard';
+import './admin/admin.css';
 import Home from './pages/Home';
 import About from './pages/About';
 import Leadership from './pages/Leadership';
@@ -24,6 +26,18 @@ function ScrollToTop() {
   return null;
 }
 
+// Wrapper that shows public Navbar + Footer only for non-admin routes
+function PublicLayout() {
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+      <Footer />
+      <FloatingJoin />
+    </>
+  );
+}
+
 export default function App() {
   const { lang } = useLang();
 
@@ -35,37 +49,47 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
-      <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/leadership" element={<Leadership />} />
-        <Route path="/activities" element={<Activities />} />
-        <Route path="/news" element={<News />} />
-        <Route path="/publications" element={<Publications />} />
-        <Route path="/constitution" element={<Constitution />} />
-        <Route path="/join" element={<Join />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
+        {/* Public routes — wrapped with Navbar + Footer */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/leadership" element={<Leadership />} />
+          <Route path="/activities" element={<Activities />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/publications" element={<Publications />} />
+          <Route path="/constitution" element={<Constitution />} />
+          <Route path="/join" element={<Join />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/member/profile-setup"
+            element={(
+              <ProtectedRoute>
+                <ProfileSetup />
+              </ProtectedRoute>
+            )}
+          />
+          <Route
+            path="/member/dashboard"
+            element={(
+              <ProtectedRoute>
+                <MemberDashboard />
+              </ProtectedRoute>
+            )}
+          />
+        </Route>
+
+        {/* Admin routes — no public Navbar/Footer, AdminLayout handles its own shell */}
         <Route
-          path="/member/profile-setup"
+          path="/admin/dashboard"
           element={(
             <ProtectedRoute>
-              <ProfileSetup />
-            </ProtectedRoute>
-          )}
-        />
-        <Route
-          path="/member/dashboard"
-          element={(
-            <ProtectedRoute>
-              <MemberDashboard />
+              <AdminDashboard />
             </ProtectedRoute>
           )}
         />
       </Routes>
-      <Footer />
-      <FloatingJoin />
     </>
   );
 }
