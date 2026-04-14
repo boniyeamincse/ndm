@@ -35,6 +35,14 @@ export const adminMenuGroups = [
         icon: FileText,
         path: '/admin/membership-applications',
         permission: 'membership.applications.view',
+        children: [
+          { id: 'applications-all', label: 'All Applications', path: '/admin/membership-applications' },
+          { id: 'applications-pending', label: 'Pending Applications', path: '/admin/membership-applications/pending' },
+          { id: 'applications-under-review', label: 'Under Review', path: '/admin/membership-applications/under-review' },
+          { id: 'applications-approved', label: 'Approved Applications', path: '/admin/membership-applications/approved' },
+          { id: 'applications-rejected', label: 'Rejected Applications', path: '/admin/membership-applications/rejected' },
+          { id: 'applications-on-hold', label: 'On Hold', path: '/admin/membership-applications/on-hold' },
+        ],
       },
       {
         id: 'members',
@@ -44,11 +52,11 @@ export const adminMenuGroups = [
         permission: 'member.view',
         children: [
           { id: 'members-all', label: 'All Members', path: '/admin/members' },
-          { id: 'members-create', label: 'Add Member', path: '/admin/members/create' },
           { id: 'members-active', label: 'Active Members', path: '/admin/members/active' },
           { id: 'members-inactive', label: 'Inactive Members', path: '/admin/members/inactive' },
           { id: 'members-suspended', label: 'Suspended Members', path: '/admin/members/suspended' },
-          { id: 'members-export', label: 'Export Members', path: '/admin/members/export' },
+          { id: 'members-leadership', label: 'Leadership Members', path: '/admin/members/leadership' },
+          { id: 'members-new', label: 'New Members', path: '/admin/members/new' },
         ],
       },
     ],

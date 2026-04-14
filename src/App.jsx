@@ -5,10 +5,14 @@ import Footer from './components/Footer';
 import FloatingJoin from './components/FloatingJoin';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './admin/pages/AdminDashboard';
-import MembershipApplications from './admin/pages/MembershipApplications';
 import AdminLayout from './admin/layouts/AdminLayout';
+import MembershipApplicationsPage from './admin/modules/membership/applications/pages/MembershipApplicationsPage';
+import MembershipApplicationDetailPage from './admin/modules/membership/applications/pages/MembershipApplicationDetailPage';
+import MembersPage from './admin/modules/membership/members/pages/MembersPage';
+import MemberDetailPage from './admin/modules/membership/members/pages/MemberDetailPage';
 import './admin/admin.css';
 import './admin/admin-shell.css';
+import './admin/modules/membership/membership.css';
 import Home from './pages/Home';
 import About from './pages/About';
 import Leadership from './pages/Leadership';
@@ -93,7 +97,22 @@ export default function App() {
           )}
         >
           <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="membership-applications" element={<MembershipApplications />} />
+          <Route path="membership-applications" element={<MembershipApplicationsPage />} />
+          <Route path="membership-applications/pending" element={<MembershipApplicationsPage />} />
+          <Route path="membership-applications/under-review" element={<MembershipApplicationsPage />} />
+          <Route path="membership-applications/approved" element={<MembershipApplicationsPage />} />
+          <Route path="membership-applications/rejected" element={<MembershipApplicationsPage />} />
+          <Route path="membership-applications/on-hold" element={<MembershipApplicationsPage />} />
+          <Route path="membership-applications/:id" element={<MembershipApplicationDetailPage />} />
+
+          <Route path="members" element={<MembersPage />} />
+          <Route path="members/active" element={<MembersPage />} />
+          <Route path="members/inactive" element={<MembersPage />} />
+          <Route path="members/suspended" element={<MembersPage />} />
+          <Route path="members/leadership" element={<MembersPage />} />
+          <Route path="members/new" element={<MembersPage />} />
+          <Route path="members/:id" element={<MemberDetailPage />} />
+          <Route path="members/:id/edit" element={<MemberDetailPage />} />
         </Route>
       </Routes>
     </>

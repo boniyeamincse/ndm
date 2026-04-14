@@ -1,0 +1,16 @@
+export const membershipApplicationMock = {
+  id: 1,
+  uuid: 'f5b4a2bf-5c9d-49a8-8d9a-d65e26aef001',
+  application_no: 'SMN-2026-000001',
+  full_name: 'Mahin Ahmed',
+  email: 'mahin@example.com',
+  mobile: '01700000002',
+  photo: null,
+  district_name: 'Dhaka',
+  division_name: 'Dhaka',
+  desired_committee_level: 'district',
+  desired_committee_name: 'Dhaka District Unit',
+  status: 'pending',
+  created_at: '2026-04-14T12:00:00Z',
+  reviewed_by_name: null,
+};

@@ -1,0 +1,16 @@
+export const memberMock = {
+  id: 101,
+  uuid: '73a8c495-d068-4fd8-b9ef-521fd40ef101',
+  member_no: 'MEM-2026-000101',
+  full_name: 'Tasnim Rahman',
+  email: 'tasnim@example.com',
+  mobile: '01710000001',
+  photo: null,
+  district_name: 'Rajshahi',
+  division_name: 'Rajshahi',
+  status: 'active',
+  joined_at: '2026-03-11T10:30:00Z',
+  leadership_summary: 'District Organizing Secretary',
+  committee_summary: 'Rajshahi District Committee',
+  linked_user_status: 'active',
+};
