@@ -104,4 +104,9 @@ class Member extends Model
     {
         return $this->hasMany(CommitteeMemberAssignment::class, 'member_id');
     }
+
+    public function profileUpdateRequests(): HasMany
+    {
+        return $this->hasMany(ProfileUpdateRequest::class, 'member_id');
+    }
 }

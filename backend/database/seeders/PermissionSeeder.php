@@ -133,6 +133,18 @@ class PermissionSeeder extends Seeder
         'notice.summary.view',
         'notice.public.view',
         'notice.member.view',
+
+        // Module 10 — Profile self-service & member account management
+        'self.profile.view',
+        'self.profile.update',
+        'self.profile.photo.update',
+        'self.account.settings.update',
+        'self.profile.request.create',
+        'self.profile.request.view',
+        'profile.request.view',
+        'profile.request.review',
+        'profile.request.approve',
+        'profile.request.reject',
     ];
 
     public function run(): void

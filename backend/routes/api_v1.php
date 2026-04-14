@@ -9,7 +9,10 @@ use App\Http\Controllers\AdminPostCategoryController;
 use App\Http\Controllers\AdminPostController;
 use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\AdminNoticeController;
+use App\Http\Controllers\AdminProfileUpdateRequestController;
 use App\Http\Controllers\MemberNoticeController;
+use App\Http\Controllers\MeProfileController;
+use App\Http\Controllers\MeProfileUpdateRequestController;
 use App\Http\Controllers\PublicPostController;
 use App\Http\Controllers\PublicNoticeController;
 use App\Http\Controllers\Api\V1\AdminMembershipApplicationController;
@@ -78,6 +81,29 @@ Route::prefix('v1')->group(function () {
     Route::prefix('member')->middleware('auth:sanctum')->group(function () {
         Route::get('/notices', [MemberNoticeController::class, 'index']);
         Route::get('/notices/{slug}', [MemberNoticeController::class, 'show']);
+    });
+
+    // ── Module 10: Profile Self-Service & Member Account Management ─────
+    Route::prefix('me')->middleware('auth:sanctum')->group(function () {
+        Route::get('/profile', [MeProfileController::class, 'profile']);
+        Route::put('/profile', [MeProfileController::class, 'updateProfile']);
+        Route::post('/profile/photo', [MeProfileController::class, 'updatePhoto']);
+
+        Route::get('/account-settings', [MeProfileController::class, 'accountSettings']);
+        Route::put('/account-settings', [MeProfileController::class, 'updateAccountSettings']);
+
+        Route::get('/member-overview', [MeProfileController::class, 'memberOverview']);
+        Route::get('/committee-assignments', [MeProfileController::class, 'committeeAssignments']);
+        Route::get('/leader', [MeProfileController::class, 'leader']);
+        Route::get('/subordinates', [MeProfileController::class, 'subordinates']);
+        Route::get('/profile-summary', [MeProfileController::class, 'profileSummary']);
+
+        Route::prefix('profile-update-requests')->group(function () {
+            Route::get('/', [MeProfileUpdateRequestController::class, 'index']);
+            Route::post('/', [MeProfileUpdateRequestController::class, 'store']);
+            Route::get('/{id}', [MeProfileUpdateRequestController::class, 'show']);
+            Route::post('/{id}/cancel', [MeProfileUpdateRequestController::class, 'cancel']);
+        });
     });
 
     // ── Module 02: Admin Membership Application Management ─────────────────
@@ -219,6 +245,13 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{id}/attachments/{attachmentId}', [AdminNoticeController::class, 'removeAttachment']);
             Route::delete('/{id}', [AdminNoticeController::class, 'destroy']);
             Route::put('/{id}/restore', [AdminNoticeController::class, 'restore']);
+        });
+
+        Route::prefix('profile-update-requests')->group(function () {
+            Route::get('/', [AdminProfileUpdateRequestController::class, 'index']);
+            Route::get('/{id}', [AdminProfileUpdateRequestController::class, 'show']);
+            Route::patch('/{id}/approve', [AdminProfileUpdateRequestController::class, 'approve']);
+            Route::patch('/{id}/reject', [AdminProfileUpdateRequestController::class, 'reject']);
         });
 
     });

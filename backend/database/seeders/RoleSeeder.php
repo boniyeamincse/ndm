@@ -13,7 +13,7 @@ class RoleSeeder extends Seeder
         // Create roles
         $superadmin = Role::firstOrCreate(['name' => 'superadmin', 'guard_name' => 'web']);
         $admin = Role::firstOrCreate(['name' => 'admin',      'guard_name' => 'web']);
-        Role::firstOrCreate(['name' => 'member',     'guard_name' => 'web']);
+        $member = Role::firstOrCreate(['name' => 'member',     'guard_name' => 'web']);
 
         // Assign all permissions to superadmin
         $allPermissions = Permission::all();
@@ -98,6 +98,26 @@ class RoleSeeder extends Seeder
             'notice.member.view',
         ];
         $admin->givePermissionTo($adminNoticePermissions);
+
+        $selfServicePermissions = [
+            'self.profile.view',
+            'self.profile.update',
+            'self.profile.photo.update',
+            'self.account.settings.update',
+            'self.profile.request.create',
+            'self.profile.request.view',
+        ];
+
+        $member->givePermissionTo($selfServicePermissions);
+        $admin->givePermissionTo($selfServicePermissions);
+
+        $adminProfileRequestReviewPermissions = [
+            'profile.request.view',
+            'profile.request.review',
+            'profile.request.approve',
+            'profile.request.reject',
+        ];
+        $admin->givePermissionTo($adminProfileRequestReviewPermissions);
 
         $this->command->info('Roles seeded: superadmin, admin, member.');
         $this->command->info('Superadmin assigned '.count($allPermissions).' permissions.');

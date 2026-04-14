@@ -23,6 +23,7 @@ class User extends Authenticatable
         'username',
         'email',
         'phone',
+        'profile_photo',
         'password',
         'role_type',
         'status',
@@ -86,6 +87,21 @@ class User extends Authenticatable
     public function editedNotices(): HasMany
     {
         return $this->hasMany(Notice::class, 'editor_id');
+    }
+
+    public function accountSettings(): HasOne
+    {
+        return $this->hasOne(AccountSetting::class, 'user_id');
+    }
+
+    public function profileUpdateRequests(): HasMany
+    {
+        return $this->hasMany(ProfileUpdateRequest::class, 'user_id');
+    }
+
+    public function reviewedProfileUpdateRequests(): HasMany
+    {
+        return $this->hasMany(ProfileUpdateRequest::class, 'reviewed_by');
     }
 }
 
