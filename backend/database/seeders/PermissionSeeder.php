@@ -25,6 +25,22 @@ class PermissionSeeder extends Seeder
         // Profile
         'profile.view',
         'profile.update',
+
+        // Module 02 — Membership application management
+        'membership.application.view',
+        'membership.application.create',
+        'membership.application.review',
+        'membership.application.approve',
+        'membership.application.reject',
+        'membership.application.hold',
+        'membership.application.delete',
+        'membership.application.restore',
+
+        // Module 02 — Member management
+        'member.view',
+        'member.create',
+        'member.update',
+        'member.status.update',
     ];
 
     public function run(): void
