@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -47,5 +48,11 @@ class CommitteeType extends Model
     public function committees(): HasMany
     {
         return $this->hasMany(Committee::class, 'committee_type_id');
+    }
+
+    public function positions(): BelongsToMany
+    {
+        return $this->belongsToMany(Position::class, 'committee_type_position', 'committee_type_id', 'position_id')
+            ->withTimestamps();
     }
 }

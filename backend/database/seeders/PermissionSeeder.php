@@ -64,6 +64,17 @@ class PermissionSeeder extends Seeder
         'committee.delete',
         'committee.restore',
         'committee.summary.view',
+
+        // Module 05 — Position management
+        'position.view',
+        'position.view.detail',
+        'position.create',
+        'position.update',
+        'position.status.update',
+        'position.delete',
+        'position.restore',
+        'position.summary.view',
+        'position.committee-type.map',
     ];
 
     public function run(): void

@@ -31,6 +31,18 @@ class RoleSeeder extends Seeder
         ];
         $admin->givePermissionTo($adminCommitteePermissions);
 
+        // Suggested baseline position permissions for admin role
+        $adminPositionPermissions = [
+            'position.view',
+            'position.view.detail',
+            'position.create',
+            'position.update',
+            'position.status.update',
+            'position.summary.view',
+            'position.committee-type.map',
+        ];
+        $admin->givePermissionTo($adminPositionPermissions);
+
         $this->command->info('Roles seeded: superadmin, admin, member.');
         $this->command->info('Superadmin assigned '.count($allPermissions).' permissions.');
     }

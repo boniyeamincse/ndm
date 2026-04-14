@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\AdminCommitteeController;
 use App\Http\Controllers\AdminCommitteeTypeController;
+use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\Api\V1\AdminMembershipApplicationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\MembershipApplicationController;
@@ -94,6 +95,19 @@ Route::prefix('v1')->group(function () {
             Route::patch('/{committee}/status',      [AdminCommitteeController::class, 'updateStatus']);
             Route::delete('/{committee}',            [AdminCommitteeController::class, 'destroy']);
             Route::put('/{committee}/restore',       [AdminCommitteeController::class, 'restore']);
+        });
+
+        // ── Module 05: Position / Designation Management ─────────────────
+        Route::get('/positions-summary',             [AdminPositionController::class, 'summary']);
+
+        Route::prefix('positions')->group(function () {
+            Route::get('/',                          [AdminPositionController::class, 'index']);
+            Route::post('/',                         [AdminPositionController::class, 'store']);
+            Route::get('/{position}',                [AdminPositionController::class, 'show']);
+            Route::put('/{position}',                [AdminPositionController::class, 'update']);
+            Route::patch('/{position}/status',       [AdminPositionController::class, 'updateStatus']);
+            Route::delete('/{position}',             [AdminPositionController::class, 'destroy']);
+            Route::put('/{position}/restore',        [AdminPositionController::class, 'restore']);
         });
 
     });
