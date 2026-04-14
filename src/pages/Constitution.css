@@ -1,0 +1,167 @@
+.constitution-intro {
+  background:
+    radial-gradient(circle at 12% 22%, rgba(192,57,43,.08), transparent 38%),
+    radial-gradient(circle at 88% 78%, rgba(243,156,18,.08), transparent 38%);
+}
+
+.constitution-intro__layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.constitution-copy {
+  color: var(--clr-text-muted);
+  max-width: 760px;
+  line-height: 1.9;
+}
+
+.constitution-note {
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  background: var(--clr-white);
+  box-shadow: var(--shadow-sm);
+  padding: 1.4rem;
+}
+
+.constitution-note__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  margin-bottom: .7rem;
+  color: var(--clr-primary);
+  background: rgba(192,57,43,.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.constitution-note h3 {
+  margin-bottom: .5rem;
+  font-size: 1.05rem;
+}
+
+.constitution-note p {
+  color: var(--clr-text-muted);
+  line-height: 1.7;
+  font-size: .94rem;
+}
+
+.constitution-principles {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.constitution-principle {
+  display: flex;
+  gap: .7rem;
+  align-items: flex-start;
+  background: var(--clr-white);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+}
+
+.constitution-principle__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: var(--clr-primary);
+  background: rgba(192,57,43,.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.constitution-principle p {
+  margin: .15rem 0 0;
+  color: var(--clr-text-muted);
+  line-height: 1.65;
+  font-size: .93rem;
+}
+
+.constitution-articles {
+  margin-top: 2.2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.constitution-article {
+  border: 1px solid var(--clr-border);
+}
+
+.constitution-article__head {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .55rem;
+}
+
+.constitution-article__no {
+  font-size: .78rem;
+  letter-spacing: .04em;
+  font-weight: 700;
+  color: var(--clr-primary);
+  background: rgba(192,57,43,.08);
+  border-radius: 50px;
+  padding: .22rem .6rem;
+}
+
+.constitution-article h3 {
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.constitution-article p {
+  color: var(--clr-text-muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
+.constitution-actions {
+  background: linear-gradient(135deg, var(--clr-dark) 0%, var(--clr-dark-2) 100%);
+}
+
+.constitution-actions__inner {
+  display: flex;
+  gap: .9rem;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.9);
+}
+
+.constitution-actions__inner p {
+  margin: 0;
+  max-width: 700px;
+  line-height: 1.75;
+}
+
+@media (max-width: 980px) {
+  .constitution-intro__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .constitution-principles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .constitution-articles {
+    grid-template-columns: 1fr;
+  }
+
+  .constitution-principles {
+    grid-template-columns: 1fr;
+  }
+
+  .constitution-actions__inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

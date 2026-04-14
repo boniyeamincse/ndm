@@ -9,6 +9,7 @@ import Leadership from './pages/Leadership';
 import Activities from './pages/Activities';
 import News from './pages/News';
 import Publications from './pages/Publications';
+import Constitution from './pages/Constitution';
 import Join from './pages/Join';
 import Contact from './pages/Contact';
 import { useLang } from './context/LanguageContext';
@@ -38,6 +39,7 @@ export default function App() {
         <Route path="/activities" element={<Activities />} />
         <Route path="/news" element={<News />} />
         <Route path="/publications" element={<Publications />} />
+        <Route path="/constitution" element={<Constitution />} />
         <Route path="/join" element={<Join />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
