@@ -98,6 +98,25 @@ class PermissionSeeder extends Seeder
         'hierarchy.restore',
         'hierarchy.summary.view',
         'hierarchy.tree.view',
+
+        // Module 08 — Blog/News publishing management
+        'post.category.view',
+        'post.category.create',
+        'post.category.update',
+        'post.category.delete',
+        'post.category.restore',
+        'post.view',
+        'post.view.detail',
+        'post.create',
+        'post.update',
+        'post.delete',
+        'post.restore',
+        'post.publish',
+        'post.unpublish',
+        'post.archive',
+        'post.feature',
+        'post.summary.view',
+        'post.public.view',
     ];
 
     public function run(): void

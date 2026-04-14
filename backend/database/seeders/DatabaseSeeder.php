@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             CommitteeTypeSeeder::class,
             PositionSeeder::class,
+            PostCategorySeeder::class,
             SuperAdminSeeder::class,
         ]);
     }

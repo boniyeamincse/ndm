@@ -5,7 +5,10 @@ use App\Http\Controllers\AdminCommitteeController;
 use App\Http\Controllers\AdminCommitteeMemberAssignmentController;
 use App\Http\Controllers\AdminCommitteeTypeController;
 use App\Http\Controllers\AdminMemberReportingRelationController;
+use App\Http\Controllers\AdminPostCategoryController;
+use App\Http\Controllers\AdminPostController;
 use App\Http\Controllers\AdminPositionController;
+use App\Http\Controllers\PublicPostController;
 use App\Http\Controllers\Api\V1\AdminMembershipApplicationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\MembershipApplicationController;
@@ -47,6 +50,16 @@ Route::prefix('v1')->group(function () {
         Route::middleware('throttle:5,1')->group(function () {
             Route::post('/apply', [MembershipApplicationController::class, 'apply']);
         });
+    });
+
+    // ── Module 08: Public Posts / News ───────────────────────────────────
+    Route::prefix('public')->group(function () {
+        Route::get('/posts', [PublicPostController::class, 'index']);
+        Route::get('/posts/{slug}', [PublicPostController::class, 'show']);
+        Route::get('/post-categories', [PublicPostController::class, 'categories']);
+        Route::get('/featured-posts', [PublicPostController::class, 'featured']);
+        Route::get('/news', [PublicPostController::class, 'news']);
+        Route::get('/blogs', [PublicPostController::class, 'blogs']);
     });
 
     // ── Module 02: Admin Membership Application Management ─────────────────
@@ -146,6 +159,33 @@ Route::prefix('v1')->group(function () {
         Route::get('/committee-member-assignments/{assignmentId}/leader', [AdminMemberReportingRelationController::class, 'leader']);
         Route::get('/committee-member-assignments/{assignmentId}/subordinates', [AdminMemberReportingRelationController::class, 'subordinates']);
         Route::get('/committees/{committeeId}/hierarchy-tree', [AdminMemberReportingRelationController::class, 'hierarchyTree']);
+
+        // ── Module 08: Blog / News Management ───────────────────────────
+        Route::get('/posts-summary', [AdminPostController::class, 'summary']);
+
+        Route::prefix('post-categories')->group(function () {
+            Route::get('/', [AdminPostCategoryController::class, 'index']);
+            Route::post('/', [AdminPostCategoryController::class, 'store']);
+            Route::get('/{id}', [AdminPostCategoryController::class, 'show']);
+            Route::put('/{id}', [AdminPostCategoryController::class, 'update']);
+            Route::patch('/{id}/status', [AdminPostCategoryController::class, 'updateStatus']);
+            Route::delete('/{id}', [AdminPostCategoryController::class, 'destroy']);
+            Route::put('/{id}/restore', [AdminPostCategoryController::class, 'restore']);
+        });
+
+        Route::prefix('posts')->group(function () {
+            Route::get('/', [AdminPostController::class, 'index']);
+            Route::post('/', [AdminPostController::class, 'store']);
+            Route::get('/{id}', [AdminPostController::class, 'show']);
+            Route::put('/{id}', [AdminPostController::class, 'update']);
+            Route::patch('/{id}/status', [AdminPostController::class, 'updateStatus']);
+            Route::patch('/{id}/feature', [AdminPostController::class, 'updateFeature']);
+            Route::post('/{id}/publish', [AdminPostController::class, 'publish']);
+            Route::post('/{id}/unpublish', [AdminPostController::class, 'unpublish']);
+            Route::post('/{id}/archive', [AdminPostController::class, 'archive']);
+            Route::delete('/{id}', [AdminPostController::class, 'destroy']);
+            Route::put('/{id}/restore', [AdminPostController::class, 'restore']);
+        });
 
     });
 

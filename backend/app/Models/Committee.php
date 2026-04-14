@@ -116,6 +116,11 @@ class Committee extends Model
         return $this->hasMany(MemberReportingRelation::class, 'committee_id');
     }
 
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'committee_id');
+    }
+
     // Future placeholder: committeeMembers()
     // Future placeholder: committeeLeaders()
     // Future placeholder: notices()
