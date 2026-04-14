@@ -2,24 +2,23 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
-     * Seed the application's database.
+     * Seeder execution order matters:
+     * 1. Permissions must exist before roles can be assigned permissions.
+     * 2. Roles must exist before users can be assigned roles.
+     * 3. SuperAdmin must be seeded last within auth module.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            PermissionSeeder::class,
+            RoleSeeder::class,
+            SuperAdminSeeder::class,
         ]);
     }
 }
+
