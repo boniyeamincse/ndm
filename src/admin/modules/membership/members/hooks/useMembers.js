@@ -39,18 +39,19 @@ export function useMembers(filters, routeConfig) {
       ]);
 
       const filtered = filterByRouteRules(listRes.items, routeConfig, normalized.recent_period_days);
-      const leadership = listRes.items.filter((item) => item.leadership_summary || item.is_leadership || item.position_name).length;
-      const newMembers = listRes.items.filter((item) => item.joined_at && (Date.now() - new Date(item.joined_at).getTime()) <= (30 * 86400000)).length;
 
       setItems(filtered);
-      setMeta({ ...listRes.meta, total: routeConfig?.leadershipOnly || routeConfig?.recentDays ? filtered.length : listRes.meta.total });
+      setMeta({
+        ...listRes.meta,
+        total: (routeConfig?.leadershipOnly || routeConfig?.recentDays) ? filtered.length : listRes.meta.total,
+      });
       setSummary({
         total: summaryRes.total,
         active: summaryRes.active,
         inactive: summaryRes.inactive,
         suspended: summaryRes.suspended,
-        leadership,
-        newMembers,
+        leadership: summaryRes.leadership,
+        newMembers: summaryRes.new_members,
       });
     } catch (err) {
       setError(err.message || 'Failed to load members');
