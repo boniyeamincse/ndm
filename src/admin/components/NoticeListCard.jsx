@@ -19,7 +19,9 @@ export default function NoticeListCard({ data = [], loading }) {
           <div className="adm-content-item__body">
             <p className="adm-content-item__title">{item.title}</p>
             <span className="adm-content-item__meta">
-              {item.author} · {new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+              {item.priority && <span style={{ textTransform: 'capitalize', marginRight: 4 }}>{item.priority}</span>}
+              {item.author && <span>{item.author} · </span>}
+              {new Date(item.published_at || item.publish_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             </span>
           </div>
           <button

@@ -12,11 +12,11 @@ export function SkeletonStatCards() {
       {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} className="adm-stat-card">
           <div className="adm-stat-card__icon">
-            <SkeletonCard height={40} />
+            <div className="adm-skeleton" style={{ width: 40, height: 40 }} />
           </div>
-          <div className="adm-stat-card__body">
-            <SkeletonText width="60%" height={28} />
-            <SkeletonText width="80%" height={14} />
+          <div className="adm-stat-card__body" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="adm-skeleton" style={{ width: '60%', height: 28 }} />
+            <div className="adm-skeleton adm-skeleton--inline" style={{ width: '80%', height: 14 }} />
           </div>
         </div>
       ))}

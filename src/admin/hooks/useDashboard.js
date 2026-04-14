@@ -11,6 +11,60 @@ import {
   mockCommitteeTypes,
 } from '../mock/dashboardMock';
 
+// ─── Data adaptors ────────────────────────────────────────────────────────────
+// The backend uses generic {label, value} for chart series.
+// Chart components expect field-specific names — adapt here so components stay clean.
+
+function adaptTrendData(raw = []) {
+  // {label:"2025-05", value:0} → {month:"May 25", new_members:0, total_members:0}
+  return raw.map(({ label, value }) => {
+    const [yr, mo] = label.split('-');
+    const monthStr = new Date(`${yr}-${mo}-01`).toLocaleString('en-US', { month: 'short' });
+    return { month: `${monthStr} ${yr.slice(2)}`, new_members: value, total_members: value };
+  });
+}
+
+function adaptStatusData(raw = []) {
+  // {label:"active", value:1} → {status:"active", count:1}
+  return raw.map(({ label, value }, i) => ({ id: i, status: label, count: value }));
+}
+
+function adaptTypeData(raw = []) {
+  // {label:"active", value:3} → {type:"active", count:3}
+  return raw.map(({ label, value }, i) => ({ id: i, type: label, count: value }));
+}
+
+// Module name → color-map key used in RecentActivityList
+const MODULE_TYPE_MAP = {
+  applications: 'application',
+  members:      'member',
+  committees:   'committee',
+  posts:        'post',
+  notices:      'notice',
+  assignments:  'member',
+  hierarchy:    'member',
+  system:       'system',
+};
+
+function adaptActivities(raw = []) {
+  return raw.map((item, i) => ({
+    ...item,
+    id: item.id ?? `${item.module}-${i}`,
+    type: MODULE_TYPE_MAP[item.module] || 'system',
+  }));
+}
+
+function adaptPendingItems(raw = []) {
+  // {type, label, count, action_url, priority} → {id, label, count, route, priority}
+  return raw.map((item, i) => ({
+    ...item,
+    id: item.id ?? item.type ?? i,
+    route: item.route || item.action_url || null,
+  }));
+}
+
+// ─── Hooks ───────────────────────────────────────────────────────────────────
+
 // Hook: fetch dashboard stats cards
 export function useDashboardStats() {
   const [data, setData] = useState(null);
@@ -20,7 +74,7 @@ export function useDashboardStats() {
   useEffect(() => {
     dashboardService.getStats()
       .then(setData)
-      .catch(() => setData(mockDashboardStats)) // graceful fallback to mock
+      .catch(() => setData(mockDashboardStats))
       .finally(() => setLoading(false));
   }, []);
 
@@ -35,7 +89,7 @@ export function usePendingItems() {
 
   useEffect(() => {
     dashboardService.getPendingItems()
-      .then(setData)
+      .then((raw) => setData(adaptPendingItems(Array.isArray(raw) ? raw : [])))
       .catch(() => setData(mockPendingItems))
       .finally(() => setLoading(false));
   }, []);
@@ -51,7 +105,7 @@ export function useRecentActivities() {
 
   useEffect(() => {
     dashboardService.getRecentActivities(10)
-      .then(setData)
+      .then((raw) => setData(adaptActivities(Array.isArray(raw) ? raw : [])))
       .catch(() => setData(mockRecentActivities))
       .finally(() => setLoading(false));
   }, []);
@@ -83,15 +137,19 @@ export function useDashboardCharts(period = '12m') {
 
   useEffect(() => {
     dashboardService.getCharts(period)
-      .then(setData)
+      .then((raw) => setData({
+        membershipTrend:  adaptTrendData(raw?.membership_application_trend?.data || raw?.member_growth?.data || []),
+        applicationStatus: adaptStatusData(raw?.members_by_status?.data || []),
+        committeeTypes:    adaptTypeData(raw?.committees_by_status?.data || []),
+      }))
       .catch(() => setData({
-        membership_application_trend: { data: mockMembershipTrend },
-        member_growth: { data: mockMembershipTrend },
-        members_by_status: { data: mockApplicationStatus },
-        committees_by_status: { data: mockCommitteeTypes },
+        membershipTrend:  mockMembershipTrend,
+        applicationStatus: mockApplicationStatus,
+        committeeTypes:    mockCommitteeTypes,
       }))
       .finally(() => setLoading(false));
   }, [period]);
 
   return { data, loading, error };
 }
+

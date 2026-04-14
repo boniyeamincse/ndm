@@ -667,6 +667,7 @@
   animation: adm-shimmer 1.6s infinite;
   border-radius: 6px;
 }
+.adm-skeleton--inline { display: inline-block; vertical-align: middle; }
 
 @keyframes adm-shimmer {
   0%   { background-position: 200% 0; }

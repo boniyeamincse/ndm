@@ -35,9 +35,9 @@ export default function AdminDashboard() {
   const content  = useLatestContent();
   const charts   = useDashboardCharts('12m');
 
-  const membershipTrend  = charts.data?.membership_application_trend?.data  || charts.data?.member_growth?.data  || [];
-  const applicationStatus= charts.data?.members_by_status?.data             || [];
-  const committeeTypes   = charts.data?.committees_by_status?.data          || [];
+  const membershipTrend   = charts.data?.membershipTrend   || [];
+  const applicationStatus = charts.data?.applicationStatus || [];
+  const committeeTypes    = charts.data?.committeeTypes    || [];
 
   const notices = content.data?.latest_notices || [];
   const posts   = content.data?.latest_posts   || [];
