@@ -117,6 +117,22 @@ class PermissionSeeder extends Seeder
         'post.feature',
         'post.summary.view',
         'post.public.view',
+
+        // Module 09 — Notice management
+        'notice.view',
+        'notice.view.detail',
+        'notice.create',
+        'notice.update',
+        'notice.delete',
+        'notice.restore',
+        'notice.publish',
+        'notice.unpublish',
+        'notice.archive',
+        'notice.pin',
+        'notice.attachment.manage',
+        'notice.summary.view',
+        'notice.public.view',
+        'notice.member.view',
     ];
 
     public function run(): void

@@ -8,7 +8,10 @@ use App\Http\Controllers\AdminMemberReportingRelationController;
 use App\Http\Controllers\AdminPostCategoryController;
 use App\Http\Controllers\AdminPostController;
 use App\Http\Controllers\AdminPositionController;
+use App\Http\Controllers\AdminNoticeController;
+use App\Http\Controllers\MemberNoticeController;
 use App\Http\Controllers\PublicPostController;
+use App\Http\Controllers\PublicNoticeController;
 use App\Http\Controllers\Api\V1\AdminMembershipApplicationController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\MembershipApplicationController;
@@ -60,6 +63,17 @@ Route::prefix('v1')->group(function () {
         Route::get('/featured-posts', [PublicPostController::class, 'featured']);
         Route::get('/news', [PublicPostController::class, 'news']);
         Route::get('/blogs', [PublicPostController::class, 'blogs']);
+
+        // ── Module 09: Public Notices ───────────────────────────────────
+        Route::get('/notices', [PublicNoticeController::class, 'index']);
+        Route::get('/notices/{slug}', [PublicNoticeController::class, 'show']);
+        Route::get('/pinned-notices', [PublicNoticeController::class, 'pinned']);
+    });
+
+    // ── Module 09: Member Notices ─────────────────────────────────────────
+    Route::prefix('member')->middleware('auth:sanctum')->group(function () {
+        Route::get('/notices', [MemberNoticeController::class, 'index']);
+        Route::get('/notices/{slug}', [MemberNoticeController::class, 'show']);
     });
 
     // ── Module 02: Admin Membership Application Management ─────────────────
@@ -185,6 +199,22 @@ Route::prefix('v1')->group(function () {
             Route::post('/{id}/archive', [AdminPostController::class, 'archive']);
             Route::delete('/{id}', [AdminPostController::class, 'destroy']);
             Route::put('/{id}/restore', [AdminPostController::class, 'restore']);
+        });
+
+        // ── Module 09: Notice Management ───────────────────────────────
+        Route::get('/notices-summary', [AdminNoticeController::class, 'summary']);
+
+        Route::prefix('notices')->group(function () {
+            Route::get('/', [AdminNoticeController::class, 'index']);
+            Route::post('/', [AdminNoticeController::class, 'store']);
+            Route::get('/{id}', [AdminNoticeController::class, 'show']);
+            Route::put('/{id}', [AdminNoticeController::class, 'update']);
+            Route::patch('/{id}/status', [AdminNoticeController::class, 'updateStatus']);
+            Route::patch('/{id}/pin', [AdminNoticeController::class, 'updatePin']);
+            Route::post('/{id}/attachments', [AdminNoticeController::class, 'addAttachments']);
+            Route::delete('/{id}/attachments/{attachmentId}', [AdminNoticeController::class, 'removeAttachment']);
+            Route::delete('/{id}', [AdminNoticeController::class, 'destroy']);
+            Route::put('/{id}/restore', [AdminNoticeController::class, 'restore']);
         });
 
     });

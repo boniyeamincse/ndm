@@ -83,6 +83,22 @@ class RoleSeeder extends Seeder
         ];
         $admin->givePermissionTo($adminPostPermissions);
 
+        $adminNoticePermissions = [
+            'notice.view',
+            'notice.view.detail',
+            'notice.create',
+            'notice.update',
+            'notice.publish',
+            'notice.unpublish',
+            'notice.archive',
+            'notice.pin',
+            'notice.attachment.manage',
+            'notice.summary.view',
+            'notice.public.view',
+            'notice.member.view',
+        ];
+        $admin->givePermissionTo($adminNoticePermissions);
+
         $this->command->info('Roles seeded: superadmin, admin, member.');
         $this->command->info('Superadmin assigned '.count($allPermissions).' permissions.');
     }

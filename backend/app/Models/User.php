@@ -77,5 +77,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class, 'editor_id');
     }
+
+    public function authoredNotices(): HasMany
+    {
+        return $this->hasMany(Notice::class, 'author_id');
+    }
+
+    public function editedNotices(): HasMany
+    {
+        return $this->hasMany(Notice::class, 'editor_id');
+    }
 }
 
