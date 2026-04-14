@@ -27,10 +27,18 @@ import ReportingHierarchyPage from './admin/modules/organization/reporting-hiera
 import ReportingHierarchyDetailPage from './admin/modules/organization/reporting-hierarchy/pages/ReportingHierarchyDetailPage';
 import ReportingHierarchyFormPage from './admin/modules/organization/reporting-hierarchy/pages/ReportingHierarchyFormPage';
 import CommitteeHierarchyTreePage from './admin/modules/organization/reporting-hierarchy/pages/CommitteeHierarchyTreePage';
+import PostsPage from './admin/modules/content/posts/pages/PostsPage';
+import PostDetailPage from './admin/modules/content/posts/pages/PostDetailPage';
+import PostFormPage from './admin/modules/content/posts/pages/PostFormPage';
+import PostCategoriesPage from './admin/modules/content/post-categories/pages/PostCategoriesPage';
+import NoticesPage from './admin/modules/content/notices/pages/NoticesPage';
+import NoticeDetailPage from './admin/modules/content/notices/pages/NoticeDetailPage';
+import NoticeFormPage from './admin/modules/content/notices/pages/NoticeFormPage';
 import './admin/admin.css';
 import './admin/admin-shell.css';
 import './admin/modules/membership/membership.css';
 import './admin/modules/organization/organization.css';
+import './admin/modules/content/content.css';
 import Home from './pages/Home';
 import About from './pages/About';
 import Leadership from './pages/Leadership';
@@ -157,6 +165,17 @@ export default function App() {
           <Route path="reporting-hierarchy/create" element={<ReportingHierarchyFormPage />} />
           <Route path="reporting-hierarchy/:id" element={<ReportingHierarchyDetailPage />} />
           <Route path="reporting-hierarchy/:id/edit" element={<ReportingHierarchyFormPage />} />
+
+          <Route path="posts" element={<PostsPage />} />
+          <Route path="posts/create" element={<PostFormPage />} />
+          <Route path="posts/:id" element={<PostDetailPage />} />
+          <Route path="posts/:id/edit" element={<PostFormPage />} />
+          <Route path="post-categories" element={<PostCategoriesPage />} />
+
+          <Route path="notices" element={<NoticesPage />} />
+          <Route path="notices/create" element={<NoticeFormPage />} />
+          <Route path="notices/:id" element={<NoticeDetailPage />} />
+          <Route path="notices/:id/edit" element={<NoticeFormPage />} />
         </Route>
       </Routes>
     </>

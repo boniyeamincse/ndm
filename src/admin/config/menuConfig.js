@@ -123,7 +123,10 @@ export const adminMenuGroups = [
         path: '/admin/posts',
         children: [
           { id: 'posts', label: 'Blog / News', icon: Newspaper, path: '/admin/posts' },
+          { id: 'posts-create', label: 'Create Post', path: '/admin/posts/create' },
+          { id: 'post-categories', label: 'Post Categories', path: '/admin/post-categories' },
           { id: 'notices', label: 'Notices', icon: Bell, path: '/admin/notices' },
+          { id: 'notices-create', label: 'Create Notice', path: '/admin/notices/create' },
         ],
       },
       {
