@@ -43,6 +43,18 @@ class RoleSeeder extends Seeder
         ];
         $admin->givePermissionTo($adminPositionPermissions);
 
+        $adminAssignmentPermissions = [
+            'committee.member.assignment.view',
+            'committee.member.assignment.view.detail',
+            'committee.member.assignment.create',
+            'committee.member.assignment.update',
+            'committee.member.assignment.status.update',
+            'committee.member.assignment.transfer',
+            'committee.member.assignment.summary.view',
+            'committee.office-bearer.view',
+        ];
+        $admin->givePermissionTo($adminAssignmentPermissions);
+
         $this->command->info('Roles seeded: superadmin, admin, member.');
         $this->command->info('Superadmin assigned '.count($allPermissions).' permissions.');
     }

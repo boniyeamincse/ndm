@@ -75,6 +75,18 @@ class PermissionSeeder extends Seeder
         'position.restore',
         'position.summary.view',
         'position.committee-type.map',
+
+        // Module 06 — Committee member assignment management
+        'committee.member.assignment.view',
+        'committee.member.assignment.view.detail',
+        'committee.member.assignment.create',
+        'committee.member.assignment.update',
+        'committee.member.assignment.status.update',
+        'committee.member.assignment.delete',
+        'committee.member.assignment.restore',
+        'committee.member.assignment.transfer',
+        'committee.member.assignment.summary.view',
+        'committee.office-bearer.view',
     ];
 
     public function run(): void

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\AdminCommitteeController;
+use App\Http\Controllers\AdminCommitteeMemberAssignmentController;
 use App\Http\Controllers\AdminCommitteeTypeController;
 use App\Http\Controllers\AdminPositionController;
 use App\Http\Controllers\Api\V1\AdminMembershipApplicationController;
@@ -109,6 +110,24 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{position}',             [AdminPositionController::class, 'destroy']);
             Route::put('/{position}/restore',        [AdminPositionController::class, 'restore']);
         });
+
+        // ── Module 06: Committee Member Assignment ───────────────────────
+        Route::get('/committee-member-assignments-summary', [AdminCommitteeMemberAssignmentController::class, 'summary']);
+
+        Route::prefix('committee-member-assignments')->group(function () {
+            Route::get('/',                          [AdminCommitteeMemberAssignmentController::class, 'index']);
+            Route::post('/',                         [AdminCommitteeMemberAssignmentController::class, 'store']);
+            Route::get('/{assignment}',              [AdminCommitteeMemberAssignmentController::class, 'show']);
+            Route::put('/{assignment}',              [AdminCommitteeMemberAssignmentController::class, 'update']);
+            Route::patch('/{assignment}/status',     [AdminCommitteeMemberAssignmentController::class, 'updateStatus']);
+            Route::post('/{assignment}/transfer',    [AdminCommitteeMemberAssignmentController::class, 'transfer']);
+            Route::delete('/{assignment}',           [AdminCommitteeMemberAssignmentController::class, 'destroy']);
+            Route::put('/{assignment}/restore',      [AdminCommitteeMemberAssignmentController::class, 'restore']);
+        });
+
+        Route::get('/committees/{committeeId}/members', [AdminCommitteeMemberAssignmentController::class, 'committeeMembers']);
+        Route::get('/committees/{committeeId}/office-bearers', [AdminCommitteeMemberAssignmentController::class, 'committeeOfficeBearers']);
+        Route::get('/members/{memberId}/committee-assignments', [AdminCommitteeMemberAssignmentController::class, 'memberAssignments']);
 
     });
 

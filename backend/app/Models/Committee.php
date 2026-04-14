@@ -106,6 +106,11 @@ class Committee extends Model
         return $this->hasMany(CommitteeStatusHistory::class, 'committee_id')->latest('created_at');
     }
 
+    public function committeeAssignments(): HasMany
+    {
+        return $this->hasMany(CommitteeMemberAssignment::class, 'committee_id');
+    }
+
     // Future placeholder: committeeMembers()
     // Future placeholder: committeeLeaders()
     // Future placeholder: notices()

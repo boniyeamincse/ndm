@@ -99,4 +99,9 @@ class Member extends Model
     {
         return $this->hasMany(MemberStatusHistory::class, 'member_id')->latest('created_at');
     }
+
+    public function committeeAssignments(): HasMany
+    {
+        return $this->hasMany(CommitteeMemberAssignment::class, 'member_id');
+    }
 }

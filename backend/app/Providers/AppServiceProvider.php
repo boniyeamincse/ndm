@@ -5,8 +5,10 @@ namespace App\Providers;
 use App\Models\Member;
 use App\Models\MembershipApplication;
 use App\Models\Committee;
+use App\Models\CommitteeMemberAssignment;
 use App\Models\CommitteeType;
 use App\Models\Position;
+use App\Policies\CommitteeMemberAssignmentPolicy;
 use App\Policies\CommitteePolicy;
 use App\Policies\CommitteeTypePolicy;
 use App\Policies\PositionPolicy;
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(CommitteeType::class, CommitteeTypePolicy::class);
         Gate::policy(Committee::class, CommitteePolicy::class);
         Gate::policy(Position::class, PositionPolicy::class);
+        Gate::policy(CommitteeMemberAssignment::class, CommitteeMemberAssignmentPolicy::class);
     }
 }
 

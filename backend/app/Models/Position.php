@@ -79,6 +79,11 @@ class Position extends Model
         return $this->hasMany(PositionStatusHistory::class, 'position_id')->latest('created_at');
     }
 
+    public function committeeAssignments(): HasMany
+    {
+        return $this->hasMany(CommitteeMemberAssignment::class, 'position_id');
+    }
+
     // Future placeholder: committeeMemberAssignments()
     // Future placeholder: leadershipAssignments()
     // Future placeholder: reportingRelations()
