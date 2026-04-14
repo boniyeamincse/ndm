@@ -1,0 +1,452 @@
+/* ── Committee Directory ─────────────────────────────────────── */
+
+.cd-wrap {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--clr-border);
+  background: var(--clr-white);
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Hero ──────────────────────────────────────────────────────── */
+.cd-hero {
+  background: linear-gradient(135deg, #0C447C 0%, #185FA5 60%, #378ADD 100%);
+  padding: 2rem 2rem 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cd-hero-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg, #fff 0, #fff 1px, transparent 0, transparent 50%
+  );
+  background-size: 20px 20px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.cd-org-badge {
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  color: #B5D4F4;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 0.5px solid rgba(255,255,255,.25);
+  margin-bottom: .75rem;
+}
+
+.cd-hero-title {
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 .4rem;
+  line-height: 1.25;
+}
+
+.cd-hero-sub {
+  font-size: .9rem;
+  color: #B5D4F4;
+  margin: 0 0 1.25rem;
+  max-width: 520px;
+  line-height: 1.6;
+}
+
+.cd-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cd-stat { text-align: center; }
+
+.cd-stat-num {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.cd-stat-lbl {
+  display: block;
+  font-size: .7rem;
+  color: #85B7EB;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-top: .15rem;
+}
+
+/* ── Body ──────────────────────────────────────────────────────── */
+.cd-body {
+  padding: 1.25rem;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────── */
+.cd-tabs {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.cd-tab {
+  padding: .45rem 1rem;
+  border-radius: 999px;
+  font-size: .83rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--clr-border);
+  background: var(--clr-white);
+  color: var(--clr-text-muted);
+  transition: all var(--transition);
+}
+
+.cd-tab:hover:not(.active) {
+  background: var(--clr-light);
+  color: var(--clr-text);
+}
+
+.cd-tab.active {
+  background: #0C447C;
+  color: #fff;
+  border-color: #0C447C;
+}
+
+/* ── Search ────────────────────────────────────────────────────── */
+.cd-search {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: var(--clr-light);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  padding: .6rem .9rem;
+  margin-bottom: 1rem;
+}
+
+.cd-search-icon { color: var(--clr-text-muted); flex-shrink: 0; }
+
+.cd-search input {
+  border: none;
+  background: transparent;
+  font-size: .9rem;
+  color: var(--clr-text);
+  width: 100%;
+  outline: none;
+}
+
+/* ── Central Committee block ───────────────────────────────────── */
+.cd-cc {
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.cd-cc-head {
+  background: #0C447C;
+  padding: .85rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.cd-cc-title {
+  font-size: .95rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 .1rem;
+}
+
+.cd-cc-sub {
+  font-size: .75rem;
+  color: #85B7EB;
+}
+
+.cd-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border: 0.5px solid rgba(255,255,255,.25);
+  border-radius: 999px;
+  padding: .4rem .9rem;
+  font-size: .8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition);
+  white-space: nowrap;
+}
+
+.cd-view-btn:hover { background: rgba(255,255,255,.25); }
+
+/* ── Member grid ───────────────────────────────────────────────── */
+.cd-members {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: .75rem;
+  padding: 1rem 1.1rem;
+}
+
+.cd-members--full {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  padding: 0;
+}
+
+.cd-member {
+  background: var(--clr-light);
+  border-radius: var(--radius-md);
+  padding: 1rem .75rem;
+  text-align: center;
+}
+
+.cd-av {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 auto .6rem;
+}
+
+.cd-av--lg { width: 60px; height: 60px; font-size: 1.2rem; }
+
+.av-blue  { background: #B5D4F4; color: #0C447C; }
+.av-teal  { background: #9FE1CB; color: #0F6E56; }
+.av-green { background: #C0DD97; color: #3B6D11; }
+.av-amber { background: #FAC775; color: #854F0B; }
+.av-coral { background: #F5C4B3; color: #993C1D; }
+
+.cd-m-name {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--clr-text);
+  margin: 0 0 .15rem;
+  line-height: 1.35;
+}
+
+.cd-m-role {
+  font-size: .74rem;
+  color: var(--clr-text-muted);
+  margin: 0 0 .4rem;
+}
+
+.cd-role-badge {
+  display: inline-block;
+  font-size: .68rem;
+  font-weight: 600;
+  padding: .18rem .55rem;
+  border-radius: 8px;
+  background: #E6F1FB;
+  color: #185FA5;
+}
+
+.cd-role-badge.leader {
+  background: #0C447C;
+  color: #B5D4F4;
+}
+
+/* ── Section label ─────────────────────────────────────────────── */
+.cd-section-lbl {
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin: .25rem 0 .75rem;
+}
+
+/* ── Division / District / Upazila grid ────────────────────────── */
+.cd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: .65rem;
+  margin-bottom: 1rem;
+}
+
+.cd-card {
+  display: flex;
+  align-items: stretch;
+  background: var(--clr-white);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  overflow: hidden;
+}
+
+.cd-card:hover { border-color: #378ADD; box-shadow: 0 2px 12px rgba(55,138,221,.15); }
+.cd-card--leaf { cursor: default; }
+.cd-card--leaf:hover { border-color: var(--clr-border); box-shadow: none; }
+
+.cd-card-bar {
+  width: 4px;
+  min-height: 100%;
+  display: block;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.cd-card-inner {
+  padding: .75rem .9rem;
+  flex: 1;
+}
+
+.cd-card-name {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--clr-text);
+  margin: 0 0 .35rem;
+}
+
+.cd-card-meta {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .76rem;
+  color: var(--clr-text-muted);
+}
+
+.cd-count-badge {
+  background: #E6F1FB;
+  color: #0C447C;
+  font-size: .7rem;
+  font-weight: 600;
+  padding: .15rem .55rem;
+  border-radius: 8px;
+}
+
+.cd-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--clr-text-muted);
+  flex-shrink: 0;
+}
+
+.cd-card-arr { margin-left: auto; color: var(--clr-text-muted); }
+
+/* ── Info bar ──────────────────────────────────────────────────── */
+.cd-info-bar {
+  background: var(--clr-light);
+  border-left: 3px solid #378ADD;
+  border-radius: var(--radius-sm);
+  padding: .65rem .9rem;
+  font-size: .84rem;
+  color: var(--clr-text-muted);
+  margin-top: .25rem;
+}
+
+/* ── Navigation (back / breadcrumb) ───────────────────────────── */
+.cd-back {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .84rem;
+  font-weight: 600;
+  color: #185FA5;
+  cursor: pointer;
+  margin-bottom: .75rem;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  transition: color var(--transition);
+}
+
+.cd-back:hover { color: #0C447C; }
+
+.cd-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .78rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 1rem;
+}
+
+.cd-bc-link {
+  color: #185FA5;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  transition: color var(--transition);
+}
+
+.cd-bc-link:hover { text-decoration: underline; color: #0C447C; }
+
+/* ── Detail panel ──────────────────────────────────────────────── */
+.cd-detail {
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.cd-detail-head {
+  background: #E6F1FB;
+  padding: .85rem 1.1rem;
+  border-bottom: 1px solid #BDD4EC;
+}
+
+.cd-detail-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0C447C;
+  margin: 0 0 .15rem;
+}
+
+.cd-detail-sub {
+  font-size: .8rem;
+  color: #185FA5;
+  margin: 0;
+}
+
+/* ── Empty state ───────────────────────────────────────────────── */
+.cd-empty {
+  color: var(--clr-text-muted);
+  font-size: .9rem;
+  padding: 1rem 0;
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .cd-hero { padding: 1.5rem; }
+
+  .cd-stats { gap: 1rem; }
+
+  .cd-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: .25rem;
+  }
+
+  .cd-tab { white-space: nowrap; }
+
+  .cd-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cd-members { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 420px) {
+  .cd-grid { grid-template-columns: 1fr; }
+  .cd-members { grid-template-columns: repeat(2, 1fr); }
+  .cd-cc-head { flex-direction: column; align-items: flex-start; }
+}
