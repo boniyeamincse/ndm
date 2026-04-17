@@ -20,6 +20,9 @@ export default function ProfileSetup() {
     dept: '',
     year: '',
     address: { division: '', district: '', upazila: '', union: '' },
+    address_line: '',
+    village_area: '',
+    post_office: '',
     why: '',
   });
   const [submitted, setSubmitted] = useState(false);
@@ -51,6 +54,9 @@ export default function ProfileSetup() {
         district_id: form.address.district || undefined,
         upazila_id: form.address.upazila || undefined,
         union_id: form.address.union || undefined,
+        address_line: form.address_line.trim() || undefined,
+        village_area: form.village_area.trim() || undefined,
+        post_office: form.post_office.trim() || undefined,
         motivation: form.why.trim() || undefined,
       };
 
@@ -77,6 +83,9 @@ export default function ProfileSetup() {
           district: errs.district_id?.[0],
           upazila: errs.upazila_id?.[0],
           union: errs.union_id?.[0],
+          address_line: errs.address_line?.[0],
+          village_area: errs.village_area?.[0],
+          post_office: errs.post_office?.[0],
           why: errs.motivation?.[0],
           _contact: errs.contact?.[0],
         });
@@ -202,6 +211,49 @@ export default function ProfileSetup() {
                     lang={lang}
                     required
                   />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="profile-address-line">{lang === 'en' ? 'Address Line' : 'ঠিকানা লাইন'}</label>
+                    <input
+                      id="profile-address-line"
+                      name="address_line"
+                      type="text"
+                      className="form-control"
+                      value={form.address_line}
+                      onChange={handleChange}
+                      placeholder={lang === 'en' ? 'House / Road / Area details' : 'বাড়ি / রোড / এলাকার বিস্তারিত'}
+                    />
+                    {fieldErrors.address_line && <span className="field-error">{fieldErrors.address_line}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="profile-village-area">{lang === 'en' ? 'Village / Area' : 'গ্রাম / এলাকা'}</label>
+                    <input
+                      id="profile-village-area"
+                      name="village_area"
+                      type="text"
+                      className="form-control"
+                      value={form.village_area}
+                      onChange={handleChange}
+                      placeholder={lang === 'en' ? 'Village or local area' : 'গ্রাম বা স্থানীয় এলাকা'}
+                    />
+                    {fieldErrors.village_area && <span className="field-error">{fieldErrors.village_area}</span>}
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="profile-post-office">{lang === 'en' ? 'Post Office' : 'ডাকঘর'}</label>
+                  <input
+                    id="profile-post-office"
+                    name="post_office"
+                    type="text"
+                    className="form-control"
+                    value={form.post_office}
+                    onChange={handleChange}
+                    placeholder={lang === 'en' ? 'Post office name' : 'ডাকঘরের নাম'}
+                  />
+                  {fieldErrors.post_office && <span className="field-error">{fieldErrors.post_office}</span>}
                 </div>
 
                 <div className="form-group">
