@@ -660,6 +660,68 @@
   border-color: #a83327;
 }
 
+.adm-quick-action-menu {
+  min-width: 320px;
+}
+
+.adm-quick-action-menu__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.adm-quick-action-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #0f172a;
+  text-align: left;
+  cursor: pointer;
+}
+
+.adm-quick-action-menu__item:hover {
+  background: #f8fafc;
+}
+
+.adm-quick-action-menu__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--action-color);
+  background: color-mix(in srgb, var(--action-color) 14%, white);
+}
+
+.adm-quick-action-menu__meta {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-quick-action-menu__title,
+.adm-quick-action-menu__desc {
+  margin: 0;
+}
+
+.adm-quick-action-menu__title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.adm-quick-action-menu__desc {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #64748b;
+}
+
 .adm-page-action--ghost {
   background: #fff;
   color: #334155;

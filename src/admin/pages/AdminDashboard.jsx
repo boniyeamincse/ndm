@@ -1,4 +1,4 @@
-import { Users, FileText, Building2, Newspaper, Bell, UserCog, Download, RefreshCw } from 'lucide-react';
+import { Download, RefreshCw } from 'lucide-react';
 import WelcomeBanner from '../components/WelcomeBanner';
 import StatCard from '../components/StatCard';
 import SectionHeader from '../components/SectionHeader';
@@ -11,6 +11,7 @@ import QuickActionGrid from '../components/QuickActionGrid';
 import AdminPageHeader from '../components/AdminPageHeader';
 import AdminContentWrapper, { PageContainer, PageSection } from '../components/AdminContentWrapper';
 import { SkeletonStatCards } from '../components/Skeleton';
+import { ADMIN_QUICK_ACTIONS } from '../config/quickActions';
 import {
   useDashboardStats,
   usePendingItems,
@@ -18,15 +19,6 @@ import {
   useLatestContent,
   useDashboardCharts,
 } from '../hooks/useDashboard';
-
-const QUICK_ACTIONS = [
-  { label: 'Add Member',          icon: Users,      route: '/admin/members/create',                color: '#2980B9' },
-  { label: 'Review Applications', icon: FileText,   route: '/admin/membership-applications',       color: '#27AE60' },
-  { label: 'Create Committee',    icon: Building2,  route: '/admin/committees/create',             color: '#8E44AD' },
-  { label: 'Publish Notice',      icon: Bell,       route: '/admin/notices/create',                color: '#E67E22' },
-  { label: 'Add News Post',       icon: Newspaper,  route: '/admin/posts/create',                  color: '#C0392B' },
-  { label: 'Profile Requests',    icon: UserCog,    route: '/admin/profile-update-requests',       color: '#16A085' },
-];
 
 export default function AdminDashboard() {
   const stats    = useDashboardStats();
@@ -129,7 +121,7 @@ export default function AdminDashboard() {
 
           <PageSection>
             <SectionHeader title="Quick Actions" subtitle="Common tasks, one click away" />
-            <QuickActionGrid actions={QUICK_ACTIONS} />
+            <QuickActionGrid actions={ADMIN_QUICK_ACTIONS} />
           </PageSection>
         </div>
       </PageContainer>

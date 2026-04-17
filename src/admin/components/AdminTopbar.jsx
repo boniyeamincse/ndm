@@ -1,6 +1,7 @@
 import { Bell, ChevronDown, Plus } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
+import { ADMIN_QUICK_ACTIONS } from '../config/quickActions';
 import { getPageMeta } from '../config/menuConfig';
 import { getStoredAdminUser, mockNotificationCount, mockNotifications } from '../mock/layoutMock';
 import NotificationDropdown from './NotificationDropdown';
@@ -10,6 +11,7 @@ import TopbarSearch from './TopbarSearch';
 
 export default function AdminTopbar({ isMobile, sidebarOpen, sidebarCollapsed, onToggleSidebar }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState(null);
 
   const pageMeta = useMemo(() => getPageMeta(pathname), [pathname]);
@@ -23,6 +25,11 @@ export default function AdminTopbar({ isMobile, sidebarOpen, sidebarCollapsed, o
 
   function toggleDropdown(key) {
     setActiveDropdown((current) => (current === key ? null : key));
+  }
+
+  function handleQuickAction(route) {
+    setActiveDropdown(null);
+    navigate(route);
   }
 
   return (
@@ -47,10 +54,53 @@ export default function AdminTopbar({ isMobile, sidebarOpen, sidebarCollapsed, o
       </div>
 
       <div className="adm-topbar__right">
-        <button type="button" className="adm-quick-action-btn">
-          <Plus size={16} />
-          <span>Quick Action</span>
-        </button>
+        <div className="adm-topbar-menu">
+          <button
+            type="button"
+            className="adm-quick-action-btn"
+            aria-label="Open quick actions"
+            aria-expanded={activeDropdown === 'quick-actions'}
+            onClick={() => toggleDropdown('quick-actions')}
+          >
+            <Plus size={16} />
+            <span>Quick Action</span>
+          </button>
+          {activeDropdown === 'quick-actions' ? (
+            <div className="adm-topbar-menu__panel adm-topbar-menu__panel--right">
+              <div className="adm-dropdown-panel adm-quick-action-menu">
+                <div className="adm-dropdown-panel__header">
+                  <div>
+                    <p className="adm-dropdown-panel__title">Quick Actions</p>
+                    <p className="adm-dropdown-panel__sub">Jump into common admin tasks</p>
+                  </div>
+                  <Plus size={16} />
+                </div>
+                <div className="adm-dropdown-panel__body adm-quick-action-menu__body">
+                  {ADMIN_QUICK_ACTIONS.map((action) => {
+                    const Icon = action.icon;
+
+                    return (
+                      <button
+                        key={action.label}
+                        type="button"
+                        className="adm-quick-action-menu__item"
+                        onClick={() => handleQuickAction(action.route)}
+                      >
+                        <span className="adm-quick-action-menu__icon" style={{ '--action-color': action.color || 'var(--adm-primary)' }}>
+                          <Icon size={16} strokeWidth={1.9} />
+                        </span>
+                        <span className="adm-quick-action-menu__meta">
+                          <span className="adm-quick-action-menu__title">{action.label}</span>
+                          <span className="adm-quick-action-menu__desc">{action.description}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </div>
 
         <div className="adm-topbar-menu">
           <button
