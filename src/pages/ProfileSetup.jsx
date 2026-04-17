@@ -23,6 +23,7 @@ export default function ProfileSetup() {
     address_line: '',
     village_area: '',
     post_office: '',
+    photo: null,
     why: '',
   });
   const [submitted, setSubmitted] = useState(false);
@@ -36,6 +37,30 @@ export default function ProfileSetup() {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   };
 
+  const handlePhotoChange = e => {
+    const file = e.target.files?.[0] || null;
+    setFieldErrors(fe => ({ ...fe, photo: undefined }));
+    setApiError(null);
+
+    if (!file) {
+      setForm(f => ({ ...f, photo: null }));
+      return;
+    }
+
+    const maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      setFieldErrors(fe => ({
+        ...fe,
+        photo: lang === 'en' ? 'Photo must be 5MB or smaller.' : 'ছবির সাইজ ৫MB বা তার কম হতে হবে।',
+      }));
+      e.target.value = '';
+      setForm(f => ({ ...f, photo: null }));
+      return;
+    }
+
+    setForm(f => ({ ...f, photo: file }));
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
@@ -43,27 +68,28 @@ export default function ProfileSetup() {
     setFieldErrors({});
 
     try {
-      const body = {
-        full_name: form.name.trim(),
-        email: form.email.trim() || undefined,
-        mobile: form.phone.trim() || undefined,
-        educational_institution: form.university.trim() || undefined,
-        department: form.dept.trim() || undefined,
-        academic_year: form.year || undefined,
-        division_id: form.address.division || undefined,
-        district_id: form.address.district || undefined,
-        upazila_id: form.address.upazila || undefined,
-        union_id: form.address.union || undefined,
-        address_line: form.address_line.trim() || undefined,
-        village_area: form.village_area.trim() || undefined,
-        post_office: form.post_office.trim() || undefined,
-        motivation: form.why.trim() || undefined,
-      };
+      const body = new FormData();
+      body.append('full_name', form.name.trim());
+
+      if (form.email.trim()) body.append('email', form.email.trim());
+      if (form.phone.trim()) body.append('mobile', form.phone.trim());
+      if (form.university.trim()) body.append('educational_institution', form.university.trim());
+      if (form.dept.trim()) body.append('department', form.dept.trim());
+      if (form.year) body.append('academic_year', form.year);
+      if (form.address.division) body.append('division_id', form.address.division);
+      if (form.address.district) body.append('district_id', form.address.district);
+      if (form.address.upazila) body.append('upazila_id', form.address.upazila);
+      if (form.address.union) body.append('union_id', form.address.union);
+      if (form.address_line.trim()) body.append('address_line', form.address_line.trim());
+      if (form.village_area.trim()) body.append('village_area', form.village_area.trim());
+      if (form.post_office.trim()) body.append('post_office', form.post_office.trim());
+      if (form.why.trim()) body.append('motivation', form.why.trim());
+      if (form.photo) body.append('photo', form.photo);
 
       const res = await fetch('/api/v1/membership/apply', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(body),
+        headers: { Accept: 'application/json' },
+        body,
       });
 
       const json = await res.json();
@@ -86,6 +112,7 @@ export default function ProfileSetup() {
           address_line: errs.address_line?.[0],
           village_area: errs.village_area?.[0],
           post_office: errs.post_office?.[0],
+          photo: errs.photo?.[0],
           why: errs.motivation?.[0],
           _contact: errs.contact?.[0],
         });
@@ -254,6 +281,26 @@ export default function ProfileSetup() {
                     placeholder={lang === 'en' ? 'Post office name' : 'ডাকঘরের নাম'}
                   />
                   {fieldErrors.post_office && <span className="field-error">{fieldErrors.post_office}</span>}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="profile-photo">
+                    {lang === 'en' ? 'Photo (max 5MB)' : 'ছবি (সর্বোচ্চ ৫MB)'}
+                  </label>
+                  <input
+                    id="profile-photo"
+                    name="photo"
+                    type="file"
+                    className="form-control"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handlePhotoChange}
+                  />
+                  {form.photo && (
+                    <small style={{ color: '#6b7280' }}>
+                      {lang === 'en' ? 'Selected:' : 'নির্বাচিত:'} {form.photo.name}
+                    </small>
+                  )}
+                  {fieldErrors.photo && <span className="field-error">{fieldErrors.photo}</span>}
                 </div>
 
                 <div className="form-group">
