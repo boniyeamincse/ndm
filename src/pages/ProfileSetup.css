@@ -62,3 +62,89 @@
     gap: 0;
   }
 }
+
+/* ─── Bangladesh Address Select ─────────────────────────── */
+.bd-addr-root { margin-bottom: 1rem; }
+
+.bd-addr-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.bd-addr-field { display: flex; flex-direction: column; gap: .35rem; position: relative; }
+
+.bd-addr-label { font-size: .875rem; font-weight: 600; color: var(--clr-dark); }
+
+.bd-addr-select-wrap {
+  position: relative;
+}
+
+.bd-addr-search {
+  width: 100%;
+  padding: .6rem .9rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: var(--radius-sm, 6px);
+  font-size: .9rem;
+  color: var(--clr-dark);
+  background: #fff;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+
+.bd-addr-search:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 3px rgba(var(--clr-primary-rgb, 37,99,235), .12);
+}
+
+.bd-addr-disabled .bd-addr-search {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.bd-addr-error .bd-addr-search {
+  border-color: #ef4444;
+}
+
+.bd-addr-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: var(--radius-sm, 6px);
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 200;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  list-style: none;
+  margin: 0; padding: 4px 0;
+}
+
+.bd-addr-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .5rem .9rem;
+  cursor: pointer;
+  font-size: .875rem;
+  gap: .5rem;
+}
+
+.bd-addr-option:hover,
+.bd-addr-option--active { background: #eff6ff; }
+
+.bd-addr-en { color: var(--clr-dark); font-weight: 500; }
+.bd-addr-bn { color: #6b7280; font-size: .82rem; }
+
+.bd-addr-no-result {
+  padding: .6rem .9rem;
+  color: #9ca3af;
+  font-size: .875rem;
+}
+
+@media (max-width: 600px) {
+  .bd-addr-grid { grid-template-columns: 1fr; }
+}

@@ -3,13 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import BdAddressSelect from '../components/BdAddressSelect';
 import './ProfileSetup.css';
-import './ProfileSetup.css';
-
-const DISTRICTS = [
-  'Dhaka', 'Chittagong', 'Rajshahi', 'Khulna', 'Sylhet', 'Barisal', 'Mymensingh', 'Rangpur',
-  'Comilla', 'Noakhali', 'Jessore', 'Bogra', 'Dinajpur', 'Faridpur', 'Tangail', 'Pabna',
-];
 
 export default function ProfileSetup() {
   const { t, lang } = useLang();
@@ -24,7 +19,7 @@ export default function ProfileSetup() {
     university: '',
     dept: '',
     year: '',
-    district: '',
+    address: { division: '', district: '', upazila: '', union: '' },
     why: '',
   });
   const [submitted, setSubmitted] = useState(false);
@@ -52,7 +47,10 @@ export default function ProfileSetup() {
         educational_institution: form.university.trim() || undefined,
         department: form.dept.trim() || undefined,
         academic_year: form.year || undefined,
-        district_name: form.district || undefined,
+        division_id: form.address.division || undefined,
+        district_id: form.address.district || undefined,
+        upazila_id: form.address.upazila || undefined,
+        union_id: form.address.union || undefined,
         motivation: form.why.trim() || undefined,
       };
 
@@ -75,7 +73,10 @@ export default function ProfileSetup() {
           university: errs.educational_institution?.[0],
           dept: errs.department?.[0],
           year: errs.academic_year?.[0],
-          district: errs.district_name?.[0],
+          division: errs.division_id?.[0],
+          district: errs.district_id?.[0],
+          upazila: errs.upazila_id?.[0],
+          union: errs.union_id?.[0],
           why: errs.motivation?.[0],
           _contact: errs.contact?.[0],
         });
@@ -185,13 +186,22 @@ export default function ProfileSetup() {
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="profile-district">{t('join_district')}</label>
-                  <select id="profile-district" name="district" className="form-control" value={form.district} onChange={handleChange}>
-                    <option value="">{lang === 'en' ? 'Select district' : 'জেলা বেছে নিন'}</option>
-                    {DISTRICTS.map(d => <option key={d} value={d}>{d}</option>)}
-                  </select>
-                  {fieldErrors.district && <span className="field-error">{fieldErrors.district}</span>}
+                <div className="form-group" style={{ gridColumn: '1/-1' }}>
+                  <label style={{ display:'block', marginBottom:'.5rem', fontWeight:600, fontSize:'.875rem' }}>
+                    {lang === 'en' ? 'Address' : 'ঠিকানা'} *
+                  </label>
+                  <BdAddressSelect
+                    value={form.address}
+                    onChange={addr => setForm(f => ({ ...f, address: addr }))}
+                    errors={{
+                      division: fieldErrors.division,
+                      district: fieldErrors.district,
+                      upazila:  fieldErrors.upazila,
+                      union:    fieldErrors.union,
+                    }}
+                    lang={lang}
+                    required
+                  />
                 </div>
 
                 <div className="form-group">
