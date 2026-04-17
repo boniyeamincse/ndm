@@ -52,6 +52,55 @@
   margin-top: .25rem;
 }
 
+.photo-preview-card {
+  margin-top: .75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: .75rem;
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+  background: #f9fafb;
+}
+
+.photo-preview-image {
+  width: 84px;
+  height: 84px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #d1d5db;
+  background: #fff;
+}
+
+.photo-preview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  min-width: 0;
+}
+
+.photo-preview-name,
+.photo-preview-size {
+  color: #4b5563;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.photo-remove-btn {
+  width: fit-content;
+  border: 1px solid #ef4444;
+  background: #fff;
+  color: #b91c1c;
+  border-radius: 7px;
+  padding: .35rem .6rem;
+  font-size: .8rem;
+  cursor: pointer;
+}
+
+.photo-remove-btn:hover {
+  background: #fef2f2;
+}
+
 @media (max-width: 640px) {
   .profile-setup-wrap .join-form-wrap {
     padding: 1.5rem;
@@ -60,6 +109,17 @@
   .profile-setup-wrap .form-row {
     grid-template-columns: 1fr;
     gap: 0;
+  }
+
+  .photo-preview-card {
+    flex-direction: column;
+  }
+
+  .photo-preview-image {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    aspect-ratio: 1 / 1;
   }
 }
 

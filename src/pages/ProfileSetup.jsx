@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
@@ -30,6 +30,22 @@ export default function ProfileSetup() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [photoPreviewUrl, setPhotoPreviewUrl] = useState('');
+  const photoInputRef = useRef(null);
+
+  useEffect(() => {
+    if (!form.photo) {
+      setPhotoPreviewUrl('');
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(form.photo);
+    setPhotoPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [form.photo]);
 
   const handleChange = e => {
     setFieldErrors(fe => ({ ...fe, [e.target.name]: undefined }));
@@ -59,6 +75,16 @@ export default function ProfileSetup() {
     }
 
     setForm(f => ({ ...f, photo: file }));
+  };
+
+  const handlePhotoRemove = () => {
+    setFieldErrors(fe => ({ ...fe, photo: undefined }));
+    setApiError(null);
+    setForm(f => ({ ...f, photo: null }));
+
+    if (photoInputRef.current) {
+      photoInputRef.current.value = '';
+    }
   };
 
   const handleSubmit = async e => {
@@ -291,14 +317,32 @@ export default function ProfileSetup() {
                     id="profile-photo"
                     name="photo"
                     type="file"
+                    ref={photoInputRef}
                     className="form-control"
                     accept="image/jpeg,image/png,image/webp"
                     onChange={handlePhotoChange}
                   />
                   {form.photo && (
-                    <small style={{ color: '#6b7280' }}>
-                      {lang === 'en' ? 'Selected:' : 'নির্বাচিত:'} {form.photo.name}
-                    </small>
+                    <div className="photo-preview-card">
+                      {photoPreviewUrl && (
+                        <img
+                          src={photoPreviewUrl}
+                          alt={lang === 'en' ? 'Selected profile photo preview' : 'নির্বাচিত ছবির প্রিভিউ'}
+                          className="photo-preview-image"
+                        />
+                      )}
+                      <div className="photo-preview-meta">
+                        <small className="photo-preview-name">
+                          {lang === 'en' ? 'Selected:' : 'নির্বাচিত:'} {form.photo.name}
+                        </small>
+                        <small className="photo-preview-size">
+                          {lang === 'en' ? 'Size:' : 'সাইজ:'} {(form.photo.size / (1024 * 1024)).toFixed(2)} MB
+                        </small>
+                        <button type="button" className="photo-remove-btn" onClick={handlePhotoRemove}>
+                          {lang === 'en' ? 'Remove Photo' : 'ছবি মুছুন'}
+                        </button>
+                      </div>
+                    </div>
                   )}
                   {fieldErrors.photo && <span className="field-error">{fieldErrors.photo}</span>}
                 </div>
