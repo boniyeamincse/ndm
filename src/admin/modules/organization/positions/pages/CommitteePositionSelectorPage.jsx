@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, BriefcaseBusiness } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
@@ -10,10 +10,12 @@ import OrganizationTable from '../../shared/components/OrganizationTable';
 import OrganizationSkeleton from '../../shared/components/OrganizationSkeleton';
 import OrganizationEmptyState from '../../shared/components/OrganizationEmptyState';
 import { useCommittees } from '../../committees/hooks/useCommittees';
+import { committeeTypesService } from '../../committee-types/services/committeeTypesService';
 
 export default function CommitteePositionSelectorPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
+  const [committeeTypeOptions, setCommitteeTypeOptions] = useState([]);
   const [filters, setFilters] = useState({
     search: '',
     status: 'active',
@@ -26,6 +28,34 @@ export default function CommitteePositionSelectorPage() {
   });
 
   const { items, meta, loading, error, reload } = useCommittees(filters);
+
+  useEffect(() => {
+    let alive = true;
+
+    async function loadCommitteeTypes() {
+      try {
+        const result = await committeeTypesService.list({ per_page: 100, sort_by: 'hierarchy_order', sort_dir: 'asc' });
+        if (alive) {
+          setCommitteeTypeOptions(result.items || []);
+        }
+      } catch {
+        if (alive) {
+          setCommitteeTypeOptions([]);
+        }
+      }
+    }
+
+    loadCommitteeTypes();
+
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const activeCommitteeTypeChip = useMemo(() => {
+    if (!filters.committee_type_id) return 'all';
+    return String(filters.committee_type_id);
+  }, [filters.committee_type_id]);
 
   return (
     <AdminContentWrapper>
@@ -41,6 +71,26 @@ export default function CommitteePositionSelectorPage() {
         />
 
         <PageSection>
+          <div className="org-quick-chips">
+            <button
+              type="button"
+              className={`org-quick-chip ${activeCommitteeTypeChip === 'all' ? 'org-quick-chip--active' : ''}`}
+              onClick={() => setFilters((current) => ({ ...current, committee_type_id: '', page: 1 }))}
+            >
+              All Types
+            </button>
+            {committeeTypeOptions.map((type) => (
+              <button
+                key={type.id}
+                type="button"
+                className={`org-quick-chip ${activeCommitteeTypeChip === String(type.id) ? 'org-quick-chip--active' : ''}`}
+                onClick={() => setFilters((current) => ({ ...current, committee_type_id: String(type.id), page: 1 }))}
+              >
+                {type.name}
+              </button>
+            ))}
+          </div>
+
           <OrganizationFilterToolbar
             search={search}
             onSearchChange={setSearch}
