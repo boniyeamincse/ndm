@@ -52,8 +52,13 @@ export default function PositionsPage() {
         <AdminPageHeader
           title="Positions"
           subtitle="Manage leadership, executive, and general organizational positions."
-          breadcrumbs={[{ label: 'Admin', path: '/admin/dashboard' }, { label: 'Organization' }, { label: 'Positions' }]}
-          actions={<button type="button" className="ndm-btn ndm-btn--primary" onClick={() => navigate('/admin/positions/create')}><Plus size={16} /> Add Position</button>}
+          breadcrumbs={[{ label: 'Admin', path: '/admin/dashboard' }, { label: 'Organization' }, { label: 'Committee Positions', path: '/admin/committee-positions' }, { label: 'All Positions' }]}
+          actions={(
+            <>
+              <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => navigate('/admin/committee-positions')}><Briefcase size={16} /> Back to Committee Positions</button>
+              <button type="button" className="ndm-btn ndm-btn--primary" onClick={() => navigate('/admin/positions/create')}><Plus size={16} /> Add Position</button>
+            </>
+          )}
         />
         <OrganizationSummaryCards cards={[
           { label: 'Total Positions', value: summary.total, tone: 'neutral' },
