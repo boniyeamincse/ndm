@@ -17,6 +17,15 @@ import { committeeTypesService } from '../../committee-types/services/committeeT
 import { BD_GEO } from '../../../../../data/bd-geo';
 import { COMMITTEE_ROUTE_META } from '../types/committeeTypes';
 
+const QUICK_LINKS = [
+  { label: 'List', path: '/admin/committees' },
+  { label: 'Central', path: '/admin/committees/central' },
+  { label: 'Division', path: '/admin/committees/division' },
+  { label: 'Active', path: '/admin/committees/active' },
+  { label: 'Inactive', path: '/admin/committees/inactive' },
+  { label: 'Committees Tree', path: '/admin/committees-tree', icon: GitBranch },
+];
+
 function buildInitialFilters(routeMeta) {
   return {
     search: '',
@@ -152,6 +161,19 @@ export default function CommitteesPage() {
             </>
           )}
         />
+
+        <div className="mem-quick-chips">
+          {QUICK_LINKS.map(({ label, path, icon: Icon }) => (
+            <button
+              key={path}
+              type="button"
+              className={`mem-quick-chip ${location.pathname === path ? 'mem-quick-chip--active' : ''}`}
+              onClick={() => navigate(path)}
+            >
+              {Icon ? <Icon size={13} /> : null} {label}
+            </button>
+          ))}
+        </div>
 
         <OrganizationSummaryCards cards={cards} />
 
