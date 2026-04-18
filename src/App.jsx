@@ -48,6 +48,9 @@ import NotificationSettingsPage from './admin/modules/settings/notifications/pag
 import SecuritySettingsPage from './admin/modules/settings/security/pages/SecuritySettingsPage';
 import ProfileUpdateRequestsPage from './admin/modules/profile-update-requests/pages/ProfileUpdateRequestsPage';
 import ProfileUpdateRequestDetailPage from './admin/modules/profile-update-requests/pages/ProfileUpdateRequestDetailPage';
+import RolesPage from './admin/modules/system/roles-permissions/pages/RolesPage';
+import RoleDetailPage from './admin/modules/system/roles-permissions/pages/RoleDetailPage';
+import PermissionsPage from './admin/modules/system/roles-permissions/pages/PermissionsPage';
 import './admin/admin.css';
 import './admin/admin-shell.css';
 import './admin/modules/membership/membership.css';
@@ -68,6 +71,7 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import MemberDashboard from './pages/MemberDashboard';
 import ProfileSetup from './pages/ProfileSetup';
+import MemberProfile from './pages/MemberProfile';
 import { useLang } from './context/LanguageContext';
 
 function ScrollToTop() {
@@ -128,6 +132,14 @@ export default function App() {
               </ProtectedRoute>
             )}
           />
+          <Route
+            path="/member/profile"
+            element={(
+              <ProtectedRoute>
+                <MemberProfile />
+              </ProtectedRoute>
+            )}
+          />
         </Route>
 
         {/* Admin routes — no public Navbar/Footer, AdminLayout handles its own shell */}
@@ -158,6 +170,10 @@ export default function App() {
           <Route path="members/:id/edit" element={<MemberDetailPage />} />
 
           <Route path="committees" element={<CommitteesPage />} />
+          <Route path="committees/central" element={<CommitteesPage />} />
+          <Route path="committees/division" element={<CommitteesPage />} />
+          <Route path="committees/active" element={<CommitteesPage />} />
+          <Route path="committees/inactive" element={<CommitteesPage />} />
           <Route path="committees/create" element={<CommitteeFormPage />} />
           <Route path="committees/:id" element={<CommitteeDetailPage />} />
           <Route path="committees/:id/edit" element={<CommitteeFormPage />} />
@@ -215,6 +231,10 @@ export default function App() {
           <Route path="profile-update-requests/approved" element={<ProfileUpdateRequestsPage />} />
           <Route path="profile-update-requests/rejected" element={<ProfileUpdateRequestsPage />} />
           <Route path="profile-update-requests/:id" element={<ProfileUpdateRequestDetailPage />} />
+
+          <Route path="roles" element={<RolesPage />} />
+          <Route path="roles/:id" element={<RoleDetailPage />} />
+          <Route path="permissions" element={<PermissionsPage />} />
         </Route>
       </Routes>
     </>

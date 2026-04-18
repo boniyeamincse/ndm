@@ -34,7 +34,7 @@ export const adminMenuGroups = [
         label: 'Membership Applications',
         icon: FileText,
         path: '/admin/membership-applications',
-        permission: 'membership.applications.view',
+        permission: 'membership.application.view',
         children: [
           { id: 'applications-all', label: 'All Applications', path: '/admin/membership-applications' },
           { id: 'applications-pending', label: 'Pending Applications', path: '/admin/membership-applications/pending' },
@@ -70,9 +70,13 @@ export const adminMenuGroups = [
         label: 'Committees',
         icon: Building2,
         path: '/admin/committees',
-        permission: 'committees.view',
+        permission: 'committee.view',
         children: [
-          { id: 'committees-all', label: 'All Committees', path: '/admin/committees' },
+          { id: 'committees-list', label: 'List of Committee', path: '/admin/committees' },
+          { id: 'committees-central', label: 'Central Committee', path: '/admin/committees/central' },
+          { id: 'committees-division', label: 'Division Committee', path: '/admin/committees/division' },
+          { id: 'committees-active', label: 'Active Committees', path: '/admin/committees/active' },
+          { id: 'committees-inactive', label: 'Inactive Committees', path: '/admin/committees/inactive' },
           { id: 'committees-tree', label: 'Committees Tree', path: '/admin/committees-tree' },
           { id: 'committee-types', label: 'Committee Types', path: '/admin/committee-types' },
         ],
@@ -82,7 +86,7 @@ export const adminMenuGroups = [
         label: 'Positions',
         icon: Shield,
         path: '/admin/positions',
-        permission: 'positions.view',
+        permission: 'position.view',
         children: [
           { id: 'positions-all', label: 'All Positions', path: '/admin/positions' },
           { id: 'positions-create', label: 'Create Position', path: '/admin/positions/create' },
@@ -93,7 +97,7 @@ export const adminMenuGroups = [
         label: 'Committee Assignments',
         icon: Briefcase,
         path: '/admin/committee-assignments',
-        permission: 'committee.assignments.view',
+        permission: 'committee.member.assignment.view',
         children: [
           { id: 'assignments-all', label: 'All Assignments', path: '/admin/committee-assignments' },
           { id: 'assignments-create', label: 'Create Assignment', path: '/admin/committee-assignments/create' },
@@ -104,7 +108,7 @@ export const adminMenuGroups = [
         label: 'Reporting Hierarchy',
         icon: Network,
         path: '/admin/reporting-hierarchy',
-        permission: 'reporting.hierarchy.view',
+        permission: 'hierarchy.view',
         children: [
           { id: 'hierarchy-all', label: 'All Relations', path: '/admin/reporting-hierarchy' },
           { id: 'hierarchy-create', label: 'Create Relation', path: '/admin/reporting-hierarchy/create' },
@@ -134,7 +138,7 @@ export const adminMenuGroups = [
         label: 'Profile Update Requests',
         icon: UserCog,
         path: '/admin/profile-update-requests',
-        permission: 'profile.requests.view',
+        permission: 'profile.request.view',
         badge: '12',
         children: [
           { id: 'profile-requests-all', label: 'All Requests', path: '/admin/profile-update-requests' },
@@ -154,7 +158,7 @@ export const adminMenuGroups = [
         label: 'Reports',
         icon: BarChart3,
         path: '/admin/reports',
-        permission: 'reports.view',
+        permission: 'report.view',
         children: [
           { id: 'reports-overview', label: 'Overview Report', path: '/admin/reports/overview' },
           { id: 'reports-membership', label: 'Membership Report', path: '/admin/reports/membership' },
@@ -176,7 +180,7 @@ export const adminMenuGroups = [
         label: 'Settings',
         icon: Settings,
         path: '/admin/settings',
-        permission: 'settings.manage',
+        permission: 'profile.view',
         roles: ['superadmin', 'admin'],
         children: [
           { id: 'settings-general', label: 'General Settings', path: '/admin/settings/general' },
@@ -184,6 +188,18 @@ export const adminMenuGroups = [
           { id: 'settings-email', label: 'Email Settings', path: '/admin/settings/email' },
           { id: 'settings-notifications', label: 'Notification Settings', path: '/admin/settings/notifications' },
           { id: 'settings-security', label: 'Security Settings', path: '/admin/settings/security' },
+        ],
+      },
+      {
+        id: 'roles-permissions',
+        label: 'Roles & Permissions',
+        icon: Shield,
+        path: '/admin/roles',
+        permission: 'role.view',
+        roles: ['superadmin'],
+        children: [
+          { id: 'system-roles', label: 'Roles', path: '/admin/roles', permission: 'role.view' },
+          { id: 'system-permissions', label: 'Permissions', path: '/admin/permissions', permission: 'permission.view' },
         ],
       },
     ],
@@ -208,14 +224,34 @@ function itemMatchesPath(item, pathname) {
 }
 
 export function filterMenuGroups(groups, user) {
+  const userPermissions = new Set(user?.permissions || []);
+
+  function hasAccess(item) {
+    if (item.hidden) return false;
+    if (item.roles?.length && !item.roles.includes(user?.roleKey)) return false;
+    if (item.permission && !userPermissions.has(item.permission) && user?.roleKey !== 'superadmin') return false;
+    return true;
+  }
+
   return groups
     .map((group) => ({
       ...group,
-      items: group.items.filter((item) => {
-        if (item.hidden) return false;
-        if (item.roles?.length && !item.roles.includes(user?.roleKey)) return false;
-        return true;
-      }),
+      items: group.items
+        .map((item) => {
+          if (!hasAccess(item)) return null;
+
+          if (!item.children?.length) {
+            return item;
+          }
+
+          const children = item.children.filter((child) => hasAccess(child));
+          if (children.length === 0 && item.permission) {
+            return null;
+          }
+
+          return { ...item, children };
+        })
+        .filter(Boolean),
     }))
     .filter((group) => group.items.length > 0);
 }

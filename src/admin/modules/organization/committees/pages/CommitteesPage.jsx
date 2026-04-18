@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { RefreshCcw, Plus, GitBranch } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
 import AdminContentWrapper, { PageContainer, PageSection } from '../../../../components/AdminContentWrapper';
 import PaginationBar from '../../../membership/shared/components/PaginationBar';
@@ -15,14 +15,13 @@ import CommitteeStatusModal from '../components/CommitteeStatusModal';
 import { useCommitteeActions, useCommittees } from '../hooks/useCommittees';
 import { committeeTypesService } from '../../committee-types/services/committeeTypesService';
 import { BD_GEO } from '../../../../../data/bd-geo';
+import { COMMITTEE_ROUTE_META } from '../types/committeeTypes';
 
-export default function CommitteesPage() {
-  const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState({
+function buildInitialFilters(routeMeta) {
+  return {
     search: '',
     committee_type_id: '',
-    status: '',
+    status: routeMeta?.status || '',
     is_current: '',
     division_id: '',
     district_id: '',
@@ -33,7 +32,15 @@ export default function CommitteesPage() {
     sort_dir: 'desc',
     page: 1,
     per_page: 20,
-  });
+  };
+}
+
+export default function CommitteesPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const routeMeta = COMMITTEE_ROUTE_META[location.pathname] || COMMITTEE_ROUTE_META['/admin/committees'];
+  const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState(() => buildInitialFilters(routeMeta));
   const [committeeTypeOptions, setCommitteeTypeOptions] = useState([]);
   const [statusTarget, setStatusTarget] = useState(null);
 
@@ -68,6 +75,11 @@ export default function CommitteesPage() {
   ];
 
   useEffect(() => {
+    setSearch('');
+    setFilters(buildInitialFilters(routeMeta));
+  }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
     let alive = true;
 
     async function loadCommitteeTypes() {
@@ -89,6 +101,24 @@ export default function CommitteesPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!routeMeta?.committeeTypeOrder || !committeeTypeOptions.length) {
+      return;
+    }
+
+    const targetType = committeeTypeOptions.find((type) => Number(type.hierarchy_order) === Number(routeMeta.committeeTypeOrder));
+    if (!targetType) {
+      return;
+    }
+
+    setFilters((current) => {
+      if (String(current.committee_type_id) === String(targetType.id)) {
+        return current;
+      }
+      return { ...current, committee_type_id: String(targetType.id), page: 1 };
+    });
+  }, [committeeTypeOptions, routeMeta?.committeeTypeOrder]);
+
   function updateFilter(name, value) {
     setFilters((current) => ({ ...current, [name]: value, page: 1 }));
   }
@@ -100,33 +130,19 @@ export default function CommitteesPage() {
 
   function resetFilters() {
     setSearch('');
-    setFilters({
-      search: '',
-      committee_type_id: '',
-      status: '',
-      is_current: '',
-      division_id: '',
-      district_id: '',
-      upazila_id: '',
-      union_id: '',
-      parent_id: '',
-      sort_by: 'start_date',
-      sort_dir: 'desc',
-      page: 1,
-      per_page: 20,
-    });
+    setFilters(buildInitialFilters(routeMeta));
   }
 
   return (
     <AdminContentWrapper>
       <PageContainer>
         <AdminPageHeader
-          title="Committees"
-          subtitle="Manage the full organization committee structure from central to union level."
+          title={routeMeta.title}
+          subtitle={routeMeta.subtitle}
           breadcrumbs={[
             { label: 'Admin', path: '/admin/dashboard' },
             { label: 'Organization' },
-            { label: 'Committees' },
+            { label: routeMeta.title },
           ]}
           actions={(
             <>
