@@ -1,6 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { committeeAssignmentsService } from '../services/committeeAssignmentsService';
 
+function getActionErrorMessage(err, fallback) {
+  const validationErrors = err?.payload?.errors;
+  if (validationErrors && typeof validationErrors === 'object') {
+    const firstGroup = Object.values(validationErrors).find((value) => Array.isArray(value) && value.length > 0);
+    if (firstGroup?.[0]) {
+      return firstGroup[0];
+    }
+  }
+
+  return err?.message || fallback;
+}
+
 export function useCommitteeAssignments(filters) {
   const [items, setItems] = useState([]);
   const [meta, setMeta] = useState({ current_page: 1, last_page: 1, total: 0, per_page: 20 });
@@ -67,7 +79,7 @@ export function useCommitteeAssignmentActions(onDone) {
       if (onDone) onDone(action);
       return true;
     } catch (err) {
-      setActionError(err.message || 'Assignment action failed');
+      setActionError(getActionErrorMessage(err, 'Assignment action failed'));
       return false;
     } finally {
       setBusyAction('');

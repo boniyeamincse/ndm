@@ -3,12 +3,44 @@ import { extractEntity, normalizeListPayload } from '../../shared/utils/resource
 
 const BASE = '/admin/committee-member-assignments';
 
+function normalizeDate(value) {
+  if (!value) return '';
+  return String(value).slice(0, 10);
+}
+
 function mapAssignment(item) {
+  const member = item.member || {};
+  const committee = item.committee || {};
+  const position = item.position || {};
+  const appointedBy = item.appointed_by && typeof item.appointed_by === 'object' ? item.appointed_by : null;
+  const approvedBy = item.approved_by && typeof item.approved_by === 'object' ? item.approved_by : null;
+
   return {
     ...item,
-    member_name: item.member_name || item.member?.full_name || item.member?.name || '—',
-    committee_name: item.committee_name || item.committee?.name || '—',
-    position_name: item.position_name || item.position?.name || '—',
+    member_id: item.member_id || member.id || '',
+    committee_id: item.committee_id || committee.id || '',
+    position_id: item.position_id || position.id || '',
+    committee_type_id: item.committee_type_id || committee.committee_type_id || committee.committee_type?.id || null,
+    member_name: item.member_name || member.full_name || member.name || '—',
+    member_no: item.member_no || member.member_no || '',
+    committee_name: item.committee_name || committee.name || '—',
+    committee_type_name: item.committee_type_name || committee.committee_type?.name || '',
+    position_name: item.position_name || position.name || '—',
+    appointed_by: appointedBy ? appointedBy.id : item.appointed_by || '',
+    approved_by: approvedBy ? approvedBy.id : item.approved_by || '',
+    appointed_by_name: item.appointed_by_name || appointedBy?.name || '',
+    approved_by_name: item.approved_by_name || approvedBy?.name || '',
+    assigned_at: normalizeDate(item.assigned_at),
+    approved_at: normalizeDate(item.approved_at),
+    start_date: normalizeDate(item.start_date),
+    end_date: normalizeDate(item.end_date),
+    assignment_history: item.assignment_history || item.assignment_history_timeline || item.history || [],
+    position_history: item.position_history || item.position_history_timeline || [],
+    member,
+    committee,
+    position,
+    appointed_by_user: appointedBy,
+    approved_by_user: approvedBy,
     is_active: item.is_active ?? item.status === 'active',
   };
 }
@@ -22,11 +54,11 @@ async function list(filters = {}) {
     position_id: filters.position_id,
     assignment_type: filters.assignment_type,
     status: filters.status,
-    active_only: filters.active_only,
-    primary_only: filters.primary_only,
-    leadership_only: filters.leadership_only,
-    from: filters.from,
-    to: filters.to,
+    is_active: filters.is_active ?? filters.active_only,
+    is_primary: filters.is_primary ?? filters.primary_only,
+    is_leadership: filters.is_leadership ?? filters.leadership_only,
+    start_date_from: filters.start_date_from ?? filters.from,
+    start_date_to: filters.start_date_to ?? filters.to,
     sort_by: filters.sort_by,
     sort_dir: filters.sort_dir,
     page: filters.page,
@@ -91,6 +123,19 @@ async function memberAssignments(memberId) {
   return normalizeListPayload(payload).items.map(mapAssignment);
 }
 
+async function lookupAdminUsers(filters = {}) {
+  const payload = await adminApi.request(adminApi.withQuery('/admin/users/lookup', {
+    search: filters.search,
+    per_page: filters.per_page,
+  }));
+
+  return normalizeListPayload(payload).items.map((item) => ({
+    ...item,
+    label: item.name,
+    description: [item.email, item.phone, Array.isArray(item.roles) ? item.roles.join(', ') : ''].filter(Boolean).join(' • '),
+  }));
+}
+
 export const committeeAssignmentsService = {
   list,
   detail,
@@ -103,4 +148,5 @@ export const committeeAssignmentsService = {
   restore,
   committeeMembers,
   memberAssignments,
+  lookupAdminUsers,
 };

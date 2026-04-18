@@ -154,6 +154,88 @@
   margin-top: 0.5rem;
 }
 
+.org-lookup-field {
+  position: relative;
+}
+
+.org-lookup-field__control {
+  position: relative;
+}
+
+.org-lookup-field__input {
+  padding-right: 4.6rem;
+}
+
+.org-lookup-field__control--open .org-lookup-field__input {
+  border-color: rgba(15, 118, 110, 0.45);
+  box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.08);
+}
+
+.org-lookup-field__control--disabled {
+  opacity: 0.8;
+}
+
+.org-lookup-field__clear {
+  position: absolute;
+  right: 0.65rem;
+  top: 0.7rem;
+  border: 0;
+  background: transparent;
+  color: #0f766e;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.org-lookup-field__menu {
+  position: absolute;
+  z-index: 15;
+  top: calc(100% + 0.45rem);
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: 0.35rem;
+  max-height: 17rem;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 0.9rem;
+  background: #fff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+}
+
+.org-lookup-field__option {
+  display: grid;
+  gap: 0.2rem;
+  text-align: left;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  background: rgba(248, 250, 252, 0.72);
+  color: #0f172a;
+}
+
+.org-lookup-field__option:hover,
+.org-lookup-field__option--selected {
+  border-color: rgba(15, 118, 110, 0.24);
+  background: rgba(236, 253, 245, 0.92);
+}
+
+.org-lookup-field__option-label {
+  font-weight: 700;
+}
+
+.org-lookup-field__option-description,
+.org-lookup-field__description,
+.org-lookup-field__state {
+  font-size: 0.78rem;
+  color: #475569;
+}
+
+.org-lookup-field__state {
+  padding: 0.6rem 0.75rem;
+}
+
 .org-overview-head__badges {
   display: flex;
   flex-wrap: wrap;
