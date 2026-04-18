@@ -97,7 +97,14 @@ export function useCommitteeActions(onDone) {
       if (onDone) onDone(action);
       return true;
     } catch (err) {
-      setActionError(err.message || 'Committee action failed');
+      const validationErrors = err?.payload?.errors;
+      if (validationErrors && typeof validationErrors === 'object') {
+        const firstField = Object.keys(validationErrors)[0];
+        const firstMessage = Array.isArray(validationErrors[firstField]) ? validationErrors[firstField][0] : null;
+        setActionError(firstMessage || err?.payload?.message || err.message || 'Committee action failed');
+      } else {
+        setActionError(err?.payload?.message || err.message || 'Committee action failed');
+      }
       return false;
     } finally {
       setBusyAction('');
