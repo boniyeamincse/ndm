@@ -1,3 +1,4 @@
+import { Briefcase } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
 import AdminContentWrapper, { PageContainer, PageSection } from '../../../../components/AdminContentWrapper';
@@ -20,7 +21,8 @@ export default function PositionDetailPage() {
         <AdminPageHeader
           title="Position Detail"
           subtitle="Inspect hierarchy rank, scope, mappings, and leadership visibility."
-          breadcrumbs={[{ label: 'Admin', path: '/admin/dashboard' }, { label: 'Organization' }, { label: 'Positions', path: '/admin/positions' }, { label: 'Position Detail' }]}
+          breadcrumbs={[{ label: 'Admin', path: '/admin/dashboard' }, { label: 'Organization' }, { label: 'Committee Positions', path: '/admin/committee-positions' }, { label: 'All Positions', path: '/admin/positions' }, { label: 'Position Detail' }]}
+          actions={<button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => navigate('/admin/committee-positions')}><Briefcase size={16} /> Back to Committee Positions</button>}
         />
         {loading ? <div className="ndm-state ndm-state--loading"><div className="ndm-skeleton" /><div className="ndm-skeleton" /></div> : null}
         {error ? <ErrorState message={error} onRetry={reload} /> : null}

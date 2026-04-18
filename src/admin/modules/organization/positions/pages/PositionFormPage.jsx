@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Briefcase } from 'lucide-react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
 import AdminContentWrapper, { PageContainer, PageSection } from '../../../../components/AdminContentWrapper';
@@ -38,7 +39,8 @@ export default function PositionFormPage() {
         <AdminPageHeader
           title={isEdit ? 'Edit Position' : 'Create Position'}
           subtitle={isEdit ? 'Update role metadata, scope, and mappings.' : prefill?.source_committee_name ? `Create a position for ${prefill.source_committee_name}.` : 'Create a new position with hierarchy and mapping controls.'}
-          breadcrumbs={[{ label: 'Admin', path: '/admin/dashboard' }, { label: 'Organization' }, { label: 'Positions', path: '/admin/positions' }, { label: isEdit ? 'Edit Position' : 'Create Position' }]}
+          breadcrumbs={[{ label: 'Admin', path: '/admin/dashboard' }, { label: 'Organization' }, { label: 'Committee Positions', path: '/admin/committee-positions' }, { label: 'All Positions', path: '/admin/positions' }, { label: isEdit ? 'Edit Position' : 'Create Position' }]}
+          actions={<button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => navigate('/admin/committee-positions')}><Briefcase size={16} /> Back to Committee Positions</button>}
         />
         <PageSection>
           {loading && isEdit ? <div className="ndm-state ndm-state--loading"><div className="ndm-skeleton" /><div className="ndm-skeleton" /></div> : null}
