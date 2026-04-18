@@ -4,9 +4,15 @@ import { extractEntity, normalizeListPayload } from '../../shared/utils/resource
 const BASE = '/admin/positions';
 
 function mapPosition(item) {
+  const mappedCommitteeTypes = Array.isArray(item.mapped_committee_types)
+    ? item.mapped_committee_types
+    : item.committee_types || item.committee_type_names || [];
+
   return {
     ...item,
-    committee_types: item.committee_types || item.committee_type_names || [],
+    committee_types: mappedCommitteeTypes,
+    committee_type_names: mappedCommitteeTypes.map((entry) => (typeof entry === 'string' ? entry : entry?.name)).filter(Boolean),
+    mapped_committee_types_count: item.mapped_committee_types_count ?? mappedCommitteeTypes.length,
     is_active: item.is_active ?? item.status === 'active',
   };
 }
@@ -38,11 +44,11 @@ async function summary() {
     const payload = await adminApi.request('/admin/positions-summary');
     const data = payload?.data || {};
     return {
-      total: data.total || 0,
-      active: data.by_status?.active || data.active || 0,
-      leadership: data.leadership || 0,
-      committee_specific: data.committee_specific || 0,
-      global: data.global || 0,
+      total: data.total_positions || data.total || 0,
+      active: data.active_positions || data.by_status?.active || data.active || 0,
+      leadership: data.leadership_positions || data.leadership || 0,
+      committee_specific: data.counts_by_scope?.committee_specific || data.committee_specific || 0,
+      global: data.counts_by_scope?.global || data.global || 0,
     };
   } catch {
     return { total: 0, active: 0, leadership: 0, committee_specific: 0, global: 0 };
