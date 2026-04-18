@@ -91,6 +91,7 @@ export const adminMenuGroups = [
         permission: 'position.view',
         children: [
           { id: 'positions-all', label: 'All Positions', path: '/admin/positions' },
+          { id: 'positions-committee', label: 'Committee Positions', path: '/admin/committee-positions' },
           { id: 'positions-create', label: 'Create Position', path: '/admin/positions/create' },
         ],
       },

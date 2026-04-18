@@ -21,6 +21,7 @@ import PositionsPage from './admin/modules/organization/positions/pages/Position
 import PositionDetailPage from './admin/modules/organization/positions/pages/PositionDetailPage';
 import PositionFormPage from './admin/modules/organization/positions/pages/PositionFormPage';
 import CommitteePositionsPage from './admin/modules/organization/positions/pages/CommitteePositionsPage';
+import CommitteePositionSelectorPage from './admin/modules/organization/positions/pages/CommitteePositionSelectorPage';
 import CommitteeAssignmentsPage from './admin/modules/organization/committee-assignments/pages/CommitteeAssignmentsPage';
 import CommitteeAssignmentDetailPage from './admin/modules/organization/committee-assignments/pages/CommitteeAssignmentDetailPage';
 import CommitteeAssignmentFormPage from './admin/modules/organization/committee-assignments/pages/CommitteeAssignmentFormPage';
@@ -188,6 +189,7 @@ export default function App() {
           <Route path="committee-types/:id" element={<CommitteeTypeDetailPage />} />
 
           <Route path="positions" element={<PositionsPage />} />
+          <Route path="committee-positions" element={<CommitteePositionSelectorPage />} />
           <Route path="positions/create" element={<PositionFormPage />} />
           <Route path="positions/:id" element={<PositionDetailPage />} />
           <Route path="positions/:id/edit" element={<PositionFormPage />} />
