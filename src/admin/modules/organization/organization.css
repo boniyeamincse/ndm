@@ -2,6 +2,88 @@
   margin-bottom: 1.5rem;
 }
 
+.org-quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+}
+
+.org-quick-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #ffffff;
+  color: #1e293b;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.org-quick-chip--active {
+  background: rgba(15, 118, 110, 0.12);
+  border-color: rgba(15, 118, 110, 0.35);
+  color: #0f766e;
+}
+
+.org-position-name-cell {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.org-position-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.org-position-code {
+  font-size: 0.76rem;
+  color: #64748b;
+}
+
+.org-position-card {
+  display: grid;
+  gap: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 0.9rem;
+  background: #fff;
+  padding: 0.85rem;
+}
+
+.org-position-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.org-position-card__head h4 {
+  margin: 0;
+  font-size: 0.96rem;
+  color: #0f172a;
+}
+
+.org-position-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.org-position-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.org-position-card__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .org-pill {
   display: inline-flex;
   align-items: center;
@@ -213,6 +295,11 @@
   .org-form__section {
     padding: 1rem;
     border-radius: 0.85rem;
+  }
+
+  .org-quick-chip {
+    font-size: 0.74rem;
+    padding: 0.32rem 0.62rem;
   }
 
   .org-tree-node__children {

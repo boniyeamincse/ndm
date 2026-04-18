@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Plus, Briefcase, ShieldCheck, Users, Layers3, Globe2, Power, PowerOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
 import AdminContentWrapper, { PageContainer, PageSection } from '../../../../components/AdminContentWrapper';
@@ -15,6 +15,17 @@ import PositionScopeBadge from '../../shared/components/PositionScopeBadge';
 import PositionForm from '../components/PositionForm';
 import { usePositionActions, usePositions } from '../hooks/usePositions';
 
+const QUICK_FILTERS = [
+  { key: 'all', label: 'All', icon: Briefcase, apply: { category: '', scope: '', is_active: '', is_leadership: '' } },
+  { key: 'leadership', label: 'Leadership', icon: ShieldCheck, apply: { category: 'leadership', scope: '', is_active: '', is_leadership: '1' } },
+  { key: 'executive', label: 'Executive', icon: Layers3, apply: { category: 'executive', scope: '', is_active: '', is_leadership: '' } },
+  { key: 'general', label: 'General', icon: Users, apply: { category: 'general', scope: '', is_active: '', is_leadership: '' } },
+  { key: 'committee', label: 'Committee Specific', icon: Briefcase, apply: { category: '', scope: 'committee_specific', is_active: '', is_leadership: '' } },
+  { key: 'global', label: 'Global', icon: Globe2, apply: { category: '', scope: 'global', is_active: '', is_leadership: '' } },
+  { key: 'active', label: 'Active', icon: Power, apply: { category: '', scope: '', is_active: '1', is_leadership: '' } },
+  { key: 'inactive', label: 'Inactive', icon: PowerOff, apply: { category: '', scope: '', is_active: '0', is_leadership: '' } },
+];
+
 export default function PositionsPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
@@ -24,6 +35,16 @@ export default function PositionsPage() {
 
   const { items, meta, summary, loading, error, reload } = usePositions(filters);
   const { run, busyAction, actionError } = usePositionActions(() => { setFormOpen(false); setEditing(null); reload(); });
+
+  const activeQuickFilter = useMemo(() => {
+    const found = QUICK_FILTERS.find((entry) => (
+      filters.category === entry.apply.category
+      && filters.scope === entry.apply.scope
+      && filters.is_active === entry.apply.is_active
+      && filters.is_leadership === entry.apply.is_leadership
+    ));
+    return found?.key || 'custom';
+  }, [filters.category, filters.scope, filters.is_active, filters.is_leadership]);
 
   return (
     <AdminContentWrapper>
@@ -41,6 +62,19 @@ export default function PositionsPage() {
           { label: 'Committee Specific Positions', value: summary.committee_specific, tone: 'info' },
           { label: 'Global Positions', value: summary.global, tone: 'warning' },
         ]} />
+
+        <div className="org-quick-chips">
+          {QUICK_FILTERS.map(({ key, label, icon: Icon, apply }) => (
+            <button
+              key={key}
+              type="button"
+              className={`org-quick-chip ${activeQuickFilter === key ? 'org-quick-chip--active' : ''}`}
+              onClick={() => setFilters((current) => ({ ...current, ...apply, page: 1 }))}
+            >
+              <Icon size={13} /> {label}
+            </button>
+          ))}
+        </div>
 
         <PageSection>
           <OrganizationFilterToolbar
@@ -79,7 +113,12 @@ export default function PositionsPage() {
                 testId="positions-table"
                 renderRow={(item) => (
                   <tr key={item.id}>
-                    <td>{item.name}</td>
+                    <td>
+                      <div className="org-position-name-cell">
+                        <div className="org-position-name">{item.name}</div>
+                        <div className="org-position-code">{item.code || 'No code'}</div>
+                      </div>
+                    </td>
                     <td>{item.short_name || '—'}</td>
                     <td><PositionCategoryBadge value={item.category} /></td>
                     <td><PositionScopeBadge value={item.scope} /></td>
@@ -87,7 +126,11 @@ export default function PositionsPage() {
                     <td>{item.display_order}</td>
                     <td>{item.is_leadership ? <span className="org-pill org-pill--red">Leadership</span> : '—'}</td>
                     <td>{item.is_active ? <span className="org-pill org-pill--green">Active</span> : <span className="org-pill org-pill--slate">Inactive</span>}</td>
-                    <td>{Array.isArray(item.committee_types) ? item.committee_types.join(', ') : '—'}</td>
+                    <td>
+                      {Array.isArray(item.committee_types) && item.committee_types.length > 0 ? (
+                        <span className="org-pill org-pill--blue">{item.committee_types.length} mapped</span>
+                      ) : '—'}
+                    </td>
                     <td>
                       <div className="ndm-table__actions">
                         <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => navigate(`/admin/positions/${item.id}`)}>View</button>
@@ -98,6 +141,32 @@ export default function PositionsPage() {
                   </tr>
                 )}
               />
+
+              <div className="ndm-mobile-only ndm-mobile-list">
+                {items.map((item) => (
+                  <article key={item.id} className="org-position-card">
+                    <div className="org-position-card__head">
+                      <h4>{item.name}</h4>
+                      <span className="org-pill org-pill--slate">{item.code || 'No code'}</span>
+                    </div>
+                    <div className="org-position-card__meta">
+                      <PositionCategoryBadge value={item.category} />
+                      <PositionScopeBadge value={item.scope} />
+                      {item.is_active ? <span className="org-pill org-pill--green">Active</span> : <span className="org-pill org-pill--slate">Inactive</span>}
+                    </div>
+                    <div className="org-position-card__stats">
+                      <span>Rank: {item.hierarchy_rank}</span>
+                      <span>Order: {item.display_order}</span>
+                      <span>Mapped: {Array.isArray(item.committee_types) ? item.committee_types.length : 0}</span>
+                    </div>
+                    <div className="org-position-card__actions">
+                      <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => navigate(`/admin/positions/${item.id}`)}>View</button>
+                      <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => navigate(`/admin/positions/${item.id}/edit`)}>Edit</button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
               <PaginationBar meta={meta} page={filters.page} onPageChange={(page) => setFilters((current) => ({ ...current, page }))} />
             </>
           ) : null}
