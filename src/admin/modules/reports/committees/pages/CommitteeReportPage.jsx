@@ -1,10 +1,100 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ReportPageLayout from '../../shared/components/ReportPageLayout';
 import { useCommitteeReport } from '../../shared/hooks/useReports';
+import { committeeTypesService } from '../../../../organization/committee-types/services/committeeTypesService';
+import { BD_GEO } from '../../../../../data/bd-geo';
 
 export default function CommitteeReportPage() {
   const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState({ search: '', committee_type: '', status: '', is_current: '', division: '', district: '', start_date: '', end_date: '', page: 1, per_page: 20, renderControls: (update) => (<><input className="ndm-input" value={filters.committee_type} onChange={(e) => update('committee_type', e.target.value)} placeholder="Committee type" /><select className="ndm-input" value={filters.status} onChange={(e) => update('status', e.target.value)}><option value="">All Status</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="dissolved">Dissolved</option><option value="archived">Archived</option></select><select className="ndm-input" value={filters.is_current} onChange={(e) => update('is_current', e.target.value)}><option value="">Current / All</option><option value="1">Current</option><option value="0">Not Current</option></select></>) });
+  const [committeeTypeOptions, setCommitteeTypeOptions] = useState([]);
+  const [filters, setFilters] = useState({
+    search: '',
+    committee_type_id: '',
+    status: '',
+    is_current: '',
+    division_id: '',
+    district_id: '',
+    start_date: '',
+    end_date: '',
+    page: 1,
+    per_page: 20,
+    renderControls: () => null,
+  });
+
+  const districtOptions = useMemo(() => {
+    const division = BD_GEO.find((entry) => String(entry.id) === String(filters.division_id));
+    return division?.districts || [];
+  }, [filters.division_id]);
+
+  useEffect(() => {
+    let alive = true;
+
+    async function loadCommitteeTypes() {
+      try {
+        const res = await committeeTypesService.list({ per_page: 100, sort_by: 'hierarchy_order', sort_dir: 'asc' });
+        if (alive) {
+          setCommitteeTypeOptions(res.items || []);
+        }
+      } catch {
+        if (alive) {
+          setCommitteeTypeOptions([]);
+        }
+      }
+    }
+
+    loadCommitteeTypes();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setFilters((current) => ({
+      ...current,
+      renderControls: (update) => (
+        <>
+          <select className="ndm-input" value={current.committee_type_id} onChange={(event) => update('committee_type_id', event.target.value)}>
+            <option value="">All Committee Types</option>
+            {committeeTypeOptions.map((type) => (
+              <option key={type.id} value={type.id}>{type.name}</option>
+            ))}
+          </select>
+          <select className="ndm-input" value={current.status} onChange={(event) => update('status', event.target.value)}>
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="dissolved">Dissolved</option>
+            <option value="archived">Archived</option>
+          </select>
+          <select className="ndm-input" value={current.is_current} onChange={(event) => update('is_current', event.target.value)}>
+            <option value="">Current / All</option>
+            <option value="1">Current</option>
+            <option value="0">Not Current</option>
+          </select>
+          <select
+            className="ndm-input"
+            value={current.division_id}
+            onChange={(event) => {
+              const value = event.target.value;
+              setFilters((prev) => ({ ...prev, division_id: value, district_id: '', page: 1 }));
+            }}
+          >
+            <option value="">All Divisions</option>
+            {BD_GEO.map((division) => (
+              <option key={division.id} value={division.id}>{division.name}</option>
+            ))}
+          </select>
+          <select className="ndm-input" value={current.district_id} onChange={(event) => update('district_id', event.target.value)} disabled={!current.division_id}>
+            <option value="">All Districts</option>
+            {districtOptions.map((district) => (
+              <option key={district.id} value={district.id}>{district.name}</option>
+            ))}
+          </select>
+        </>
+      ),
+    }));
+  }, [committeeTypeOptions, districtOptions]);
+
   const { data, loading, error, reload } = useCommitteeReport(filters);
   const cards = data ? [
     { label: 'Total Committees', value: data.summary.total, tone: 'neutral' },
