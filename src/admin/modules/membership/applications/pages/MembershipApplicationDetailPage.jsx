@@ -17,8 +17,17 @@ export default function MembershipApplicationDetailPage() {
   const [modal, setModal] = useState({ action: '', item: null });
 
   const { data, loading, error, reload } = useMembershipApplicationDetail(id);
-  const { run, busyAction, actionError } = useMembershipApplicationActions(() => {
+  const { run, busyAction, actionError } = useMembershipApplicationActions((action) => {
     setModal({ action: '', item: null });
+
+    if (action === 'approve' || action === 'reject') {
+      navigate('/admin/membership-applications', {
+        replace: true,
+        state: { refreshedAt: Date.now(), action },
+      });
+      return;
+    }
+
     reload();
   });
 
