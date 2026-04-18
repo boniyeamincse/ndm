@@ -97,6 +97,9 @@ export default function CommitteeForm({ initialValues, committeeTypeOptions = []
         const nextOptions = res.items || [];
         setParentOptions(nextOptions);
         setForm((current) => {
+          if (!current.parent_id && nextOptions.length === 1) {
+            return { ...current, parent_id: String(nextOptions[0].id) };
+          }
           if (!current.parent_id) {
             return current;
           }
@@ -151,12 +154,14 @@ export default function CommitteeForm({ initialValues, committeeTypeOptions = []
               value={form.parent_id || ''}
               onChange={(event) => updateField('parent_id', event.target.value)}
               disabled={!parentType}
+              required={Boolean(parentType)}
             >
               <option value="">{parentType ? `Select ${parentType.name}` : 'No parent required for this committee type'}</option>
               {parentOptions.map((item) => (
                 <option key={item.id} value={item.id}>{item.name} ({item.committee_no})</option>
               ))}
             </select>
+            {parentType && parentOptions.length === 0 ? <small>No active {parentType.name} committee found. Create {parentType.name} first.</small> : null}
           </label>
           <label>
             Code
