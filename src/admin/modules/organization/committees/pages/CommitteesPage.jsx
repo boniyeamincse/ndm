@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { RefreshCcw, Plus, GitBranch } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
@@ -42,6 +42,21 @@ export default function CommitteesPage() {
     setStatusTarget(null);
     reload();
   });
+
+  const districtOptions = useMemo(() => {
+    const division = BD_GEO.find((entry) => String(entry.id) === String(filters.division_id));
+    return division?.districts || [];
+  }, [filters.division_id]);
+
+  const upazilaOptions = useMemo(() => {
+    const district = districtOptions.find((entry) => String(entry.id) === String(filters.district_id));
+    return district?.upazilas || [];
+  }, [districtOptions, filters.district_id]);
+
+  const unionOptions = useMemo(() => {
+    const upazila = upazilaOptions.find((entry) => String(entry.id) === String(filters.upazila_id));
+    return upazila?.unions || [];
+  }, [upazilaOptions, filters.upazila_id]);
 
   const cards = [
     { label: 'Total Committees', value: summary.total, tone: 'neutral' },
@@ -150,10 +165,69 @@ export default function CommitteesPage() {
               <option value="1">Current</option>
               <option value="0">Past</option>
             </select>
-            <select className="ndm-input" value={filters.division_id} onChange={(event) => updateFilter('division_id', event.target.value)}>
+            <select
+              className="ndm-input"
+              value={filters.division_id}
+              onChange={(event) => {
+                const value = event.target.value;
+                setFilters((current) => ({
+                  ...current,
+                  division_id: value,
+                  district_id: '',
+                  upazila_id: '',
+                  union_id: '',
+                  page: 1,
+                }));
+              }}
+            >
               <option value="">All Divisions</option>
               {BD_GEO.map((division) => (
                 <option key={division.id} value={division.id}>{division.name}</option>
+              ))}
+            </select>
+            <select
+              className="ndm-input"
+              value={filters.district_id}
+              onChange={(event) => {
+                const value = event.target.value;
+                setFilters((current) => ({
+                  ...current,
+                  district_id: value,
+                  upazila_id: '',
+                  union_id: '',
+                  page: 1,
+                }));
+              }}
+              disabled={!filters.division_id}
+            >
+              <option value="">All Districts</option>
+              {districtOptions.map((district) => (
+                <option key={district.id} value={district.id}>{district.name}</option>
+              ))}
+            </select>
+            <select
+              className="ndm-input"
+              value={filters.upazila_id}
+              onChange={(event) => {
+                const value = event.target.value;
+                setFilters((current) => ({
+                  ...current,
+                  upazila_id: value,
+                  union_id: '',
+                  page: 1,
+                }));
+              }}
+              disabled={!filters.district_id}
+            >
+              <option value="">All Upazilas</option>
+              {upazilaOptions.map((upazila) => (
+                <option key={upazila.id} value={upazila.id}>{upazila.name}</option>
+              ))}
+            </select>
+            <select className="ndm-input" value={filters.union_id} onChange={(event) => updateFilter('union_id', event.target.value)} disabled={!filters.upazila_id}>
+              <option value="">All Unions</option>
+              {unionOptions.map((union) => (
+                <option key={union.id} value={union.id}>{union.name}</option>
               ))}
             </select>
           </OrganizationFilterToolbar>
