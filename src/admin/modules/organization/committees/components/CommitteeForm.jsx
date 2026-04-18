@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BD_GEO } from '../../../../../data/bd-geo';
+import { committeesService } from '../services/committeesService';
 
 const EMPTY_FORM = {
   name: '',
@@ -26,6 +27,7 @@ const EMPTY_FORM = {
 
 export default function CommitteeForm({ initialValues, committeeTypeOptions = [], busy, onCancel, onSubmit }) {
   const [form, setForm] = useState(EMPTY_FORM);
+  const [parentOptions, setParentOptions] = useState([]);
 
   const districtOptions = useMemo(() => {
     const division = BD_GEO.find((entry) => String(entry.id) === String(form.division_id));
@@ -42,9 +44,67 @@ export default function CommitteeForm({ initialValues, committeeTypeOptions = []
     return upazila?.unions || [];
   }, [upazilaOptions, form.upazila_id]);
 
+  const selectedType = useMemo(
+    () => committeeTypeOptions.find((type) => String(type.id) === String(form.committee_type_id)) || null,
+    [committeeTypeOptions, form.committee_type_id]
+  );
+
+  const parentType = useMemo(() => {
+    if (!selectedType?.hierarchy_order || Number(selectedType.hierarchy_order) <= 1) {
+      return null;
+    }
+    return committeeTypeOptions.find((type) => Number(type.hierarchy_order) === Number(selectedType.hierarchy_order) - 1) || null;
+  }, [committeeTypeOptions, selectedType]);
+
   useEffect(() => {
     setForm({ ...EMPTY_FORM, ...(initialValues || {}) });
   }, [initialValues]);
+
+  useEffect(() => {
+    let alive = true;
+
+    async function loadParentOptions() {
+      if (!parentType?.id) {
+        if (alive) {
+          setParentOptions([]);
+          setForm((current) => (current.parent_id ? { ...current, parent_id: '' } : current));
+        }
+        return;
+      }
+
+      try {
+        const res = await committeesService.list({
+          committee_type_id: parentType.id,
+          status: 'active',
+          per_page: 200,
+          sort_by: 'name',
+          sort_dir: 'asc',
+        });
+        if (!alive) {
+          return;
+        }
+
+        const nextOptions = res.items || [];
+        setParentOptions(nextOptions);
+        setForm((current) => {
+          if (!current.parent_id) {
+            return current;
+          }
+          const stillValid = nextOptions.some((item) => String(item.id) === String(current.parent_id));
+          return stillValid ? current : { ...current, parent_id: '' };
+        });
+      } catch {
+        if (alive) {
+          setParentOptions([]);
+        }
+      }
+    }
+
+    loadParentOptions();
+    return () => {
+      alive = false;
+    };
+  }, [parentType?.id]);
 
   function updateField(name, value) {
     setForm((current) => ({ ...current, [name]: value }));
@@ -74,8 +134,18 @@ export default function CommitteeForm({ initialValues, committeeTypeOptions = []
             </select>
           </label>
           <label>
-            Parent ID
-            <input className="ndm-input" value={form.parent_id} onChange={(event) => updateField('parent_id', event.target.value)} />
+            Parent Committee
+            <select
+              className="ndm-input"
+              value={form.parent_id || ''}
+              onChange={(event) => updateField('parent_id', event.target.value)}
+              disabled={!parentType}
+            >
+              <option value="">{parentType ? `Select ${parentType.name}` : 'No parent required for this committee type'}</option>
+              {parentOptions.map((item) => (
+                <option key={item.id} value={item.id}>{item.name} ({item.committee_no})</option>
+              ))}
+            </select>
           </label>
           <label>
             Code
