@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { RefreshCcw, Plus, GitBranch } from 'lucide-react';
+import { RefreshCcw, Plus, GitBranch, BriefcaseBusiness } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
 import AdminContentWrapper, { PageContainer, PageSection } from '../../../../components/AdminContentWrapper';
@@ -19,6 +19,7 @@ import { COMMITTEE_ROUTE_META } from '../types/committeeTypes';
 
 const QUICK_LINKS = [
   { label: 'List', path: '/admin/committees' },
+  { label: 'Committee Positions', path: '/admin/committee-positions', icon: BriefcaseBusiness },
   { label: 'Central', path: '/admin/committees/central' },
   { label: 'Division', path: '/admin/committees/division' },
   { label: 'Active', path: '/admin/committees/active' },

@@ -73,6 +73,7 @@ export const adminMenuGroups = [
         permission: 'committee.view',
         children: [
           { id: 'committees-list', label: 'List of Committee', path: '/admin/committees' },
+          { id: 'committees-positions', label: 'Committee Positions', path: '/admin/committee-positions' },
           { id: 'committees-central', label: 'Central Committee', path: '/admin/committees/central' },
           { id: 'committees-division', label: 'Division Committee', path: '/admin/committees/division' },
           { id: 'committees-active', label: 'Active Committees', path: '/admin/committees/active' },
