@@ -88,11 +88,11 @@ export const adminMenuGroups = [
         id: 'positions',
         label: 'Positions',
         icon: Shield,
-        path: '/admin/positions',
+        path: '/admin/committee-positions',
         permission: 'position.view',
         children: [
-          { id: 'positions-all', label: 'All Positions', path: '/admin/positions' },
           { id: 'positions-committee', label: 'Committee Positions', path: '/admin/committee-positions' },
+          { id: 'positions-all', label: 'All Positions', path: '/admin/positions' },
           { id: 'positions-create', label: 'Create Position', path: '/admin/positions/create' },
         ],
       },
