@@ -255,9 +255,47 @@
   margin-top: 1rem;
 }
 
+.org-inline-empty {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.org-inline-empty p {
+  margin: 0;
+  color: #475569;
+}
+
+.org-position-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
 .org-location-block {
   display: grid;
   gap: 0.4rem;
+}
+
+.org-selection-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.org-selection-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 0.85rem;
+  background: rgba(248, 250, 252, 0.85);
+  font-size: 0.84rem;
+  color: #0f172a;
+}
+
+.org-selection-chip--active {
+  border-color: rgba(15, 118, 110, 0.32);
+  background: rgba(236, 253, 245, 0.92);
 }
 
 .org-tree {

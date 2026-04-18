@@ -1,9 +1,11 @@
 import ActionPanelCard from '../../shared/components/ActionPanelCard';
 
-export default function CommitteeActionPanel({ committee, onEdit, onStatus, onMembers, onHierarchy, onChildren }) {
+export default function CommitteeActionPanel({ committee, onEdit, onStatus, onAddPosition, onAddMember, onMembers, onHierarchy, onChildren }) {
   return (
     <ActionPanelCard title="Committee Actions">
       <button type="button" className="ndm-btn ndm-btn--primary" onClick={() => onEdit(committee.id)}>Edit Committee</button>
+      <button type="button" className="ndm-btn ndm-btn--primary" onClick={() => onAddPosition(committee)}>Add Position</button>
+      <button type="button" className="ndm-btn ndm-btn--primary" onClick={() => onAddMember(committee)}>Add Member To Position</button>
       <button type="button" className="ndm-btn ndm-btn--warning" onClick={() => onStatus(committee)}>Change Status</button>
       <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => onMembers(committee.id)}>View Members</button>
       <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => onHierarchy(committee.id)}>View Hierarchy</button>
