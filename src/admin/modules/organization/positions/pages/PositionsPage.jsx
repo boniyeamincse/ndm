@@ -58,6 +58,7 @@ export default function PositionsPage() {
         <OrganizationSummaryCards cards={[
           { label: 'Total Positions', value: summary.total, tone: 'neutral' },
           { label: 'Active Positions', value: summary.active, tone: 'success' },
+          { label: 'Inactive Positions', value: summary.inactive, tone: 'muted' },
           { label: 'Leadership Positions', value: summary.leadership, tone: 'danger' },
           { label: 'Committee Specific Positions', value: summary.committee_specific, tone: 'info' },
           { label: 'Global Positions', value: summary.global, tone: 'warning' },

@@ -46,12 +46,13 @@ async function summary() {
     return {
       total: data.total_positions || data.total || 0,
       active: data.active_positions || data.by_status?.active || data.active || 0,
+      inactive: data.inactive_positions || data.by_status?.inactive || data.inactive || 0,
       leadership: data.leadership_positions || data.leadership || 0,
       committee_specific: data.counts_by_scope?.committee_specific || data.committee_specific || 0,
       global: data.counts_by_scope?.global || data.global || 0,
     };
   } catch {
-    return { total: 0, active: 0, leadership: 0, committee_specific: 0, global: 0 };
+    return { total: 0, active: 0, inactive: 0, leadership: 0, committee_specific: 0, global: 0 };
   }
 }
 
