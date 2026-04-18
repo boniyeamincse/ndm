@@ -20,6 +20,7 @@ import CommitteeTypeDetailPage from './admin/modules/organization/committee-type
 import PositionsPage from './admin/modules/organization/positions/pages/PositionsPage';
 import PositionDetailPage from './admin/modules/organization/positions/pages/PositionDetailPage';
 import PositionFormPage from './admin/modules/organization/positions/pages/PositionFormPage';
+import CommitteePositionsPage from './admin/modules/organization/positions/pages/CommitteePositionsPage';
 import CommitteeAssignmentsPage from './admin/modules/organization/committee-assignments/pages/CommitteeAssignmentsPage';
 import CommitteeAssignmentDetailPage from './admin/modules/organization/committee-assignments/pages/CommitteeAssignmentDetailPage';
 import CommitteeAssignmentFormPage from './admin/modules/organization/committee-assignments/pages/CommitteeAssignmentFormPage';
@@ -179,6 +180,7 @@ export default function App() {
           <Route path="committees/:id" element={<CommitteeDetailPage />} />
           <Route path="committees/:id/edit" element={<CommitteeFormPage />} />
           <Route path="committees/:committeeId/members" element={<CommitteeMembersPage />} />
+          <Route path="committees/:committeeId/positions" element={<CommitteePositionsPage />} />
           <Route path="committees/:committeeId/hierarchy-tree" element={<CommitteeHierarchyTreePage />} />
           <Route path="committees-tree" element={<CommitteesTreePage />} />
 

@@ -15,6 +15,7 @@ export default function CommitteeMembersPage() {
   const { committeeId } = useParams();
   const { items, loading, error, reload } = useCommitteeMembers(committeeId);
   const createLink = `/admin/committee-assignments/create?committee_id=${committeeId}`;
+  const positionsLink = `/admin/committees/${committeeId}/positions`;
 
   return (
     <AdminContentWrapper>
@@ -22,7 +23,12 @@ export default function CommitteeMembersPage() {
         <AdminPageHeader
           title="Committee Members"
           subtitle="Leadership-first committee member listing with assignment visibility."
-          actions={<button type="button" className="ndm-btn ndm-btn--primary" onClick={() => navigate(createLink)}><Plus size={16} /> Add Member To Committee</button>}
+          actions={(
+            <>
+              <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => navigate(positionsLink)}>View Committee Positions</button>
+              <button type="button" className="ndm-btn ndm-btn--primary" onClick={() => navigate(createLink)}><Plus size={16} /> Add Member To Committee</button>
+            </>
+          )}
           breadcrumbs={[
             { label: 'Admin', path: '/admin/dashboard' },
             { label: 'Organization' },

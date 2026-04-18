@@ -214,6 +214,7 @@ export default function CommitteeDetailPage() {
                 onEdit={(committeeId) => navigate(`/admin/committees/${committeeId}/edit`)}
                 onAddPosition={(committee) => navigate(buildPositionCreateLink(committee))}
                 onAddMember={(committee) => navigate(buildCommitteeAssignmentLink(committee))}
+                onViewPositions={(committeeId) => navigate(`/admin/committees/${committeeId}/positions`)}
                 onStatus={(committee) => setStatusTarget(committee)}
                 onMembers={(committeeId) => navigate(`/admin/committees/${committeeId}/members`)}
                 onHierarchy={(committeeId) => navigate(`/admin/committees/${committeeId}/hierarchy-tree`)}
