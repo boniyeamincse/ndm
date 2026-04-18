@@ -23,6 +23,7 @@ const QUICK_LINKS = [
   { label: 'Division', path: '/admin/committees/division' },
   { label: 'Active', path: '/admin/committees/active' },
   { label: 'Inactive', path: '/admin/committees/inactive' },
+  { label: 'Pending Approval', path: '/admin/committees/pending-approval' },
   { label: 'Committees Tree', path: '/admin/committees-tree', icon: GitBranch },
 ];
 
@@ -31,6 +32,7 @@ function buildInitialFilters(routeMeta) {
     search: '',
     committee_type_id: '',
     status: routeMeta?.status || '',
+    pending_approval: routeMeta?.pendingApproval ? 'true' : '',
     is_current: '',
     division_id: '',
     district_id: '',

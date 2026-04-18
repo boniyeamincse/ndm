@@ -36,6 +36,7 @@ async function list(filters = {}) {
     search: filters.search,
     committee_type_id: filters.committee_type_id,
     status: filters.status,
+    pending_approval: filters.pending_approval,
     is_current: filters.is_current,
     division_id: filters.division_id,
     district_id: filters.district_id,

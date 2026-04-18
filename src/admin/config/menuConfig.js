@@ -77,6 +77,8 @@ export const adminMenuGroups = [
           { id: 'committees-division', label: 'Division Committee', path: '/admin/committees/division' },
           { id: 'committees-active', label: 'Active Committees', path: '/admin/committees/active' },
           { id: 'committees-inactive', label: 'Inactive Committees', path: '/admin/committees/inactive' },
+          { id: 'committees-pending-approval', label: 'Pending Approval', path: '/admin/committees/pending-approval' },
+          { id: 'committees-hierarchy-view', label: 'Hierarchy View', path: '/admin/committees-tree' },
           { id: 'committees-tree', label: 'Committees Tree', path: '/admin/committees-tree' },
           { id: 'committee-types', label: 'Committee Types', path: '/admin/committee-types' },
         ],

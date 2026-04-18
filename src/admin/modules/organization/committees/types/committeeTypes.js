@@ -23,6 +23,11 @@ export const COMMITTEE_ROUTE_META = {
     subtitle: 'List of inactive committees.',
     status: 'inactive',
   },
+  '/admin/committees/pending-approval': {
+    title: 'Pending Approval Committees',
+    subtitle: 'List of committees awaiting approval.',
+    pendingApproval: true,
+  },
 };
 
 export const COMMITTEE_STATUS_OPTIONS = ['active', 'inactive', 'dissolved', 'archived'];

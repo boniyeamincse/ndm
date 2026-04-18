@@ -174,6 +174,7 @@ export default function App() {
           <Route path="committees/division" element={<CommitteesPage />} />
           <Route path="committees/active" element={<CommitteesPage />} />
           <Route path="committees/inactive" element={<CommitteesPage />} />
+          <Route path="committees/pending-approval" element={<CommitteesPage />} />
           <Route path="committees/create" element={<CommitteeFormPage />} />
           <Route path="committees/:id" element={<CommitteeDetailPage />} />
           <Route path="committees/:id/edit" element={<CommitteeFormPage />} />
