@@ -1,13 +1,31 @@
 import { adminApi } from '../../../../services/adminApi';
 import { extractEntity, normalizeListPayload } from '../../shared/utils/resourceTransforms';
+import { BD_GEO } from '../../../../../data/bd-geo';
 
 const BASE = '/admin/committees';
 
+function resolveGeoName(item) {
+  const division = BD_GEO.find((entry) => String(entry.id) === String(item.division_id));
+  const district = division?.districts?.find((entry) => String(entry.id) === String(item.district_id));
+  const upazila = district?.upazilas?.find((entry) => String(entry.id) === String(item.upazila_id));
+  const union = upazila?.unions?.find((entry) => String(entry.id) === String(item.union_id));
+
+  return {
+    division_name: item.division_name || division?.name || null,
+    district_name: item.district_name || district?.name || null,
+    upazila_name: item.upazila_name || upazila?.name || null,
+    union_name: item.union_name || union?.name || null,
+  };
+}
+
 function mapCommittee(item) {
+  const geo = resolveGeoName(item);
   return {
     ...item,
+    committee_type_id: item.committee_type_id || item.committee_type?.id || null,
     committee_type_name: item.committee_type_name || item.committee_type?.name || item.committee_type || 'Committee',
     parent_name: item.parent_name || item.parent?.name || null,
+    ...geo,
     child_committees_count: item.child_committees_count || item.children_count || item.child_count || 0,
     is_current: Boolean(item.is_current),
   };
@@ -19,10 +37,10 @@ async function list(filters = {}) {
     committee_type_id: filters.committee_type_id,
     status: filters.status,
     is_current: filters.is_current,
-    division: filters.division,
-    district: filters.district,
-    upazila: filters.upazila,
-    union: filters.union,
+    division_id: filters.division_id,
+    district_id: filters.district_id,
+    upazila_id: filters.upazila_id,
+    union_id: filters.union_id,
     parent_id: filters.parent_id,
     sort_by: filters.sort_by,
     sort_dir: filters.sort_dir,

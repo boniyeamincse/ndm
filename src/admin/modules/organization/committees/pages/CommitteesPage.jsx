@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RefreshCcw, Plus, GitBranch } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
@@ -13,6 +13,8 @@ import CommitteeTable from '../components/CommitteeTable';
 import CommitteeCard from '../components/CommitteeCard';
 import CommitteeStatusModal from '../components/CommitteeStatusModal';
 import { useCommitteeActions, useCommittees } from '../hooks/useCommittees';
+import { committeeTypesService } from '../../committee-types/services/committeeTypesService';
+import { BD_GEO } from '../../../../../data/bd-geo';
 
 export default function CommitteesPage() {
   const navigate = useNavigate();
@@ -22,16 +24,17 @@ export default function CommitteesPage() {
     committee_type_id: '',
     status: '',
     is_current: '',
-    division: '',
-    district: '',
-    upazila: '',
-    union: '',
+    division_id: '',
+    district_id: '',
+    upazila_id: '',
+    union_id: '',
     parent_id: '',
     sort_by: 'start_date',
     sort_dir: 'desc',
     page: 1,
     per_page: 20,
   });
+  const [committeeTypeOptions, setCommitteeTypeOptions] = useState([]);
   const [statusTarget, setStatusTarget] = useState(null);
 
   const { items, meta, summary, loading, error, reload } = useCommittees(filters);
@@ -49,6 +52,28 @@ export default function CommitteesPage() {
     { label: 'Current Committees', value: summary.current, tone: 'info' },
   ];
 
+  useEffect(() => {
+    let alive = true;
+
+    async function loadCommitteeTypes() {
+      try {
+        const res = await committeeTypesService.list({ per_page: 100, sort_by: 'hierarchy_order', sort_dir: 'asc' });
+        if (alive) {
+          setCommitteeTypeOptions(res.items || []);
+        }
+      } catch {
+        if (alive) {
+          setCommitteeTypeOptions([]);
+        }
+      }
+    }
+
+    loadCommitteeTypes();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   function updateFilter(name, value) {
     setFilters((current) => ({ ...current, [name]: value, page: 1 }));
   }
@@ -65,10 +90,10 @@ export default function CommitteesPage() {
       committee_type_id: '',
       status: '',
       is_current: '',
-      division: '',
-      district: '',
-      upazila: '',
-      union: '',
+      division_id: '',
+      district_id: '',
+      upazila_id: '',
+      union_id: '',
       parent_id: '',
       sort_by: 'start_date',
       sort_dir: 'desc',
@@ -107,7 +132,12 @@ export default function CommitteesPage() {
             onReset={resetFilters}
             searchPlaceholder="Search by committee no, name or code"
           >
-            <input className="ndm-input" placeholder="Committee Type" value={filters.committee_type_id} onChange={(event) => updateFilter('committee_type_id', event.target.value)} />
+            <select className="ndm-input" value={filters.committee_type_id} onChange={(event) => updateFilter('committee_type_id', event.target.value)}>
+              <option value="">All Committee Types</option>
+              {committeeTypeOptions.map((type) => (
+                <option key={type.id} value={type.id}>{type.name}</option>
+              ))}
+            </select>
             <select className="ndm-input" value={filters.status} onChange={(event) => updateFilter('status', event.target.value)}>
               <option value="">All Status</option>
               <option value="active">Active</option>
@@ -120,8 +150,12 @@ export default function CommitteesPage() {
               <option value="1">Current</option>
               <option value="0">Past</option>
             </select>
-            <input className="ndm-input" placeholder="Division" value={filters.division} onChange={(event) => updateFilter('division', event.target.value)} />
-            <input className="ndm-input" placeholder="District" value={filters.district} onChange={(event) => updateFilter('district', event.target.value)} />
+            <select className="ndm-input" value={filters.division_id} onChange={(event) => updateFilter('division_id', event.target.value)}>
+              <option value="">All Divisions</option>
+              {BD_GEO.map((division) => (
+                <option key={division.id} value={division.id}>{division.name}</option>
+              ))}
+            </select>
           </OrganizationFilterToolbar>
 
           {error ? <ErrorState message={error} onRetry={reload} /> : null}

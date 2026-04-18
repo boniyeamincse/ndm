@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { BD_GEO } from '../../../../../data/bd-geo';
 
 const EMPTY_FORM = {
   name: '',
   committee_type_id: '',
   parent_id: '',
   code: '',
-  division_name: '',
-  district_name: '',
-  upazila_name: '',
-  union_name: '',
+  division_id: '',
+  district_id: '',
+  upazila_id: '',
+  union_id: '',
   address_line: '',
   office_phone: '',
   office_email: '',
@@ -23,8 +24,23 @@ const EMPTY_FORM = {
   notes: '',
 };
 
-export default function CommitteeForm({ initialValues, busy, onCancel, onSubmit }) {
+export default function CommitteeForm({ initialValues, committeeTypeOptions = [], busy, onCancel, onSubmit }) {
   const [form, setForm] = useState(EMPTY_FORM);
+
+  const districtOptions = useMemo(() => {
+    const division = BD_GEO.find((entry) => String(entry.id) === String(form.division_id));
+    return division?.districts || [];
+  }, [form.division_id]);
+
+  const upazilaOptions = useMemo(() => {
+    const district = districtOptions.find((entry) => String(entry.id) === String(form.district_id));
+    return district?.upazilas || [];
+  }, [districtOptions, form.district_id]);
+
+  const unionOptions = useMemo(() => {
+    const upazila = upazilaOptions.find((entry) => String(entry.id) === String(form.upazila_id));
+    return upazila?.unions || [];
+  }, [upazilaOptions, form.upazila_id]);
 
   useEffect(() => {
     setForm({ ...EMPTY_FORM, ...(initialValues || {}) });
@@ -49,8 +65,13 @@ export default function CommitteeForm({ initialValues, busy, onCancel, onSubmit 
             <input className="ndm-input" value={form.name} onChange={(event) => updateField('name', event.target.value)} required />
           </label>
           <label>
-            Committee Type ID
-            <input className="ndm-input" value={form.committee_type_id} onChange={(event) => updateField('committee_type_id', event.target.value)} />
+            Committee Type
+            <select className="ndm-input" value={form.committee_type_id || ''} onChange={(event) => updateField('committee_type_id', event.target.value)} required>
+              <option value="">Select Committee Type</option>
+              {committeeTypeOptions.map((type) => (
+                <option key={type.id} value={type.id}>{type.name}</option>
+              ))}
+            </select>
           </label>
           <label>
             Parent ID
@@ -68,19 +89,82 @@ export default function CommitteeForm({ initialValues, busy, onCancel, onSubmit 
         <div className="ndm-form-grid">
           <label>
             Division
-            <input className="ndm-input" value={form.division_name} onChange={(event) => updateField('division_name', event.target.value)} />
+            <select
+              className="ndm-input"
+              value={form.division_id || ''}
+              onChange={(event) => {
+                const value = event.target.value;
+                setForm((current) => ({
+                  ...current,
+                  division_id: value,
+                  district_id: '',
+                  upazila_id: '',
+                  union_id: '',
+                }));
+              }}
+            >
+              <option value="">Select Division</option>
+              {BD_GEO.map((division) => (
+                <option key={division.id} value={division.id}>{division.name}</option>
+              ))}
+            </select>
           </label>
           <label>
             District
-            <input className="ndm-input" value={form.district_name} onChange={(event) => updateField('district_name', event.target.value)} />
+            <select
+              className="ndm-input"
+              value={form.district_id || ''}
+              onChange={(event) => {
+                const value = event.target.value;
+                setForm((current) => ({
+                  ...current,
+                  district_id: value,
+                  upazila_id: '',
+                  union_id: '',
+                }));
+              }}
+              disabled={!form.division_id}
+            >
+              <option value="">Select District</option>
+              {districtOptions.map((district) => (
+                <option key={district.id} value={district.id}>{district.name}</option>
+              ))}
+            </select>
           </label>
           <label>
             Upazila
-            <input className="ndm-input" value={form.upazila_name} onChange={(event) => updateField('upazila_name', event.target.value)} />
+            <select
+              className="ndm-input"
+              value={form.upazila_id || ''}
+              onChange={(event) => {
+                const value = event.target.value;
+                setForm((current) => ({
+                  ...current,
+                  upazila_id: value,
+                  union_id: '',
+                }));
+              }}
+              disabled={!form.district_id}
+            >
+              <option value="">Select Upazila</option>
+              {upazilaOptions.map((upazila) => (
+                <option key={upazila.id} value={upazila.id}>{upazila.name}</option>
+              ))}
+            </select>
           </label>
           <label>
             Union
-            <input className="ndm-input" value={form.union_name} onChange={(event) => updateField('union_name', event.target.value)} />
+            <select
+              className="ndm-input"
+              value={form.union_id || ''}
+              onChange={(event) => updateField('union_id', event.target.value)}
+              disabled={!form.upazila_id}
+            >
+              <option value="">Select Union</option>
+              {unionOptions.map((union) => (
+                <option key={union.id} value={union.id}>{union.name}</option>
+              ))}
+            </select>
           </label>
           <label className="org-form__field org-form__field--wide">
             Address
