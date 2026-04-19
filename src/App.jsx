@@ -10,11 +10,13 @@ import MembershipApplicationsPage from './admin/modules/membership/applications/
 import MembershipApplicationDetailPage from './admin/modules/membership/applications/pages/MembershipApplicationDetailPage';
 import MembersPage from './admin/modules/membership/members/pages/MembersPage';
 import MemberDetailPage from './admin/modules/membership/members/pages/MemberDetailPage';
+import PromotionPage from './admin/modules/membership/members/pages/PromotionPage';
 import CommitteesPage from './admin/modules/organization/committees/pages/CommitteesPage';
 import CommitteeDetailPage from './admin/modules/organization/committees/pages/CommitteeDetailPage';
 import CommitteeFormPage from './admin/modules/organization/committees/pages/CommitteeFormPage';
 import CommitteesTreePage from './admin/modules/organization/committees/pages/CommitteesTreePage';
 import CommitteeMembersPage from './admin/modules/organization/committees/pages/CommitteeMembersPage';
+import CommitteePrintPadPage from './admin/modules/organization/committees/pages/CommitteePrintPadPage';
 import CommitteeTypesPage from './admin/modules/organization/committee-types/pages/CommitteeTypesPage';
 import CommitteeTypeDetailPage from './admin/modules/organization/committee-types/pages/CommitteeTypeDetailPage';
 import PositionsPage from './admin/modules/organization/positions/pages/PositionsPage';
@@ -168,6 +170,7 @@ export default function App() {
           <Route path="members/suspended" element={<MembersPage />} />
           <Route path="members/leadership" element={<MembersPage />} />
           <Route path="members/new" element={<MembersPage />} />
+          <Route path="members/promotions" element={<PromotionPage />} />
           <Route path="members/:id" element={<MemberDetailPage />} />
           <Route path="members/:id/edit" element={<MemberDetailPage />} />
 
@@ -181,6 +184,7 @@ export default function App() {
           <Route path="committees/:id" element={<CommitteeDetailPage />} />
           <Route path="committees/:id/edit" element={<CommitteeFormPage />} />
           <Route path="committees/:committeeId/members" element={<CommitteeMembersPage />} />
+          <Route path="committees/:committeeId/print-pad" element={<CommitteePrintPadPage />} />
           <Route path="committees/:committeeId/positions" element={<CommitteePositionsPage />} />
           <Route path="committees/:committeeId/hierarchy-tree" element={<CommitteeHierarchyTreePage />} />
           <Route path="committees-tree" element={<CommitteesTreePage />} />

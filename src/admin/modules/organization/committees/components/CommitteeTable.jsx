@@ -1,4 +1,4 @@
-import { Eye, GitBranch, Pencil, RefreshCcw, Trash2, Users } from 'lucide-react';
+import { Eye, GitBranch, Pencil, Printer, RefreshCcw, Trash2, Users } from 'lucide-react';
 import CommitteeStatusBadge from '../../shared/components/CommitteeStatusBadge';
 import CommitteeTypeBadge from '../../shared/components/CommitteeTypeBadge';
 import CommitteeLocationBlock from '../../shared/components/CommitteeLocationBlock';
@@ -8,7 +8,7 @@ function formatDate(value) {
   return value ? new Date(value).toLocaleDateString() : '—';
 }
 
-export default function CommitteeTable({ items, onView, onEdit, onStatus, onDelete, onTree, onChildren }) {
+export default function CommitteeTable({ items, onView, onEdit, onStatus, onDelete, onTree, onChildren, onPrintPad }) {
   return (
     <OrganizationTable
       columns={[
@@ -43,6 +43,7 @@ export default function CommitteeTable({ items, onView, onEdit, onStatus, onDele
               <button type="button" className="ndm-icon-btn ndm-icon-btn--warning" onClick={() => onStatus(item)} aria-label="Change committee status"><RefreshCcw size={16} /></button>
               <button type="button" className="ndm-icon-btn" onClick={() => onChildren(item.id)} aria-label="View child committees"><Users size={16} /></button>
               <button type="button" className="ndm-icon-btn" onClick={() => onTree(item.id)} aria-label="Open committee tree"><GitBranch size={16} /></button>
+              <button type="button" className="ndm-icon-btn" onClick={() => onPrintPad(item.id)} aria-label="Print official pad"><Printer size={16} /></button>
               <button type="button" className="ndm-icon-btn ndm-icon-btn--danger" onClick={() => onDelete(item)} aria-label="Delete committee"><Trash2 size={16} /></button>
             </div>
           </td>

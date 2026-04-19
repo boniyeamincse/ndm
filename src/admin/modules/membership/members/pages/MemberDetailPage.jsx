@@ -183,10 +183,10 @@ export default function MemberDetailPage() {
       />
 
       <EditMemberModal
-        member={editTarget || data}
+        member={editTarget}
         busy={busyAction === 'update'}
         onClose={() => setEditTarget(null)}
-        onSubmit={(payload) => updateProfile((editTarget || data)?.id, payload)}
+        onSubmit={(payload) => (editTarget ? updateProfile(editTarget.id, payload) : Promise.resolve(false))}
       />
     </AdminContentWrapper>
   );

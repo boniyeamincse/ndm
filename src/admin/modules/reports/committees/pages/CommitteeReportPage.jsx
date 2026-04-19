@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import ReportPageLayout from '../../shared/components/ReportPageLayout';
 import { useCommitteeReport } from '../../shared/hooks/useReports';
-import { committeeTypesService } from '../../../../organization/committee-types/services/committeeTypesService';
+import { committeeTypesService } from '../../../organization/committee-types/services/committeeTypesService';
 import { BD_GEO } from '../../../../../data/bd-geo';
 
 export default function CommitteeReportPage() {

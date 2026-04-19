@@ -33,6 +33,9 @@ function applyMockFilters(items, filters) {
   if (filters.leadership_only === true || filters.leadership_only === 'true') {
     result = result.filter((m) => m.is_leadership);
   }
+  if (filters.promoted === true || filters.promoted === 'true' || filters.promoted === '1') {
+    result = result.filter((m) => m.is_promoted);
+  }
   if (filters.search) {
     const q = filters.search.toLowerCase();
     result = result.filter(
@@ -171,6 +174,21 @@ async function updateStatus(id, body) {
   }
 }
 
+async function promote(id) {
+  try {
+    return await adminApi.request(`${BASE}/${id}/promote`, {
+      method: 'PATCH',
+    });
+  } catch {
+    const numId = Number(id);
+    const index = mockStore.findIndex((m) => m.id === numId);
+    if (index !== -1) {
+      mockStore[index] = { ...mockStore[index], is_promoted: true };
+    }
+    return { data: mockStore[index] };
+  }
+}
+
 async function summary() {
   try {
     const payload = await adminApi.request('/admin/members-summary');
@@ -194,5 +212,6 @@ export const membersService = {
   detail,
   update,
   updateStatus,
+  promote,
   summary,
 };

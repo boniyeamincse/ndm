@@ -1,9 +1,9 @@
-import { GitBranch, Users } from 'lucide-react';
+import { GitBranch, Printer, Users } from 'lucide-react';
 import CommitteeStatusBadge from '../../shared/components/CommitteeStatusBadge';
 import CommitteeTypeBadge from '../../shared/components/CommitteeTypeBadge';
 import CommitteeLocationBlock from '../../shared/components/CommitteeLocationBlock';
 
-export default function CommitteeCard({ item, onView, onTree, onChildren }) {
+export default function CommitteeCard({ item, onView, onTree, onChildren, onPrintPad }) {
   return (
     <article className="ndm-mobile-card org-mobile-card">
       <div className="ndm-mobile-card__header">
@@ -17,6 +17,7 @@ export default function CommitteeCard({ item, onView, onTree, onChildren }) {
         <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => onView(item.id)}>View</button>
         <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => onChildren(item.id)}><Users size={14} /> Members</button>
         <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => onTree(item.id)}><GitBranch size={14} /> Tree</button>
+        <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => onPrintPad(item.id)}><Printer size={14} /> Print Pad</button>
       </div>
     </article>
   );

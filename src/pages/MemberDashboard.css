@@ -70,6 +70,49 @@
   transform: translateX(2px);
 }
 
+
+.dashboard-user-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: 1rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .35rem .85rem;
+  border-radius: 100px;
+  font-size: .85rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-badge--pending { background: #fef3c7; color: #d97706; }
+.status-badge--approved { background: #f0fdf4; color: #16a34a; }
+.status-badge--rejected { background: #fef2f2; color: #dc2626; }
+
+.id-badge {
+  display: inline-flex;
+  padding: .35rem .85rem;
+  border-radius: 100px;
+  font-size: .85rem;
+  font-weight: 700;
+  background: var(--clr-bg-alt);
+  color: var(--clr-text-muted);
+  border: 1px solid var(--clr-border);
+}
+
+.dashboard-profile-note {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--clr-bg-alt);
+  border-radius: var(--radius-sm);
+  font-size: .88rem;
+  color: var(--clr-text-muted);
+}
+
 @media (max-width: 900px) {
   .dashboard-grid {
     grid-template-columns: 1fr;

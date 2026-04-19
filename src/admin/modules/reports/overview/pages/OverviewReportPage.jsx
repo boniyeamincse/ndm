@@ -7,14 +7,15 @@ export default function OverviewReportPage() {
   const [filters, setFilters] = useState({ search: '', start_date: '', end_date: '', page: 1, per_page: 20 });
   const { data, loading, error, reload } = useOverviewReport(filters);
 
+  const summary = data?.summary ?? {};
   const cards = data ? [
-    { label: 'Total Members', value: data.summary.total_members, tone: 'neutral' },
-    { label: 'Total Committees', value: data.summary.total_committees, tone: 'info' },
-    { label: 'Active Assignments', value: data.summary.active_assignments, tone: 'success' },
-    { label: 'Published Posts', value: data.summary.published_posts, tone: 'success' },
-    { label: 'Published Notices', value: data.summary.published_notices, tone: 'info' },
-    { label: 'Pending Applications', value: data.summary.pending_applications, tone: 'warning' },
-    { label: 'Pending Profile Requests', value: data.summary.pending_profile_requests, tone: 'warning' },
+    { label: 'Total Members',            value: summary.total_members            ?? 0, tone: 'neutral' },
+    { label: 'Total Committees',         value: summary.total_committees         ?? 0, tone: 'info' },
+    { label: 'Active Assignments',       value: summary.active_assignments       ?? 0, tone: 'success' },
+    { label: 'Published Posts',          value: summary.published_posts          ?? 0, tone: 'success' },
+    { label: 'Published Notices',        value: summary.published_notices        ?? 0, tone: 'info' },
+    { label: 'Pending Applications',     value: summary.pending_applications     ?? 0, tone: 'warning' },
+    { label: 'Pending Profile Requests', value: summary.pending_profile_requests ?? 0, tone: 'warning' },
   ] : [];
 
   return (

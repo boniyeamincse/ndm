@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import { Plus, Printer } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
 import AdminContentWrapper, { PageContainer, PageSection } from '../../../../components/AdminContentWrapper';
@@ -26,6 +26,7 @@ export default function CommitteeMembersPage() {
           actions={(
             <>
               <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => navigate(positionsLink)}>View Committee Positions</button>
+              <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => navigate(`/admin/committees/${committeeId}/print-pad`)}><Printer size={16} /> Print Official Pad</button>
               <button type="button" className="ndm-btn ndm-btn--primary" onClick={() => navigate(createLink)}><Plus size={16} /> Add Member To Committee</button>
             </>
           )}

@@ -3,7 +3,6 @@ import {
   FileText,
   Users,
   Building2,
-  Layers3,
   Shield,
   Briefcase,
   Network,
@@ -15,6 +14,7 @@ import {
   User,
   LogOut,
   FolderKanban,
+  Award,
 } from 'lucide-react';
 
 export const adminMenuGroups = [
@@ -57,6 +57,7 @@ export const adminMenuGroups = [
           { id: 'members-suspended', label: 'Suspended Members', path: '/admin/members/suspended' },
           { id: 'members-leadership', label: 'Leadership Members', path: '/admin/members/leadership' },
           { id: 'members-new', label: 'New Members', path: '/admin/members/new' },
+          { id: 'members-promoted', label: 'Promoted Members', path: '/admin/members/promotions' },
         ],
       },
     ],
@@ -73,13 +74,11 @@ export const adminMenuGroups = [
         permission: 'committee.view',
         children: [
           { id: 'committees-list', label: 'List of Committee', path: '/admin/committees' },
-          { id: 'committees-positions', label: 'Committee Positions', path: '/admin/committee-positions' },
           { id: 'committees-central', label: 'Central Committee', path: '/admin/committees/central' },
           { id: 'committees-division', label: 'Division Committee', path: '/admin/committees/division' },
           { id: 'committees-active', label: 'Active Committees', path: '/admin/committees/active' },
           { id: 'committees-inactive', label: 'Inactive Committees', path: '/admin/committees/inactive' },
           { id: 'committees-pending-approval', label: 'Pending Approval', path: '/admin/committees/pending-approval' },
-          { id: 'committees-hierarchy-view', label: 'Hierarchy View', path: '/admin/committees-tree' },
           { id: 'committees-tree', label: 'Committees Tree', path: '/admin/committees-tree' },
           { id: 'committee-types', label: 'Committee Types', path: '/admin/committee-types' },
         ],
@@ -87,11 +86,11 @@ export const adminMenuGroups = [
       {
         id: 'positions',
         label: 'Positions',
-        icon: Shield,
-        path: '/admin/committee-positions',
+        icon: Award,
+        path: '/admin/positions',
         permission: 'position.view',
         children: [
-          { id: 'positions-committee', label: 'Committee Positions', path: '/admin/committee-positions' },
+          { id: 'positions-by-committee', label: 'Positions by Committee', path: '/admin/committee-positions' },
           { id: 'positions-all', label: 'All Positions', path: '/admin/positions' },
           { id: 'positions-create', label: 'Create Position', path: '/admin/positions/create' },
         ],

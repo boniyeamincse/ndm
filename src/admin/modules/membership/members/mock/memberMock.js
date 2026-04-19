@@ -18,6 +18,7 @@ export const memberListMock = [
     status: 'active',
     joined_at: '2024-01-15T10:00:00Z',
     is_leadership: true,
+    is_promoted: true,
     leadership_summary: 'President',
     committee_summary: 'Central Committee',
     primary_committee_name: 'Central Committee',
@@ -271,6 +272,7 @@ export const memberListMock = [
     status: 'active',
     joined_at: '2026-04-08T14:30:00Z',
     is_leadership: false,
+    is_promoted: false,
     leadership_summary: null,
     committee_summary: "Cox's Bazar District Committee",
     primary_committee_name: "Cox's Bazar District Committee",
@@ -306,6 +308,7 @@ export const memberDetailMock = {
   joined_at: '2024-01-15T10:00:00Z',
   approved_at: '2024-01-16T14:30:00Z',
   is_leadership: true,
+  is_promoted: true,
   emergency_contact: {
     name: 'Jalal Ahmed',
     phone: '01711000000',

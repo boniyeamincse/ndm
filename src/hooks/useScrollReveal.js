@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export function useScrollReveal(selector = '.reveal') {
+export function useScrollReveal(selector = '.reveal', deps = []) {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export function useScrollReveal(selector = '.reveal') {
     );
     elements.forEach(el => observer.observe(el));
     return () => observer.disconnect();
-  }, [selector]);
+  }, [selector, ...deps]);
 
   return containerRef;
 }

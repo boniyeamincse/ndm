@@ -5,6 +5,7 @@ export const mockAdminUser = {
   avatar: '',
   organizationName: 'Student Movment - NDM',
   email: 'admin@ndm.local',
+  permissions: [],
 };
 
 export const mockNotifications = [
@@ -41,6 +42,9 @@ export function getStoredAdminUser() {
       // API returns roles[] array; normalise to a display-friendly label
       role: parsed?.role_name || (Array.isArray(parsed?.roles) ? parsed.roles[0] : null) || parsed?.role || mockAdminUser.role,
       roleKey: parsed?.roleKey || (Array.isArray(parsed?.roles) ? parsed.roles[0] : null) || parsed?.role_type || mockAdminUser.roleKey,
+      permissions: Array.isArray(parsed?.permissions)
+        ? parsed.permissions.map((item) => (typeof item === 'string' ? item : item?.name)).filter(Boolean)
+        : mockAdminUser.permissions,
     };
   } catch {
     return mockAdminUser;

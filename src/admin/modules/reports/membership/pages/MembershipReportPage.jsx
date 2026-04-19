@@ -12,7 +12,7 @@ export default function MembershipReportPage() {
     { label: 'Approved', value: data.summary.approved, tone: 'success' },
     { label: 'Rejected', value: data.summary.rejected, tone: 'danger' },
     { label: 'On Hold', value: data.summary.on_hold, tone: 'muted' },
-    { label: 'Approval Rate', value: data.summary.approval_rate, tone: 'info' },
+    { label: 'Approval Rate', value: `${data.summary.approval_ratio ?? 0}%`, tone: 'info' },
   ] : [];
   return <ReportPageLayout pageTitle="Membership Report" pageSubtitle="Monitor application status, reviewer throughput, and location trends." breadcrumbs={[{ label: 'Admin', path: '/admin/dashboard' }, { label: 'Reports' }, { label: 'Membership Report' }]} cards={cards} filters={filters} setFilters={setFilters} search={search} setSearch={setSearch} data={data} loading={loading} error={error} onReload={reload} searchPlaceholder="Search applications" tableColumns={[{ key: 'application_no', label: 'Application No' }, { key: 'applicant', label: 'Applicant' }, { key: 'contact', label: 'Contact' }, { key: 'location', label: 'Location' }, { key: 'status', label: 'Status' }, { key: 'submitted_at', label: 'Submitted At' }, { key: 'reviewed_by', label: 'Reviewed By' }, { key: 'decision_at', label: 'Approved/Rejected At' }]} />;
 }

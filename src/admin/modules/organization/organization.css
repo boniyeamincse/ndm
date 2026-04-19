@@ -431,3 +431,298 @@
     padding: 0.9rem;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   COMMITTEE OFFICIAL PRINT PAD
+   ════════════════════════════════════════════════════════════════ */
+
+/* Screen wrapper */
+.print-pad-root {
+  background: #f1f5f9;
+  min-height: 100vh;
+  padding-bottom: 2rem;
+}
+
+/* Toolbar — screen only */
+.print-pad-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.24);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.print-pad-toolbar__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* A4 page card on screen */
+.print-pad-page {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 1.5rem auto;
+  background: #fff;
+  box-shadow: 0 4px 40px rgba(15, 23, 42, 0.15);
+  border-radius: 4px;
+  padding: 14mm 16mm 12mm;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  font-family: 'Georgia', serif;
+  font-size: 12pt;
+  color: #0f172a;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.print-pad-header__band {
+  height: 6px;
+  background: linear-gradient(90deg, #0f766e, #1d4ed8 60%, #0f766e);
+  border-radius: 2px;
+  margin-bottom: 0;
+}
+
+.print-pad-header__body {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.85rem 0;
+}
+
+.print-pad-header__emblem {
+  width: 68px;
+  height: 68px;
+  border-radius: 999px;
+  border: 3px solid #0f766e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 68px;
+  background: #ecfdf5;
+}
+
+.print-pad-header__emblem-text {
+  font-weight: 900;
+  font-size: 1.15rem;
+  color: #0f766e;
+  letter-spacing: 0.04em;
+}
+
+.print-pad-header__text {
+  flex: 1;
+  text-align: center;
+}
+
+.print-pad-header__org-bn {
+  margin: 0 0 0.1rem;
+  font-size: 15pt;
+  font-weight: 700;
+  color: #0f766e;
+  letter-spacing: 0.02em;
+}
+
+.print-pad-header__org-en {
+  margin: 0 0 0.35rem;
+  font-size: 10pt;
+  color: #475569;
+}
+
+.print-pad-header__committee {
+  margin: 0;
+  font-size: 14pt;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.print-pad-header__meta {
+  margin: 0.25rem 0 0;
+  font-size: 9pt;
+  color: #475569;
+}
+
+/* ── Date / ref line ────────────────────────────────────────── */
+.print-pad-ref-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0 0.55rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 9pt;
+  color: #475569;
+}
+
+/* ── President block ────────────────────────────────────────── */
+.print-pad-president {
+  margin: 1.1rem 0;
+  padding: 0.9rem 1.2rem;
+  border: 2px solid #0f766e;
+  border-radius: 6px;
+  background: #f0fdf4;
+  text-align: center;
+}
+
+.print-pad-president__label {
+  font-size: 8.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #0f766e;
+  margin-bottom: 0.3rem;
+}
+
+.print-pad-president__name {
+  font-size: 15pt;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.print-pad-president__position {
+  font-size: 9.5pt;
+  color: #475569;
+  margin-top: 0.15rem;
+}
+
+/* ── Roster ─────────────────────────────────────────────────── */
+.print-pad-roster {
+  flex: 1;
+  margin-top: 0.75rem;
+}
+
+.print-pad-roster__title {
+  font-size: 11pt;
+  font-weight: 800;
+  color: #0f172a;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.print-pad-roster__section-label {
+  font-size: 8.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #1d4ed8;
+  margin: 0.85rem 0 0.35rem;
+}
+
+/* ── Table ──────────────────────────────────────────────────── */
+.print-pad-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+}
+
+.print-pad-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 8pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.print-pad-table td {
+  padding: 0.42rem 0.6rem;
+  border: 1px solid #e2e8f0;
+  vertical-align: top;
+}
+
+.print-pad-table__sl { width: 30px; text-align: center; color: #64748b; }
+.print-pad-table__name { font-weight: 600; color: #0f172a; }
+.print-pad-table__light { color: #475569; }
+
+.print-pad-table tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+/* ── Signatures ─────────────────────────────────────────────── */
+.print-pad-signatures {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  padding-top: 0.5rem;
+}
+
+.print-pad-sig {
+  flex: 1;
+  text-align: center;
+}
+
+.print-pad-sig__line {
+  border-top: 1.5px solid #0f172a;
+  margin: 0 1rem 0.4rem;
+}
+
+.print-pad-sig__label {
+  font-size: 8pt;
+  color: #475569;
+  font-weight: 600;
+}
+
+.print-pad-sig__name {
+  font-size: 8.5pt;
+  color: #0f172a;
+  margin-top: 0.2rem;
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.print-pad-footer {
+  margin-top: 1.25rem;
+}
+
+.print-pad-footer__band {
+  height: 5px;
+  background: linear-gradient(90deg, #0f766e, #1d4ed8 60%, #0f766e);
+  border-radius: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.print-pad-footer__text {
+  margin: 0;
+  font-size: 7.5pt;
+  color: #94a3b8;
+  text-align: center;
+}
+
+/* ════════════════ PRINT MEDIA ════════════════ */
+@media print {
+  .no-print { display: none !important; }
+
+  body { margin: 0; background: #fff; }
+
+  .print-pad-root { background: none; padding: 0; }
+
+  .print-pad-page {
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 10mm 14mm 10mm;
+    box-shadow: none;
+    border-radius: 0;
+    page-break-inside: avoid;
+  }
+
+  .print-pad-table { page-break-inside: auto; }
+  .print-pad-table tr { page-break-inside: avoid; }
+
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+}

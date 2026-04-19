@@ -290,6 +290,7 @@ export default function CommitteesPage() {
                   onDelete={(item) => run(item.deleted_at ? 'restore' : 'delete', item.id)}
                   onTree={(id) => navigate(`/admin/committees/${id}/hierarchy-tree`)}
                   onChildren={(id) => navigate(`/admin/committees/${id}/members`)}
+                  onPrintPad={(id) => navigate(`/admin/committees/${id}/print-pad`)}
                 />
               </div>
               <div className="ndm-mobile-only ndm-mobile-list">
@@ -300,6 +301,7 @@ export default function CommitteesPage() {
                     onView={(id) => navigate(`/admin/committees/${id}`)}
                     onTree={(id) => navigate(`/admin/committees/${id}/hierarchy-tree`)}
                     onChildren={(id) => navigate(`/admin/committees/${id}/members`)}
+                    onPrintPad={(id) => navigate(`/admin/committees/${id}/print-pad`)}
                   />
                 ))}
               </div>
