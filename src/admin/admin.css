@@ -650,6 +650,22 @@
   gap: 1rem;
 }
 
+.ndm-permissions-item__meta {
+  flex: 0 0 auto;
+  display: grid;
+  justify-items: end;
+  gap: 0.35rem;
+}
+
+.ndm-permissions-item__roles {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+
 .ndm-permissions-item__main {
   min-width: 0;
   display: grid;
@@ -716,6 +732,103 @@
 .ndm-permissions-empty {
   margin: 0;
   color: #64748b;
+}
+
+.ndm-permissions-role-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.ndm-permissions-role-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.ndm-permissions-role-chip {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.ndm-permissions-role-chip:hover {
+  border-color: #0f766e;
+  background: #f0fdf4;
+}
+
+.ndm-permissions-role-chip--system {
+  color: #7c2d12;
+  background: #fff7ed;
+  border-color: #fdba74;
+}
+
+.ndm-permissions-modal__subtitle {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+}
+
+.ndm-permissions-assign-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.ndm-permissions-assign-list {
+  display: grid;
+  gap: 0.75rem;
+  max-height: 50vh;
+  overflow: auto;
+}
+
+.ndm-permissions-assign-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+  padding: 0.9rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.ndm-permissions-assign-row--active {
+  border-color: #0f766e;
+  background: #f0fdf4;
+}
+
+.ndm-permissions-assign-row__check {
+  padding-top: 0.15rem;
+}
+
+.ndm-permissions-assign-row__content {
+  min-width: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.ndm-permissions-assign-row__title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.ndm-permissions-assign-row__meta {
+  color: #64748b;
+  font-size: 0.88rem;
+  word-break: break-word;
 }
 
 @media (max-width: 980px) {

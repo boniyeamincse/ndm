@@ -3,7 +3,8 @@ import { committeeTypesService } from '../../committee-types/services/committeeT
 
 const EMPTY = {
   name: '',
-  code: '',
+  name_bn: '',
+  code: ''
   short_name: '',
   hierarchy_rank: '',
   display_order: '',
@@ -74,7 +75,8 @@ export default function PositionForm({ initialValues, busy, onCancel, onSubmit }
     }}>
       <section className="org-form__section">
         <div className="ndm-form-grid">
-          <label className="org-form__field"><span>Name</span><input className="ndm-input" value={form.name} onChange={(event) => updateField('name', event.target.value)} required /></label>
+          <label className="org-form__field"><span>Name (English)</span><input className="ndm-input" value={form.name} onChange={(event) => updateField('name', event.target.value)} required /></label>
+          <label className="org-form__field"><span>Name (Bengali / বাংলা)</span><input className="ndm-input" lang="bn" dir="ltr" placeholder="বাংলা নাম" value={form.name_bn} onChange={(event) => updateField('name_bn', event.target.value)} /></label>
           <label className="org-form__field"><span>Code</span><input className="ndm-input" value={form.code} onChange={(event) => updateField('code', event.target.value)} /></label>
           <label className="org-form__field"><span>Short Name</span><input className="ndm-input" value={form.short_name} onChange={(event) => updateField('short_name', event.target.value)} /></label>
           <label className="org-form__field"><span>Hierarchy Rank</span><input type="number" className="ndm-input" value={form.hierarchy_rank} onChange={(event) => updateField('hierarchy_rank', event.target.value)} /></label>

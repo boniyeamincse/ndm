@@ -36,6 +36,7 @@ export default function PositionDetailPage() {
                 {data.is_active ? <span className="org-pill org-pill--green">Active</span> : <span className="org-pill org-pill--slate">Inactive</span>}
               </div>
               <InfoGrid items={[
+                { label: 'Bengali Name', value: data.name_bn },
                 { label: 'Short Name', value: data.short_name },
                 { label: 'Hierarchy Rank', value: data.hierarchy_rank },
                 { label: 'Display Order', value: data.display_order },

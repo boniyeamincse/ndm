@@ -38,6 +38,12 @@
   color: #0f172a;
 }
 
+.org-position-name-bn {
+  font-size: 0.82rem;
+  color: #475569;
+  font-weight: 500;
+}
+
 .org-position-code {
   font-size: 0.76rem;
   color: #64748b;

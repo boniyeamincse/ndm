@@ -122,6 +122,7 @@ export default function PositionsPage() {
                     <td>
                       <div className="org-position-name-cell">
                         <div className="org-position-name">{item.name}</div>
+                        {item.name_bn ? <div className="org-position-name-bn">{item.name_bn}</div> : null}
                         <div className="org-position-code">{item.code || 'No code'}</div>
                       </div>
                     </td>
