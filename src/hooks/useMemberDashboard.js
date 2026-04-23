@@ -75,7 +75,9 @@ export function useMemberDashboard() {
           full_name: profileMember.full_name || profileUser.name || localUser.full_name,
           member_no: profileMember.member_no || localUser.member_no,
           membership_status: profileMember.status || localUser.membership_status || 'pending',
-          photo_url: profileMember.photo_url || localUser.photo_url || null,
+          photo_url: profileUser.profile_photo_url || profileMember.photo_url || localUser.photo_url || null,
+          profile_photo_url: profileUser.profile_photo_url || localUser.profile_photo_url || null,
+          profile_photo_data_url: profileUser.profile_photo_data_url || localUser.profile_photo_data_url || null,
         };
         setUser(mergedUser);
         localStorage.setItem('ndm_user', JSON.stringify(mergedUser));

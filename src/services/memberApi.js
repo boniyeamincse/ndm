@@ -91,6 +91,15 @@ export const memberApi = {
   },
   getCommitteeAssignments: (params = {}) => request(withQuery('/me/committee-assignments', params)),
   getMemberNotices: (params = {}) => request(withQuery('/member/notices', params)),
+  uploadMyProfilePhoto: async (file) => {
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    return request('/me/profile/photo', {
+      method: 'POST',
+      body: formData,
+    });
+  },
   getDashboard: () => request('/dashboard/member'),
   logout: () => request('/auth/logout', { method: 'POST' }),
 };

@@ -32,14 +32,21 @@ export default function MemberProfile() {
   const handlePhotoSelect = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
       setPhotoError(lang === 'en' ? 'Only JPG, PNG, or WebP images are allowed.' : 'শুধুমাত্র JPG, PNG বা WebP ছবি গ্রহণযোগ্য।');
       return;
     }
+
     if (file.size > 2 * 1024 * 1024) {
       setPhotoError(lang === 'en' ? 'Image must be smaller than 2 MB.' : 'ছবির আকার ২ MB-এর বেশি হওয়া যাবে না।');
       return;
     }
+
+    if (photoPreview) {
+      URL.revokeObjectURL(photoPreview);
+    }
+
     setPhotoError('');
     setPhotoSuccess('');
     setPhotoFile(file);
@@ -51,28 +58,38 @@ export default function MemberProfile() {
     setPhotoUploading(true);
     setPhotoError('');
     setPhotoSuccess('');
+
     try {
-      const formData = new FormData();
-      formData.append('photo', photoFile);
-      const res = await fetch('/api/v1/me/profile/photo', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('ndm_token')}`,
-        },
-        body: formData,
-      });
-      const json = await res.json().catch(() => ({}));
-      if (res.ok) {
-        const newPhotoUrl = json.data?.photo_url || json.data?.photo || photoPreview;
-        setMember(prev => prev ? { ...prev, photo: newPhotoUrl } : prev);
-        setPhotoSuccess(lang === 'en' ? 'Profile photo updated!' : 'প্রোফাইল ফটো আপডেট হয়েছে!');
-        setPhotoFile(null);
-      } else {
-        setPhotoError(json.message || (lang === 'en' ? 'Upload failed. Please try again.' : 'আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।'));
+      const json = await memberApi.uploadMyProfilePhoto(photoFile);
+      const freshPhotoUrl = json?.data?.photo_url;
+
+      if (!freshPhotoUrl) {
+        throw new Error(lang === 'en' ? 'Upload completed but no photo URL was returned.' : 'আপলোড সম্পন্ন হয়েছে, কিন্তু ছবির লিংক পাওয়া যায়নি।');
       }
-    } catch {
-      setPhotoError(lang === 'en' ? 'Network error. Please try again.' : 'নেটওয়ার্ক ত্রুটি। আবার চেষ্টা করুন।');
+
+      const bustUrl = `${freshPhotoUrl}${freshPhotoUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
+
+      setMember(prev => (prev ? { ...prev, photo_url: bustUrl } : prev));
+      setUser(prev => {
+        const nextUser = {
+          ...prev,
+          profile_photo_url: bustUrl,
+          photo_url: bustUrl,
+        };
+        localStorage.setItem('ndm_user', JSON.stringify(nextUser));
+        window.dispatchEvent(new Event('auth-changed'));
+        return nextUser;
+      });
+
+      if (photoPreview) {
+        URL.revokeObjectURL(photoPreview);
+      }
+
+      setPhotoPreview(null);
+      setPhotoFile(null);
+      setPhotoSuccess(lang === 'en' ? 'Profile photo updated!' : 'প্রোফাইল ফটো আপডেট হয়েছে!');
+    } catch (err) {
+      setPhotoError(err?.message || (lang === 'en' ? 'Upload failed. Please try again.' : 'আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।'));
     } finally {
       setPhotoUploading(false);
     }
@@ -83,6 +100,14 @@ export default function MemberProfile() {
     const file = e.dataTransfer.files?.[0];
     if (file) handlePhotoSelect({ target: { files: [file] } });
   };
+
+  useEffect(() => {
+    return () => {
+      if (photoPreview) {
+        URL.revokeObjectURL(photoPreview);
+      }
+    };
+  }, [photoPreview]);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -179,6 +204,8 @@ export default function MemberProfile() {
     return lang === 'bn' ? member[`${field}_name_bn`] : member[`${field}_name_en`];
   };
 
+  const currentPhoto = photoPreview || member?.photo_url || user?.profile_photo_url || user?.profile_photo_data_url || null;
+
   const handleIdCardDownload = async () => {
     setIdCardBusy(true);
     setIdCardError('');
@@ -235,9 +262,9 @@ export default function MemberProfile() {
                 onClick={() => photoInputRef.current?.click()}
                 title={lang === 'en' ? 'Click or drag to change photo' : 'ফটো পরিবর্তন করতে ক্লিক বা ড্র্যাগ করুন'}
               >
-                {photoPreview || member?.photo ? (
+                {currentPhoto ? (
                   <img
-                    src={photoPreview || member.photo}
+                    src={currentPhoto}
                     alt="Profile"
                     className="profile-photo-img"
                   />
