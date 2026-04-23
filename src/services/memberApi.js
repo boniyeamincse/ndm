@@ -129,6 +129,14 @@ export const memberApi = {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   }),
+  sendMessageToAllMembers: (data) => request('/member/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      ...data,
+      send_to_all: true,
+    }),
+  }),
   getAnnouncements: () => request('/member/announcements'),
   getDiscussions: () => request('/member/discussions'),
   createDiscussion: (data) => request('/member/discussions', {

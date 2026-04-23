@@ -29,6 +29,12 @@ export default function MemberCommunicationPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Compose / send message state
+  const [showMessageCompose, setShowMessageCompose] = useState(false);
+  const [messageForm, setMessageForm] = useState({ subject: '', body: '' });
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [messageStatus, setMessageStatus] = useState('');
+
   // Compose / new discussion state
   const [showCompose, setShowCompose] = useState(false);
   const [form, setForm] = useState({ title: '', body: '' });
@@ -81,30 +87,97 @@ export default function MemberCommunicationPage() {
 
   const rows = Array.isArray(data[tab]) ? data[tab] : [];
 
+  const handleMessageSubmit = async (e) => {
+    e.preventDefault();
+    if (!messageForm.body.trim()) return;
+
+    setSendingMessage(true);
+    setMessageStatus('');
+
+    try {
+      const res = await memberApi.sendMessageToAllMembers({
+        subject: messageForm.subject?.trim() || null,
+        body: messageForm.body.trim(),
+      });
+
+      const sentCount = res?.data?.sent_count || 0;
+      setMessageStatus(`SMS sent to ${sentCount} members.`);
+      setMessageForm({ subject: '', body: '' });
+      setShowMessageCompose(false);
+      setData(prev => ({ ...prev, messages: null }));
+    } catch (e2) {
+      setMessageStatus(e2?.message || 'Failed to send message.');
+    } finally {
+      setSendingMessage(false);
+    }
+  };
+
   const renderMessages = () => {
-    if (!rows.length) return (
-      <div className="member-empty">
-        <MessageCircleMore size={28} style={{ marginBottom: '.45rem' }} />
-        <p>No messages yet.</p>
-      </div>
-    );
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
-        {rows.map(msg => (
-          <article key={msg.id} className="member-card" style={{ display: 'flex', flexDirection: 'column', gap: '.3rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '.5rem' }}>
-              <p className="member-card__title" style={{ marginBottom: 0 }}>{msg.subject || '(No subject)'}</p>
-              {!msg.is_read && <span style={{ background: '#1d4ed8', color: '#fff', borderRadius: 999, padding: '1px 8px', fontSize: '.72rem', fontWeight: 700 }}>Unread</span>}
+      <>
+        {showMessageCompose && (
+          <form onSubmit={handleMessageSubmit} style={{ background: '#f8fafc', border: '1px solid var(--clr-border)', borderRadius: 10, padding: '1rem', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
+            <p className="member-card__meta" style={{ margin: 0, color: '#0f172a' }}>
+              Broadcast this SMS to all member accounts.
+            </p>
+            <input
+              className="form-input"
+              placeholder="Subject (optional)"
+              value={messageForm.subject}
+              onChange={e => setMessageForm(p => ({ ...p, subject: e.target.value }))}
+              maxLength={255}
+              style={{ padding: '.5rem .75rem', border: '1px solid var(--clr-border)', borderRadius: 8, fontSize: '.92rem' }}
+            />
+            <textarea
+              className="form-input"
+              placeholder="Write your SMS/message..."
+              value={messageForm.body}
+              onChange={e => setMessageForm(p => ({ ...p, body: e.target.value }))}
+              required
+              maxLength={5000}
+              rows={4}
+              style={{ padding: '.5rem .75rem', border: '1px solid var(--clr-border)', borderRadius: 8, fontSize: '.92rem', resize: 'vertical' }}
+            />
+            {messageStatus && (
+              <p style={{ fontSize: '.85rem', color: messageStatus.startsWith('SMS sent') ? '#15803d' : '#dc2626' }}>
+                {messageStatus}
+              </p>
+            )}
+            <div style={{ display: 'flex', gap: '.5rem' }}>
+              <button type="submit" className="btn btn-primary btn-sm" disabled={sendingMessage}>
+                <Send size={13} /> {sendingMessage ? 'Sending…' : 'Send SMS to All'}
+              </button>
+              <button type="button" className="btn btn-outline btn-sm" onClick={() => setShowMessageCompose(false)}>
+                Cancel
+              </button>
             </div>
-            <p className="member-card__meta" style={{ margin: 0 }}>
-              From: {msg.sender?.name || 'Admin'} · {fmt(msg.created_at)}
-            </p>
-            <p style={{ fontSize: '.9rem', color: '#475569', marginTop: '.2rem', lineClamp: 2, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-              {msg.body}
-            </p>
-          </article>
-        ))}
-      </div>
+          </form>
+        )}
+
+        {!rows.length ? (
+          <div className="member-empty">
+            <MessageCircleMore size={28} style={{ marginBottom: '.45rem' }} />
+            <p>No messages yet.</p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
+            {rows.map(msg => (
+              <article key={msg.id} className="member-card" style={{ display: 'flex', flexDirection: 'column', gap: '.3rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '.5rem' }}>
+                  <p className="member-card__title" style={{ marginBottom: 0 }}>{msg.subject || '(No subject)'}</p>
+                  {!msg.is_read && <span style={{ background: '#1d4ed8', color: '#fff', borderRadius: 999, padding: '1px 8px', fontSize: '.72rem', fontWeight: 700 }}>Unread</span>}
+                </div>
+                <p className="member-card__meta" style={{ margin: 0 }}>
+                  From: {msg.sender?.name || 'Admin'} · {fmt(msg.created_at)}
+                </p>
+                <p style={{ fontSize: '.9rem', color: '#475569', marginTop: '.2rem', lineClamp: 2, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                  {msg.body}
+                </p>
+              </article>
+            ))}
+          </div>
+        )}
+      </>
     );
   };
 
@@ -191,6 +264,11 @@ export default function MemberCommunicationPage() {
           <p>Inbox, announcements, and member discussions.</p>
         </div>
         <div style={{ display: 'flex', gap: '.5rem' }}>
+          {tab === 'messages' && (
+            <button type="button" className="btn btn-primary btn-sm" onClick={() => setShowMessageCompose(v => !v)}>
+              <Send size={14} /> SMS All Members
+            </button>
+          )}
           {tab === 'discussions' && (
             <button type="button" className="btn btn-primary btn-sm" onClick={() => setShowCompose(v => !v)}>
               <MessagesSquare size={14} /> New Discussion
