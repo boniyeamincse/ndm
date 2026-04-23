@@ -91,6 +91,51 @@ export const memberApi = {
   },
   getCommitteeAssignments: (params = {}) => request(withQuery('/me/committee-assignments', params)),
   getMemberNotices: (params = {}) => request(withQuery('/member/notices', params)),
+
+  // ── Committee Workspace ─────────────────────────────────────────────────
+  getMyCommittee: () => request('/member/committee'),
+  getCommitteeMembers: () => request('/member/committee/members'),
+  getCommitteeActivities: () => request('/member/committee/activities'),
+  applyForCommittee: (data) => request('/member/committee/apply', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }),
+
+  // ── Events ──────────────────────────────────────────────────────────────
+  getUpcomingEvents: () => request('/member/events/upcoming'),
+  getRegisteredEvents: () => request('/member/events/registered'),
+  getEventHistory: () => request('/member/events/history'),
+  joinEvent: (id) => request(`/member/events/${id}/join`, { method: 'POST' }),
+
+  // ── Applications ────────────────────────────────────────────────────────
+  getApplications: () => request('/member/applications'),
+  getMembershipStatus: () => request('/member/applications/membership-status'),
+  applyForEvent: (data) => request('/member/applications/event', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }),
+  requestCertificate: (data) => request('/member/applications/certificate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }),
+
+  // ── Communication ────────────────────────────────────────────────────────
+  getMessages: () => request('/member/messages'),
+  sendMessage: (data) => request('/member/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }),
+  getAnnouncements: () => request('/member/announcements'),
+  getDiscussions: () => request('/member/discussions'),
+  createDiscussion: (data) => request('/member/discussions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }),
   uploadMyProfilePhoto: async (file) => {
     const formData = new FormData();
     formData.append('photo', file);
