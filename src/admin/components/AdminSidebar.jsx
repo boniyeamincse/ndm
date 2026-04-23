@@ -11,6 +11,7 @@ export default function AdminSidebar({
   isMobile,
   isOpen,
   organizationName,
+  organizationLogo,
   openSubmenus,
   onToggleSubmenu,
   onToggleSidebar,
@@ -35,7 +36,7 @@ export default function AdminSidebar({
   return (
     <aside className={className} aria-label="Admin navigation">
       <div className="adm-sidebar__header">
-        <SidebarLogo collapsed={collapsed && !isMobile} organizationName={organizationName} />
+        <SidebarLogo collapsed={collapsed && !isMobile} organizationName={organizationName} logoUrl={organizationLogo} />
         {isMobile ? (
           <button type="button" className="adm-icon-button" onClick={onCloseMobile} aria-label="Close navigation drawer">
             <X size={18} />

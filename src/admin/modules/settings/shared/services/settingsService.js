@@ -1,4 +1,3 @@
-import { adminApi } from '../../../../services/adminApi';
 import {
   emailSettingsMock,
   generalSettingsMock,
@@ -8,6 +7,7 @@ import {
 } from '../mock/settingsMock';
 
 const STORAGE_PREFIX = 'ndm_admin_settings';
+export const SETTINGS_UPDATED_EVENT = 'ndm:settings-updated';
 
 const localStore = {
   general: { ...generalSettingsMock },
@@ -44,7 +44,20 @@ function writeLocal(section, data) {
     window.localStorage.setItem(getStorageKey(section), JSON.stringify(localStore[section]));
   } catch {}
 
+  try {
+    window.dispatchEvent(new CustomEvent(SETTINGS_UPDATED_EVENT, {
+      detail: {
+        section,
+        data: { ...localStore[section] },
+      },
+    }));
+  } catch {}
+
   return { ...localStore[section] };
+}
+
+export function getSettingsSnapshot(section) {
+  return readLocal(section);
 }
 
 async function get(section) {

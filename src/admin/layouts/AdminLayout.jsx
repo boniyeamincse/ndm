@@ -6,6 +6,7 @@ import AdminFooter from '../components/AdminFooter';
 import SidebarOverlay from '../components/SidebarOverlay';
 import { filterMenuGroups, getMenuState, adminMenuGroups } from '../config/menuConfig';
 import { getStoredAdminUser } from '../mock/layoutMock';
+import { SETTINGS_UPDATED_EVENT, getSettingsSnapshot } from '../modules/settings/shared/services/settingsService';
 
 const MOBILE_BREAKPOINT = 1024;
 
@@ -17,9 +18,13 @@ export default function AdminLayout({ children }) {
     return localStorage.getItem('ndm_admin_sidebar_collapsed') === 'true';
   });
   const [openSubmenus, setOpenSubmenus] = useState([]);
+  const [organizationSettings, setOrganizationSettings] = useState(() => getSettingsSnapshot('organization'));
 
   const user = useMemo(() => getStoredAdminUser(), []);
   const visibleGroups = useMemo(() => filterMenuGroups(adminMenuGroups, user), [user]);
+  const organizationName = organizationSettings?.short_name || organizationSettings?.organization_name || user.organizationName;
+  const brandingLogo = organizationSettings?.logo_url || '/images/logo/logo.jpeg';
+  const brandingFavicon = organizationSettings?.favicon_url || brandingLogo || '/favicon.svg';
 
   useEffect(() => {
     function handleResize() {
@@ -46,6 +51,41 @@ export default function AdminLayout({ children }) {
       setSidebarOpen(false);
     }
   }, [visibleGroups, pathname, isMobile]);
+
+  useEffect(() => {
+    function handleSettingsUpdated(event) {
+      if (event?.detail?.section === 'organization') {
+        setOrganizationSettings(event.detail.data || getSettingsSnapshot('organization'));
+      }
+    }
+
+    function handleStorage(event) {
+      if (event.key === 'ndm_admin_settings:organization') {
+        setOrganizationSettings(getSettingsSnapshot('organization'));
+      }
+    }
+
+    window.addEventListener(SETTINGS_UPDATED_EVENT, handleSettingsUpdated);
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      window.removeEventListener(SETTINGS_UPDATED_EVENT, handleSettingsUpdated);
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!brandingFavicon) return;
+
+    let iconLink = document.querySelector("link[rel='icon']");
+    if (!iconLink) {
+      iconLink = document.createElement('link');
+      iconLink.setAttribute('rel', 'icon');
+      document.head.appendChild(iconLink);
+    }
+
+    iconLink.setAttribute('href', brandingFavicon);
+  }, [brandingFavicon]);
 
   function handleToggleSidebar() {
     if (isMobile) {
@@ -77,7 +117,8 @@ export default function AdminLayout({ children }) {
         collapsed={!isMobile && sidebarCollapsed}
         isMobile={isMobile}
         isOpen={sidebarOpen}
-        organizationName={user.organizationName}
+        organizationName={organizationName}
+        organizationLogo={brandingLogo}
         openSubmenus={openSubmenus}
         onToggleSubmenu={handleToggleSubmenu}
         onToggleSidebar={handleToggleSidebar}
