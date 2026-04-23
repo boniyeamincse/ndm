@@ -42,6 +42,7 @@ import OverviewReportPage from './admin/modules/reports/overview/pages/OverviewR
 import MembershipReportPage from './admin/modules/reports/membership/pages/MembershipReportPage';
 import CommitteeReportPage from './admin/modules/reports/committees/pages/CommitteeReportPage';
 import DistrictwiseCommitteeReportPage from './admin/modules/reports/committees/pages/DistrictwiseCommitteeReportPage';
+import DivisionwiseCommitteeReportPage from './admin/modules/reports/committees/pages/DivisionwiseCommitteeReportPage';
 import AssignmentReportPage from './admin/modules/reports/assignments/pages/AssignmentReportPage';
 import ContentReportPage from './admin/modules/reports/content/pages/ContentReportPage';
 import NoticeReportPage from './admin/modules/reports/notices/pages/NoticeReportPage';
@@ -225,6 +226,7 @@ export default function App() {
           <Route path="reports/membership" element={<MembershipReportPage />} />
           <Route path="reports/committees" element={<CommitteeReportPage />} />
           <Route path="reports/committees-districtwise" element={<DistrictwiseCommitteeReportPage />} />
+          <Route path="reports/committees-divisionwise" element={<DivisionwiseCommitteeReportPage />} />
           <Route path="reports/assignments" element={<AssignmentReportPage />} />
           <Route path="reports/content" element={<ContentReportPage />} />
           <Route path="reports/notices" element={<NoticeReportPage />} />
