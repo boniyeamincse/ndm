@@ -53,10 +53,12 @@ export default function ProfileUpdateRequestsPage() {
           >
             <select className="ndm-input" value={filters.request_type} onChange={(event) => setFilters((current) => ({ ...current, request_type: event.target.value, page: 1 }))}>
               <option value="">All Request Types</option>
-              <option value="profile_correction">Profile Correction</option>
-              <option value="identity_update">Identity Update</option>
-              <option value="committee_affiliation">Committee Affiliation</option>
-              <option value="contact_update">Contact Update</option>
+              <option value="profile_update">Profile Update</option>
+              <option value="email_change">Email Change</option>
+              <option value="mobile_change">Mobile Change</option>
+              <option value="sensitive_info_change">Sensitive Info Change</option>
+              <option value="photo_change">Photo Change</option>
+              <option value="other">Other</option>
             </select>
             <select className="ndm-input" value={filters.status} onChange={(event) => setFilters((current) => ({ ...current, status: event.target.value, page: 1 }))}>
               <option value="">All Status</option>

@@ -54,7 +54,7 @@ export default function MemberProfile() {
     setError('');
 
     try {
-      const res = await fetch('/api/v1/profile-update-requests', {
+      const res = await fetch('/api/v1/me/profile-update-requests', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,8 +62,11 @@ export default function MemberProfile() {
           'Authorization': `Bearer ${localStorage.getItem('ndm_token')}`
         },
         body: JSON.stringify({
-          requested_changes: updateForm.changes,
-          reason: updateForm.reason
+          request_type: 'other',
+          requested_changes: {
+            details: updateForm.changes
+          },
+          submitted_note: updateForm.reason
         })
       });
 
