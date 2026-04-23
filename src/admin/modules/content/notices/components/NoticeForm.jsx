@@ -52,7 +52,7 @@ export default function NoticeForm({ initialValues, busy, onCancel, onSubmit }) 
     onSubmit({
       ...form,
       slug: slugPreview,
-      attachments: [...(form.attachments || []), ...queuedFiles],
+      attachments: [...queuedFiles],
       status: intent === 'publish' ? 'published' : intent === 'review' ? 'pending_review' : form.status,
     });
   }
@@ -91,11 +91,15 @@ export default function NoticeForm({ initialValues, busy, onCancel, onSubmit }) 
           <label className="cnt-form__field">
             Notice Type
             <select className="ndm-input" value={form.notice_type} onChange={(event) => updateField('notice_type', event.target.value)}>
+              <option value="general">General</option>
+              <option value="urgent">Urgent</option>
+              <option value="meeting">Meeting</option>
               <option value="circular">Circular</option>
-              <option value="advisory">Advisory</option>
-              <option value="deadline">Deadline</option>
               <option value="event">Event</option>
-              <option value="announcement">Announcement</option>
+              <option value="election">Election</option>
+              <option value="directive">Directive</option>
+              <option value="emergency">Emergency</option>
+              <option value="other">Other</option>
             </select>
           </label>
           <label className="cnt-form__field">
@@ -105,7 +109,6 @@ export default function NoticeForm({ initialValues, busy, onCancel, onSubmit }) 
               <option value="normal">Normal</option>
               <option value="high">High</option>
               <option value="urgent">Urgent</option>
-              <option value="critical">Critical</option>
             </select>
           </label>
           <label className="ndm-checkbox-row">

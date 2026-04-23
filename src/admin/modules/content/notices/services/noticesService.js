@@ -6,16 +6,88 @@ const BASE = '/admin/notices';
 const SUMMARY = '/admin/notices-summary';
 let noticesStore = [...noticesMock];
 
+function getToken() {
+  return localStorage.getItem('ndm_token');
+}
+
+async function requestFormData(path, method, formData) {
+  const token = getToken();
+  const response = await fetch(`/api/v1${path}`, {
+    method,
+    headers: {
+      Accept: 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  });
+
+  const payload = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const error = new Error(payload.message || `Request failed (${response.status})`);
+    error.status = response.status;
+    error.payload = payload;
+    throw error;
+  }
+
+  return payload;
+}
+
+function appendFormValue(formData, key, value) {
+  if (value === undefined || value === null || value === '') return;
+
+  if (Array.isArray(value)) {
+    value.forEach((entry, index) => {
+      if (entry === undefined || entry === null) return;
+
+      if (entry instanceof File) {
+        formData.append(`${key}[]`, entry);
+      } else if (typeof entry === 'object') {
+        Object.entries(entry).forEach(([nestedKey, nestedValue]) => {
+          appendFormValue(formData, `${key}[${index}][${nestedKey}]`, nestedValue);
+        });
+      } else {
+        formData.append(`${key}[]`, String(entry));
+      }
+    });
+    return;
+  }
+
+  if (value instanceof File) {
+    formData.append(key, value);
+    return;
+  }
+
+  if (typeof value === 'boolean') {
+    formData.append(key, value ? '1' : '0');
+    return;
+  }
+
+  formData.append(key, String(value));
+}
+
 function nextId() {
   return noticesStore.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
 }
 
 function mapNotice(item) {
+  const timeline = Array.isArray(item.status_history)
+    ? item.status_history
+    : Array.isArray(item.status_history_timeline)
+      ? item.status_history_timeline.map((entry) => ({
+          id: entry.id,
+          title: `Status: ${entry.old_status || 'none'} -> ${entry.new_status || 'unknown'}`,
+          description: entry.note || entry.changed_by?.name || '',
+          at: entry.created_at,
+        }))
+      : [];
+
   return {
     ...item,
     committee_name: item.committee?.name || item.committee_name || '—',
     author_name: item.author?.name || item.author_name || '—',
     approver_name: item.approver?.name || item.approver_name || '—',
+    status_history: timeline,
   };
 }
 
@@ -89,7 +161,15 @@ async function detail(id) {
 async function summary() {
   try {
     const payload = await adminApi.request(SUMMARY);
-    return payload?.data || buildSummary();
+    const data = payload?.data || {};
+    return {
+      total: data.total || data.total_notices || 0,
+      draft: data.draft || data.total_drafts || 0,
+      published: data.published || data.total_published || 0,
+      pinned: data.pinned || data.total_pinned || 0,
+      expired: data.expired || data.total_expired || 0,
+      urgent: data.urgent || data.by_priority?.urgent || 0,
+    };
   } catch {
     return buildSummary();
   }
@@ -99,7 +179,12 @@ async function save(id, data) {
   const path = id ? `${BASE}/${id}` : BASE;
   const method = id ? 'PUT' : 'POST';
   try {
-    const payload = await adminApi.request(path, { method, body: JSON.stringify(data) });
+    const formData = new FormData();
+    Object.entries(data || {}).forEach(([key, value]) => {
+      appendFormValue(formData, key, value);
+    });
+
+    const payload = await requestFormData(path, method, formData);
     return mapNotice(extractEntity(payload));
   } catch {
     if (id) {
@@ -153,7 +238,14 @@ async function pin(id, is_pinned) {
 
 async function uploadAttachment(id, files = []) {
   try {
-    await adminApi.request(`${BASE}/${id}/attachments`, { method: 'POST', body: JSON.stringify({ files }) });
+    const formData = new FormData();
+    (files || []).forEach((file) => {
+      if (file instanceof File) {
+        formData.append('attachments[]', file);
+      }
+    });
+
+    await requestFormData(`${BASE}/${id}/attachments`, 'POST', formData);
   } catch {
     noticesStore = noticesStore.map((item) => {
       if (String(item.id) !== String(id)) return item;
