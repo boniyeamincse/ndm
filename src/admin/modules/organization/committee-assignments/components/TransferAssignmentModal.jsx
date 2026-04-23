@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 const EMPTY = {
   target_committee_id: '',
   target_position_id: '',
-  transfer_mode: 'replace',
+  transfer_mode: 'move',
   effective_date: '',
   note: '',
   keep_old_assignment_active: false,
@@ -28,7 +28,7 @@ export default function TransferAssignmentModal({ assignment, busy, onClose, onS
         <div className="ndm-form-grid">
           <label>Target Committee ID<input className="ndm-input" value={form.target_committee_id} onChange={(event) => updateField('target_committee_id', event.target.value)} /></label>
           <label>Target Position ID<input className="ndm-input" value={form.target_position_id} onChange={(event) => updateField('target_position_id', event.target.value)} /></label>
-          <label>Transfer Mode<select className="ndm-input" value={form.transfer_mode} onChange={(event) => updateField('transfer_mode', event.target.value)}><option value="replace">Replace</option><option value="parallel">Parallel</option><option value="temporary">Temporary</option></select></label>
+          <label>Transfer Mode<select className="ndm-input" value={form.transfer_mode} onChange={(event) => updateField('transfer_mode', event.target.value)}><option value="move">Move</option><option value="copy">Copy</option></select></label>
           <label>Effective Date<input type="date" className="ndm-input" value={form.effective_date} onChange={(event) => updateField('effective_date', event.target.value)} /></label>
           <label className="org-form__field org-form__field--wide">Note<textarea className="ndm-input" rows={4} value={form.note} onChange={(event) => updateField('note', event.target.value)} /></label>
         </div>
@@ -38,7 +38,7 @@ export default function TransferAssignmentModal({ assignment, busy, onClose, onS
         </div>
         <div className="ndm-modal__actions">
           <button type="button" className="ndm-btn ndm-btn--ghost" onClick={onClose} disabled={busy}>Cancel</button>
-          <button type="button" className="ndm-btn ndm-btn--primary" onClick={() => onSubmit(form)} disabled={busy || !form.target_committee_id || !form.target_position_id}>{busy ? 'Transferring...' : 'Confirm Transfer'}</button>
+          <button type="button" className="ndm-btn ndm-btn--primary" onClick={() => onSubmit(form)} disabled={busy || !form.target_committee_id}>{busy ? 'Transferring...' : 'Confirm Transfer'}</button>
         </div>
       </div>
     </div>

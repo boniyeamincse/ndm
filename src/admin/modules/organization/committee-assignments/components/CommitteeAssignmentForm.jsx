@@ -220,7 +220,6 @@ export default function CommitteeAssignmentForm({ initialValues, busy, onCancel,
               <option value="">Select</option>
               <option value="office_bearer">Office Bearer</option>
               <option value="general_member">General Member</option>
-              <option value="observer">Observer</option>
             </select>
           </label>
 
