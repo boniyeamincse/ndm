@@ -81,6 +81,14 @@ import ResetPassword from './pages/ResetPassword';
 import MemberDashboard from './pages/MemberDashboard';
 import ProfileSetup from './pages/ProfileSetup';
 import MemberProfile from './pages/MemberProfile';
+import MemberLayout from './member/MemberLayout';
+import MemberCommitteePage from './member/pages/MemberCommitteePage';
+import MemberApplicationsPage from './member/pages/MemberApplicationsPage';
+import MemberEventsPage from './member/pages/MemberEventsPage';
+import MemberCommunicationPage from './member/pages/MemberCommunicationPage';
+import MemberSettingsPage from './member/pages/MemberSettingsPage';
+import MemberNoticesPage from './member/pages/MemberNoticesPage';
+import MemberNoticeDetailPage from './member/pages/MemberNoticeDetailPage';
 import { useLang } from './context/LanguageContext';
 
 function ScrollToTop() {
@@ -135,22 +143,26 @@ export default function App() {
               </ProtectedRoute>
             )}
           />
-          <Route
-            path="/member/dashboard"
-            element={(
-              <ProtectedRoute>
-                <MemberDashboard />
-              </ProtectedRoute>
-            )}
-          />
-          <Route
-            path="/member/profile"
-            element={(
-              <ProtectedRoute>
-                <MemberProfile />
-              </ProtectedRoute>
-            )}
-          />
+        </Route>
+
+        {/* Member workspace routes — custom sidebar shell */}
+        <Route
+          path="/member"
+          element={(
+            <ProtectedRoute>
+              <MemberLayout />
+            </ProtectedRoute>
+          )}
+        >
+          <Route path="dashboard" element={<MemberDashboard />} />
+          <Route path="profile" element={<MemberProfile />} />
+          <Route path="committee" element={<MemberCommitteePage />} />
+          <Route path="applications" element={<MemberApplicationsPage />} />
+          <Route path="events" element={<MemberEventsPage />} />
+          <Route path="communication" element={<MemberCommunicationPage />} />
+          <Route path="settings" element={<MemberSettingsPage />} />
+          <Route path="notices" element={<MemberNoticesPage />} />
+          <Route path="notices/:slug" element={<MemberNoticeDetailPage />} />
         </Route>
 
         {/* Admin routes — no public Navbar/Footer, AdminLayout handles its own shell */}
