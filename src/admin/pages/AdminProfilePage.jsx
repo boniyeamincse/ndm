@@ -5,6 +5,8 @@ import AdminPageHeader from '../components/AdminPageHeader';
 import { adminApi } from '../services/adminApi';
 import { getStoredAdminUser } from '../mock/layoutMock';
 
+const MAX_PHOTO_SIZE_BYTES = 5 * 1024 * 1024;
+
 function getFallbackProfile() {
   const user = getStoredAdminUser();
   return {
@@ -140,6 +142,16 @@ export default function AdminProfilePage() {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Profile photo must be an image file.');
+      return;
+    }
+
+    if (file.size > MAX_PHOTO_SIZE_BYTES) {
+      setError('Profile photo must be 5MB or smaller.');
+      return;
+    }
 
     const token = localStorage.getItem('ndm_token');
     if (!token) {
