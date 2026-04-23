@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, ArrowRight, Image } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
-import { useScrollReveal } from '../hooks/useScrollReveal';
 import { publicApi } from '../services/publicApi';
 import './Activities.css';
 
@@ -103,7 +102,6 @@ export default function Activities() {
   const [campaigns, setCampaigns] = useState([]);
   const [campaignsLoading, setCampaignsLoading] = useState(true);
   const [campaignsError, setCampaignsError] = useState('');
-  useScrollReveal();
 
   useEffect(() => {
     let cancelled = false;
@@ -157,14 +155,14 @@ export default function Activities() {
       {/* Campaigns */}
       <section className="section-pad">
         <div className="container">
-          <div className="text-center reveal">
+          <div className="text-center">
             <span className="section-label">{t('act_campaigns_label')}</span>
             <h2 className="section-title">{t('act_campaigns_title')}</h2>
             <div className="divider" />
           </div>
           <div className="campaigns-grid">
             {campaignsLoading && [1, 2, 3].map((i) => (
-              <div key={i} className="campaign-card card reveal" style={{ padding: '1rem' }}>
+              <div key={i} className="campaign-card card" style={{ padding: '1rem' }}>
                 <div className="member-skeleton" style={{ height: '160px', borderRadius: '10px', marginBottom: '.8rem' }} />
                 <div className="member-skeleton" style={{ width: '40%', marginBottom: '.45rem' }} />
                 <div className="member-skeleton" style={{ width: '80%', marginBottom: '.45rem' }} />
@@ -173,7 +171,7 @@ export default function Activities() {
             ))}
 
             {!campaignsLoading && campaignsError && (
-              <div className="campaign-card card reveal" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '1.6rem' }}>
+              <div className="campaign-card card" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '1.6rem' }}>
                 <h3 style={{ marginBottom: '.55rem' }}>
                   {lang === 'en' ? 'Unable to load campaigns right now.' : 'এই মুহূর্তে ক্যাম্পেইন লোড করা যাচ্ছে না।'}
                 </h3>
@@ -182,7 +180,7 @@ export default function Activities() {
             )}
 
             {!campaignsLoading && !campaignsError && campaigns.length === 0 && (
-              <div className="campaign-card card reveal" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '1.6rem' }}>
+              <div className="campaign-card card" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '1.6rem' }}>
                 <h3 style={{ marginBottom: '.55rem' }}>
                   {lang === 'en' ? 'No active campaigns available right now.' : 'এই মুহূর্তে কোনো সক্রিয় ক্যাম্পেইন নেই।'}
                 </h3>
@@ -195,7 +193,7 @@ export default function Activities() {
             )}
 
             {!campaignsLoading && !campaignsError && campaigns.map((c) => (
-              <div className="campaign-card card reveal" key={c.slug || c.title}>
+              <div className="campaign-card card" key={c.slug || c.title}>
                 <div className="campaign-card__img">
                   {c.featured_image_url ? (
                     <img src={c.featured_image_url} alt={c.title} loading="lazy" />
@@ -221,14 +219,14 @@ export default function Activities() {
       {/* Events */}
       <section className="section-pad" style={{ background: 'var(--clr-light)' }}>
         <div className="container">
-          <div className="text-center reveal">
+          <div className="text-center">
             <span className="section-label">{t('act_events_label')}</span>
             <h2 className="section-title">{t('act_events_title')}</h2>
             <div className="divider" />
           </div>
           <div className="events-grid">
             {EVENTS.map((ev, i) => (
-              <div className="event-card card reveal" key={i}>
+              <div className="event-card card" key={i}>
                 <div className="event-card__date-badge">
                   {ev.date.split(',')[0].split(' ').slice(0, 2).join(' ')}
                 </div>
@@ -258,14 +256,14 @@ export default function Activities() {
       {/* Activity Reports */}
       <section className="section-pad">
         <div className="container">
-          <div className="text-center reveal">
+          <div className="text-center">
             <span className="section-label">{lang === 'en' ? 'Activity Reports' : 'কার্যক্রম প্রতিবেদন'}</span>
             <h2 className="section-title">{lang === 'en' ? 'Latest from the Field' : 'মাঠ পর্যায়ের সর্বশেষ সংবাদ'}</h2>
             <div className="divider" />
           </div>
           <div className="reports-column">
             {ACTIVITY_REPORTS.map(rpt => (
-              <article className="report-card reveal" key={rpt.id}>
+              <article className="report-card" key={rpt.id}>
                 <div className="report-card__header">
                   <span className="report-card__date"><Calendar size={14} /> {rpt.date}</span>
                   <h2 className="report-card__title">{lang === 'en' ? rpt.title_en : rpt.title_bn}</h2>
@@ -293,14 +291,14 @@ export default function Activities() {
       {/* Gallery */}
       <section className="section-pad">
         <div className="container">
-          <div className="text-center reveal">
+          <div className="text-center">
             <span className="section-label">{t('act_gallery_label')}</span>
             <h2 className="section-title">{t('act_gallery_title')}</h2>
             <div className="divider" />
           </div>
           <div className="gallery-grid">
             {GALLERY_IMGS.map((src, i) => (
-              <div className="gallery-item reveal" key={i}>
+              <div className="gallery-item" key={i}>
                 <img src={src} alt={`Gallery ${i + 1}`} loading="lazy" />
                 <div className="gallery-item__overlay">
                   <Image size={28} color="white" />
