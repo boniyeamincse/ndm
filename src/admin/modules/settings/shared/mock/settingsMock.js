@@ -17,8 +17,8 @@ export const organizationSettingsMock = {
   contact_phone: '+8801700000000',
   address: 'Topkhana Road, Dhaka, Bangladesh',
   website: 'https://ndm.test',
-  logo_url: '/images/logo/logo.png',
-  favicon_url: '/images/logo/logo.png',
+  logo_url: '/images/logo/logo.jpeg',
+  favicon_url: '/favicon.svg',
   footer_text: 'NDM Student Wing | All rights reserved.',
   registration_terms: 'Applicants must accept the organization code of conduct and membership terms.',
 };

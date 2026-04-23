@@ -7,13 +7,7 @@ import {
   securitySettingsMock,
 } from '../mock/settingsMock';
 
-const SETTINGS_ENDPOINTS = {
-  general: '/admin/settings/general',
-  organization: '/admin/settings/organization',
-  email: '/admin/settings/email',
-  notifications: '/admin/settings/notifications',
-  security: '/admin/settings/security',
-};
+const STORAGE_PREFIX = 'ndm_admin_settings';
 
 const localStore = {
   general: { ...generalSettingsMock },
@@ -23,35 +17,45 @@ const localStore = {
   security: { ...securitySettingsMock },
 };
 
-async function get(section) {
+function getStorageKey(section) {
+  return `${STORAGE_PREFIX}:${section}`;
+}
+
+function readLocal(section) {
   try {
-    const payload = await adminApi.request(SETTINGS_ENDPOINTS[section]);
-    return payload?.data || payload;
+    const saved = window.localStorage.getItem(getStorageKey(section));
+    if (!saved) {
+      return { ...localStore[section] };
+    }
+
+    return {
+      ...localStore[section],
+      ...JSON.parse(saved),
+    };
   } catch {
     return { ...localStore[section] };
   }
+}
+
+function writeLocal(section, data) {
+  localStore[section] = { ...data };
+
+  try {
+    window.localStorage.setItem(getStorageKey(section), JSON.stringify(localStore[section]));
+  } catch {}
+
+  return { ...localStore[section] };
+}
+
+async function get(section) {
+  return readLocal(section);
 }
 
 async function save(section, data) {
-  try {
-    const payload = await adminApi.request(SETTINGS_ENDPOINTS[section], {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    });
-    return payload?.data || payload;
-  } catch {
-    localStore[section] = { ...data };
-    return { ...localStore[section] };
-  }
+  return writeLocal(section, data);
 }
 
 async function sendTestEmail(payload) {
-  try {
-    await adminApi.request('/admin/settings/email/test', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
-  } catch {}
   return { success: true, message: `Test email queued for ${payload?.test_email_address || 'recipient'}.` };
 }
 
