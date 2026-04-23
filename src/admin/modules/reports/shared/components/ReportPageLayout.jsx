@@ -31,6 +31,22 @@ export default function ReportPageLayout({
   const rows = data?.rows || [];
   const meta = data?.meta;
 
+  function toCsvCell(value) {
+    if (value === null || value === undefined) {
+      return '""';
+    }
+
+    const text = String(value).replace(/"/g, '""');
+    return `"${text}"`;
+  }
+
+  function sanitizeFileName(value = '') {
+    return String(value)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'report';
+  }
+
   function handlePrint() {
     const originalTitle = document.title;
     document.title = `${pageTitle} - NDM Report`;
@@ -38,6 +54,33 @@ export default function ReportPageLayout({
     window.setTimeout(() => {
       document.title = originalTitle;
     }, 150);
+  }
+
+  function handleExport() {
+    if (!rows.length || !tableColumns?.length) {
+      return;
+    }
+
+    const header = tableColumns.map((column) => toCsvCell(column.label || column.key)).join(',');
+    const body = rows.map((row) => (
+      tableColumns
+        .map((column) => toCsvCell(row?.[column.key]))
+        .join(',')
+    ));
+
+    const csvContent = [header, ...body].join('\n');
+    const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+    const fileDate = new Date().toISOString().slice(0, 10);
+    const fileName = `${sanitizeFileName(pageTitle)}-${fileDate}.csv`;
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   }
 
   function updateFilter(name, value) {
@@ -68,7 +111,7 @@ export default function ReportPageLayout({
             }}
             onRefresh={onReload}
             onPrint={handlePrint}
-            onExport={() => {}}
+            onExport={handleExport}
             startDate={filters.start_date}
             endDate={filters.end_date}
             onStartDateChange={(value) => updateFilter('start_date', value)}
