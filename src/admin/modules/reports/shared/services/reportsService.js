@@ -1,5 +1,6 @@
 import { adminApi } from '../../../../services/adminApi';
 import { reportsMock } from '../mock/reportsMock';
+import { BD_GEO } from '../../../../../data/bd-geo';
 
 const REPORT_ENDPOINTS = {
   overview: '/reports/overview',
@@ -152,6 +153,34 @@ function buildLocation(parts = []) {
   return text || '—';
 }
 
+function resolveDivisionName(divisionName, divisionId) {
+  if (divisionName) {
+    return divisionName;
+  }
+
+  if (!divisionId) {
+    return '';
+  }
+
+  const division = BD_GEO.find((entry) => String(entry.id) === String(divisionId));
+  return division?.name || `Division #${divisionId}`;
+}
+
+function resolveDistrictName(districtName, divisionId, districtId) {
+  if (districtName) {
+    return districtName;
+  }
+
+  if (!districtId) {
+    return '';
+  }
+
+  const division = BD_GEO.find((entry) => String(entry.id) === String(divisionId));
+  const district = division?.districts?.find((entry) => String(entry.id) === String(districtId));
+
+  return district?.name || `District #${districtId}`;
+}
+
 function formatBoolean(value) {
   return value ? 'Yes' : 'No';
 }
@@ -175,19 +204,25 @@ const ROW_MAPPERS = {
     reviewed_by:    r.reviewed_by ?? '—',
     decision_at:    r.approved_at ?? r.rejected_at ?? '—',
   }),
-  committees: (r) => ({
-    committee_no: r.committee_no,
-    name:         r.name,
-    type:         r.committee_type ?? '—',
-    location:     buildLocation([
-      r.division_name || (r.division_id ? `Division #${r.division_id}` : ''),
-      r.district_name || (r.district_id ? `District #${r.district_id}` : ''),
-    ]),
-    status:       r.status,
-    current:      r.is_current ? 'Yes' : 'No',
-    start_date:   r.start_date ?? r.created_at,
-    parent:       r.parent_name ?? r.parent_id ?? '—',
-  }),
+  committees: (r) => {
+    const division = resolveDivisionName(r.division_name, r.division_id) || 'Unknown Division';
+    const district = resolveDistrictName(r.district_name, r.division_id, r.district_id) || 'Unknown District';
+
+    return {
+      committee_no: r.committee_no,
+      name:         r.name,
+      type:         r.committee_type ?? '—',
+      division,
+      district,
+      division_id:  r.division_id ?? null,
+      district_id:  r.district_id ?? null,
+      location:     buildLocation([division, district]),
+      status:       r.status,
+      current:      r.is_current ? 'Yes' : 'No',
+      start_date:   r.start_date ?? r.created_at,
+      parent:       r.parent_name ?? r.parent_id ?? '—',
+    };
+  },
   assignments: (r) => ({
     assignment_no:   r.assignment_no,
     member:          r.member_name,
