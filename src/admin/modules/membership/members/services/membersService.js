@@ -207,9 +207,28 @@ async function summary() {
   }
 }
 
+async function create(body) {
+  try {
+    const formData = new FormData();
+    Object.keys(body).forEach((key) => {
+      if (body[key] !== null && body[key] !== undefined && body[key] !== '') {
+        formData.append(key, body[key]);
+      }
+    });
+    
+    return await adminApi.request(BASE, {
+      method: 'POST',
+      body: formData,
+    });
+  } catch (err) {
+    throw err;
+  }
+}
+
 export const membersService = {
   list,
   detail,
+  create,
   update,
   updateStatus,
   promote,

@@ -11,8 +11,10 @@ import MembersTable from '../components/MembersTable';
 import MemberCard from '../components/MemberCard';
 import UpdateMemberStatusModal from '../components/UpdateMemberStatusModal';
 import EditMemberModal from '../components/EditMemberModal';
+import CreateMemberModal from '../components/CreateMemberModal';
 import { MEMBER_ROUTE_CONFIG } from '../types/memberTypes';
 import { useMemberActions, useMembers } from '../hooks/useMembers';
+import { membersService } from '../services/membersService';
 
 const DIVISIONS = ['Dhaka', 'Rajshahi', 'Khulna', 'Chittagong', 'Sylhet', 'Barisal', 'Rangpur', 'Mymensingh'];
 
@@ -55,6 +57,8 @@ export default function MembersPage() {
   const [filters, setFilters] = useState(() => buildInitialFilters(routeConfig));
   const [editTarget, setEditTarget] = useState(null);
   const [statusTarget, setStatusTarget] = useState({ member: null, status: '' });
+  const [createOpen, setCreateOpen] = useState(false);
+  const [busyCreate, setBusyCreate] = useState(false);
 
   const { items, meta, summary, loading, error, reload } = useMembers(filters, routeConfig);
   const { busyAction, actionError, updateProfile, updateStatus } = useMemberActions(() => {
@@ -91,6 +95,19 @@ export default function MembersPage() {
     setFilters((prev) => ({ ...prev, [name]: value, page: 1 }));
   }
 
+  async function handleCreateMember(formData) {
+    setBusyCreate(true);
+    try {
+      await membersService.create(formData);
+      setCreateOpen(false);
+      reload();
+    } catch (err) {
+      console.error('Failed to create member:', err);
+    } finally {
+      setBusyCreate(false);
+    }
+  }
+
   const headerActions = (
     <div className="mem-header-actions">
       <button type="button" className="ndm-btn ndm-btn--ghost" onClick={reload} title="Refresh">
@@ -101,7 +118,7 @@ export default function MembersPage() {
         <Download size={15} />
         <span>Export</span>
       </button>
-      <button type="button" className="ndm-btn ndm-btn--primary" title="Add Member (placeholder)">
+      <button type="button" className="ndm-btn ndm-btn--primary" onClick={() => setCreateOpen(true)} title="Add Member">
         <UserPlus size={15} />
         <span>Add Member</span>
       </button>
@@ -263,6 +280,13 @@ export default function MembersPage() {
         busy={busyAction === 'update'}
         onClose={() => setEditTarget(null)}
         onSubmit={(payload) => updateProfile(editTarget.id, payload)}
+      />
+
+      <CreateMemberModal
+        open={createOpen}
+        busy={busyCreate}
+        onClose={() => setCreateOpen(false)}
+        onSubmit={handleCreateMember}
       />
     </AdminContentWrapper>
   );
