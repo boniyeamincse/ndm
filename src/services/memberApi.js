@@ -52,12 +52,43 @@ export const memberApi = {
   withQuery,
   getMeProfile: () => request('/me/profile'),
   getMemberOverview: () => request('/me/member-overview'),
-  getAccountSettings: () => request('/me/account-settings'),
-  updateAccountSettings: (data) => request('/me/account-settings', {
+  getMemberSettings: () => request('/member/settings'),
+  updateMemberAccountSettings: (data) => request('/member/settings/account', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   }),
+  updateMemberPrivacySettings: (data) => request('/member/settings/privacy', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }),
+  updateMemberNotificationSettings: (data) => request('/member/settings/notifications', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }),
+  updateMemberPassword: (data) => request('/member/settings/password', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }),
+  getMemberIdCard: () => request('/member/id-card'),
+  downloadMemberIdCard: async () => {
+    const res = await fetch(`${API_BASE}/member/id-card?download=1`, {
+      headers: authHeaders(),
+    });
+
+    if (!res.ok) {
+      const payload = await res.json().catch(() => ({}));
+      const error = new Error(payload.message || `Request failed (${res.status})`);
+      error.status = res.status;
+      error.payload = payload;
+      throw error;
+    }
+
+    return res.blob();
+  },
   getCommitteeAssignments: (params = {}) => request(withQuery('/me/committee-assignments', params)),
   getMemberNotices: (params = {}) => request(withQuery('/member/notices', params)),
   getDashboard: () => request('/dashboard/member'),

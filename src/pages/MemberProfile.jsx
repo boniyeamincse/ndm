@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { User, Mail, Phone, MapPin, GraduationCap, Briefcase, FileEdit, AlertCircle, CheckCircle2, Camera, Upload } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { memberApi } from '../services/memberApi';
 import './MemberProfile.css';
 
 export default function MemberProfile() {
@@ -16,6 +17,9 @@ export default function MemberProfile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [idCard, setIdCard] = useState(null);
+  const [idCardBusy, setIdCardBusy] = useState(false);
+  const [idCardError, setIdCardError] = useState('');
 
   // Photo upload
   const photoInputRef = useRef(null);
@@ -83,18 +87,20 @@ export default function MemberProfile() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const res = await fetch('/api/v1/me/profile', {
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('ndm_token')}`
-          }
-        });
-        const json = await res.json();
-        if (res.ok) {
-          setUser(json.data.user);
-          setMember(json.data.member);
+        const [profileJson, idCardJson] = await Promise.all([
+          memberApi.getMeProfile(),
+          memberApi.getMemberIdCard().catch(() => null),
+        ]);
+
+        if (profileJson?.data) {
+          setUser(profileJson.data.user);
+          setMember(profileJson.data.member);
           // Also update local storage to keep it sync
-          localStorage.setItem('ndm_user', JSON.stringify(json.data.user));
+          localStorage.setItem('ndm_user', JSON.stringify(profileJson.data.user));
+        }
+
+        if (idCardJson?.data) {
+          setIdCard(idCardJson.data);
         }
       } catch (err) {
         console.error('Failed to fetch profile:', err);
@@ -171,6 +177,26 @@ export default function MemberProfile() {
   const getGeoName = (field) => {
     if (!member) return null;
     return lang === 'bn' ? member[`${field}_name_bn`] : member[`${field}_name_en`];
+  };
+
+  const handleIdCardDownload = async () => {
+    setIdCardBusy(true);
+    setIdCardError('');
+    try {
+      const blob = await memberApi.downloadMemberIdCard();
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `${member?.member_no || 'member-id-card'}.svg`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setIdCardError(err?.message || 'Could not download member ID card.');
+    } finally {
+      setIdCardBusy(false);
+    }
   };
 
   return (
@@ -309,6 +335,33 @@ export default function MemberProfile() {
               <InfoField label={lang === 'en' ? 'Academic Year' : 'শিক্ষাবর্ষ'} value={member?.academic_year ? t(member.academic_year) : '-'} />
               <InfoField label={lang === 'en' ? 'Occupation' : 'পেশা'} value={member?.occupation} icon={Briefcase} />
             </div>
+          </div>
+
+          <div className="profile-card card reveal">
+            <div className="profile-card__header">
+              <div className="profile-card__title">
+                <Briefcase size={24} />
+                <span>{lang === 'en' ? 'Member ID Card' : 'সদস্য আইডি কার্ড'}</span>
+              </div>
+              <button type="button" className="btn btn-outline btn-sm" onClick={handleIdCardDownload} disabled={idCardBusy || !idCard}>
+                {idCardBusy ? (lang === 'en' ? 'Preparing...' : 'প্রস্তুত হচ্ছে...') : (lang === 'en' ? 'Download Card' : 'কার্ড ডাউনলোড')}
+              </button>
+            </div>
+
+            {idCardError && (
+              <div className="form-alert form-alert--error" style={{ marginBottom: '1rem' }}>
+                <AlertCircle size={16} />
+                <span>{idCardError}</span>
+              </div>
+            )}
+
+            {idCard?.svg ? (
+              <div className="profile-id-card-preview" dangerouslySetInnerHTML={{ __html: idCard.svg }} />
+            ) : (
+              <div className="profile-id-card-empty">
+                {lang === 'en' ? 'Member ID card preview is not available yet.' : 'সদস্য আইডি কার্ড প্রিভিউ এখনো উপলব্ধ নয়।'}
+              </div>
+            )}
           </div>
 
           <div className="update-request-section reveal">

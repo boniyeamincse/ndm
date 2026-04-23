@@ -203,6 +203,28 @@
   border-radius: var(--radius-md);
 }
 
+.profile-id-card-preview {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--clr-border);
+  background: #f6f7fb;
+}
+
+.profile-id-card-preview svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.profile-id-card-empty {
+  padding: 1.25rem;
+  border: 1px dashed var(--clr-border);
+  border-radius: 14px;
+  text-align: center;
+  color: var(--clr-text-muted);
+}
+
 .update-request-header {
   margin-bottom: 1rem;
 }
