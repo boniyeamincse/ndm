@@ -75,6 +75,8 @@ import Publications from './pages/Publications';
 import Constitution from './pages/Constitution';
 import Join from './pages/Join';
 import Contact from './pages/Contact';
+import Blog from './pages/blog/Blog';
+import BlogDetail from './pages/blog/BlogDetail';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -128,6 +130,8 @@ export default function App() {
           <Route path="/leadership" element={<Leadership />} />
           <Route path="/activities" element={<Activities />} />
           <Route path="/news" element={<News />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/publications" element={<Publications />} />
           <Route path="/constitution" element={<Constitution />} />
           <Route path="/join" element={<Join />} />

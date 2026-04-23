@@ -1,4 +1,4 @@
-import { publicApi } from '../../../services/publicApi';
+import { publicApi } from '../../services/publicApi';
 
 const BLOG_BASE = '/public/blogs';
 const POSTS_BASE = '/public/posts';
