@@ -166,6 +166,7 @@ export const adminMenuGroups = [
           { id: 'reports-overview', label: 'Overview Report', path: '/admin/reports/overview' },
           { id: 'reports-membership', label: 'Membership Report', path: '/admin/reports/membership' },
           { id: 'reports-committees', label: 'Committee Report', path: '/admin/reports/committees' },
+          { id: 'reports-committees-districtwise', label: 'District-wise Committee Report', path: '/admin/reports/committees-districtwise' },
           { id: 'reports-assignments', label: 'Assignment Report', path: '/admin/reports/assignments' },
           { id: 'reports-content', label: 'Content Report', path: '/admin/reports/content' },
           { id: 'reports-notices', label: 'Notice Report', path: '/admin/reports/notices' },
