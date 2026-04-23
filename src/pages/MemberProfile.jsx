@@ -2,17 +2,32 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { User, Mail, Phone, MapPin, GraduationCap, Briefcase, FileEdit, AlertCircle, CheckCircle2, Camera, Upload } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
-import { useScrollReveal } from '../hooks/useScrollReveal';
 import { memberApi } from '../services/memberApi';
 import './MemberProfile.css';
 
+function normaliseAssetUrl(url) {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    return `${parsed.pathname}${parsed.search || ''}`;
+  } catch {
+    return url;
+  }
+}
+
 export default function MemberProfile() {
   const { t, lang } = useLang();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('ndm_user') || '{}'));
+  const [user, setUser] = useState(() => {
+    const localUser = JSON.parse(localStorage.getItem('ndm_user') || '{}');
+    return {
+      ...localUser,
+      profile_photo_url: normaliseAssetUrl(localUser?.profile_photo_url),
+      photo_url: normaliseAssetUrl(localUser?.photo_url),
+    };
+  });
   const [member, setMember] = useState(null);
   const [fetching, setFetching] = useState(true);
 
-  useScrollReveal('.reveal', [fetching]);
   const [requestingUpdate, setRequestingUpdate] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -67,13 +82,7 @@ export default function MemberProfile() {
         throw new Error(lang === 'en' ? 'Upload completed but no photo URL was returned.' : 'আপলোড সম্পন্ন হয়েছে, কিন্তু ছবির লিংক পাওয়া যায়নি।');
       }
 
-      // Normalise to a relative URL so Vite proxy serves the image correctly.
-      let relativeUrl;
-      try {
-        relativeUrl = new URL(freshPhotoUrl).pathname;
-      } catch {
-        relativeUrl = freshPhotoUrl;
-      }
+      const relativeUrl = normaliseAssetUrl(freshPhotoUrl);
       const bustUrl = `${relativeUrl}?t=${Date.now()}`;
 
       setMember(prev => (prev ? { ...prev, photo_url: bustUrl } : prev));
@@ -126,15 +135,20 @@ export default function MemberProfile() {
 
         if (profileJson?.data) {
           const remoteUser = profileJson.data.user;
-          // Normalise absolute storage URLs to relative for Vite proxy compatibility.
-          const normalise = (url) => { try { return url ? new URL(url).pathname : null; } catch { return url; } };
+          const remoteMember = profileJson.data.member;
           const patchedUser = {
             ...remoteUser,
-            profile_photo_url: normalise(remoteUser?.profile_photo_url),
-            photo_url: normalise(remoteUser?.photo_url || remoteUser?.profile_photo_url),
+            profile_photo_url: normaliseAssetUrl(remoteUser?.profile_photo_url),
+            photo_url: normaliseAssetUrl(remoteUser?.photo_url || remoteUser?.profile_photo_url),
           };
+          const patchedMember = remoteMember
+            ? {
+              ...remoteMember,
+              photo_url: normaliseAssetUrl(remoteMember?.photo_url),
+            }
+            : remoteMember;
           setUser(patchedUser);
-          setMember(profileJson.data.member);
+          setMember(patchedMember);
           localStorage.setItem('ndm_user', JSON.stringify(patchedUser));
         }
 
@@ -218,7 +232,7 @@ export default function MemberProfile() {
     return lang === 'bn' ? member[`${field}_name_bn`] : member[`${field}_name_en`];
   };
 
-  const currentPhoto = photoPreview || member?.photo_url || user?.profile_photo_url || user?.profile_photo_data_url || null;
+  const currentPhoto = normaliseAssetUrl(photoPreview || member?.photo_url || user?.profile_photo_url || user?.profile_photo_data_url || null);
 
   const handleIdCardDownload = async () => {
     setIdCardBusy(true);
@@ -256,7 +270,7 @@ export default function MemberProfile() {
 
       <section className="section-pad">
         <div className="container profile-view-wrap">
-          <div className="profile-card card reveal">
+          <div className="profile-card card">
             <div className="profile-card__header">
               <div className="profile-card__title">
                 <User size={24} />
@@ -343,7 +357,7 @@ export default function MemberProfile() {
             </div>
           </div>
 
-          <div className="profile-card card reveal">
+          <div className="profile-card card">
             <div className="profile-card__header">
               <div className="profile-card__title">
                 <MapPin size={24} />
@@ -362,7 +376,7 @@ export default function MemberProfile() {
             </div>
           </div>
 
-          <div className="profile-card card reveal">
+          <div className="profile-card card">
             <div className="profile-card__header">
               <div className="profile-card__title">
                 <GraduationCap size={24} />
@@ -378,7 +392,7 @@ export default function MemberProfile() {
             </div>
           </div>
 
-          <div className="profile-card card reveal">
+          <div className="profile-card card">
             <div className="profile-card__header">
               <div className="profile-card__title">
                 <Briefcase size={24} />
@@ -405,7 +419,7 @@ export default function MemberProfile() {
             )}
           </div>
 
-          <div className="update-request-section reveal">
+          <div className="update-request-section">
             <div className="update-request-header">
               <h3>{lang === 'en' ? 'Need to Update Your Profile?' : 'প্রোফাইল আপডেট করতে চান?'}</h3>
               <p>

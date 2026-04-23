@@ -5,8 +5,27 @@ import MemberSidebar from './components/MemberSidebar';
 import { memberApi } from '../services/memberApi';
 import './components/MemberShell.css';
 
+function normaliseAssetUrl(url) {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    return `${parsed.pathname}${parsed.search || ''}`;
+  } catch {
+    return url;
+  }
+}
+
 function getLocalUser() {
-  try { return JSON.parse(localStorage.getItem('ndm_user') || '{}'); } catch { return {}; }
+  try {
+    const localUser = JSON.parse(localStorage.getItem('ndm_user') || '{}');
+    return {
+      ...localUser,
+      photo_url: normaliseAssetUrl(localUser?.photo_url),
+      profile_photo_url: normaliseAssetUrl(localUser?.profile_photo_url),
+    };
+  } catch {
+    return {};
+  }
 }
 
 export default function MemberLayout() {

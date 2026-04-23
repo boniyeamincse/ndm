@@ -34,6 +34,16 @@ function formatJoinedDate(joinedAt, lang) {
   });
 }
 
+function normaliseAssetUrl(url) {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    return `${parsed.pathname}${parsed.search || ''}`;
+  } catch {
+    return url;
+  }
+}
+
 export default function MemberDashboard() {
   const { t, lang } = useLang();
   const { user, overview, notices, noticesLoading, loading, error, reload } = useMemberDashboard();
@@ -83,6 +93,7 @@ export default function MemberDashboard() {
   const joinedLabel = formatJoinedDate(overviewData.joined_at, lang);
   const spotlightNotice = notices[0] || null;
   const noticeList = spotlightNotice ? notices.slice(1) : notices;
+  const avatarUrl = normaliseAssetUrl(user?.photo_url || overviewData.photo_url || null);
 
   const highlightCards = [
     {
@@ -191,8 +202,8 @@ export default function MemberDashboard() {
 
                     <div className="db-hero-aside">
                       <div className="db-hero-avatar">
-                        {user?.photo_url || overviewData.photo_url
-                          ? <img src={user?.photo_url || overviewData.photo_url} alt="avatar" className="db-hero-avatar-img" />
+                        {avatarUrl
+                          ? <img src={avatarUrl} alt="avatar" className="db-hero-avatar-img" />
                           : <User2 size={30} />
                         }
                       </div>

@@ -100,7 +100,13 @@ export function useMemberDashboard() {
       }
 
       if (overviewRes.status === 'fulfilled') {
-        setOverview(overviewRes.value || null);
+        const rawOverview = overviewRes.value || null;
+        setOverview(rawOverview
+          ? {
+            ...rawOverview,
+            photo_url: toRelativeUrl(rawOverview.photo_url),
+          }
+          : null);
       }
 
       if (noticesRes.status === 'fulfilled') {
@@ -123,7 +129,11 @@ export function useMemberDashboard() {
   useEffect(() => {
     const onAuthChanged = () => {
       const fresh = getLocalUser();
-      setUser(fresh);
+      setUser({
+        ...fresh,
+        photo_url: toRelativeUrl(fresh?.photo_url),
+        profile_photo_url: toRelativeUrl(fresh?.profile_photo_url),
+      });
     };
     window.addEventListener('auth-changed', onAuthChanged);
     return () => window.removeEventListener('auth-changed', onAuthChanged);
