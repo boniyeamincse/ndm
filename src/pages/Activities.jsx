@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, ArrowRight, Image } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { publicApi } from '../services/publicApi';
 import './Activities.css';
 
 const EVENTS = [
@@ -98,7 +100,41 @@ To build a just, developed, and prosperous Bangladesh together—this is our pro
 
 export default function Activities() {
   const { t, lang } = useLang();
+  const [campaigns, setCampaigns] = useState([]);
+  const [campaignsLoading, setCampaignsLoading] = useState(true);
+  const [campaignsError, setCampaignsError] = useState('');
   useScrollReveal();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCampaigns() {
+      setCampaignsLoading(true);
+      setCampaignsError('');
+      try {
+        const json = await publicApi.request(publicApi.withQuery('/public/campaigns', { per_page: 6 }));
+        const rows = Array.isArray(json?.data) ? json.data : [];
+        if (!cancelled) {
+          setCampaigns(rows);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setCampaigns([]);
+          setCampaignsError(err?.message || 'Failed to load campaigns.');
+        }
+      } finally {
+        if (!cancelled) {
+          setCampaignsLoading(false);
+        }
+      }
+    }
+
+    loadCampaigns();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const categoryColor = cat => {
     const map = { Rally: '#c0392b', Summit: '#2980b9', Workshop: '#27ae60', Competition: '#f39c12' };
@@ -127,16 +163,57 @@ export default function Activities() {
             <div className="divider" />
           </div>
           <div className="campaigns-grid">
-            <div className="campaign-card card reveal" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '1.6rem' }}>
-              <h3 style={{ marginBottom: '.55rem' }}>
-                {lang === 'en' ? 'No active campaigns available right now.' : 'এই মুহূর্তে কোনো সক্রিয় ক্যাম্পেইন নেই।'}
-              </h3>
-              <p style={{ color: 'var(--clr-text-muted)' }}>
-                {lang === 'en'
-                  ? 'Campaign updates will appear here once published.'
-                  : 'প্রকাশিত হলে ক্যাম্পেইন আপডেট এখানে দেখা যাবে।'}
-              </p>
-            </div>
+            {campaignsLoading && [1, 2, 3].map((i) => (
+              <div key={i} className="campaign-card card reveal" style={{ padding: '1rem' }}>
+                <div className="member-skeleton" style={{ height: '160px', borderRadius: '10px', marginBottom: '.8rem' }} />
+                <div className="member-skeleton" style={{ width: '40%', marginBottom: '.45rem' }} />
+                <div className="member-skeleton" style={{ width: '80%', marginBottom: '.45rem' }} />
+                <div className="member-skeleton" style={{ width: '65%' }} />
+              </div>
+            ))}
+
+            {!campaignsLoading && campaignsError && (
+              <div className="campaign-card card reveal" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '1.6rem' }}>
+                <h3 style={{ marginBottom: '.55rem' }}>
+                  {lang === 'en' ? 'Unable to load campaigns right now.' : 'এই মুহূর্তে ক্যাম্পেইন লোড করা যাচ্ছে না।'}
+                </h3>
+                <p style={{ color: 'var(--clr-text-muted)' }}>{campaignsError}</p>
+              </div>
+            )}
+
+            {!campaignsLoading && !campaignsError && campaigns.length === 0 && (
+              <div className="campaign-card card reveal" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '1.6rem' }}>
+                <h3 style={{ marginBottom: '.55rem' }}>
+                  {lang === 'en' ? 'No active campaigns available right now.' : 'এই মুহূর্তে কোনো সক্রিয় ক্যাম্পেইন নেই।'}
+                </h3>
+                <p style={{ color: 'var(--clr-text-muted)' }}>
+                  {lang === 'en'
+                    ? 'Campaign updates will appear here once published.'
+                    : 'প্রকাশিত হলে ক্যাম্পেইন আপডেট এখানে দেখা যাবে।'}
+                </p>
+              </div>
+            )}
+
+            {!campaignsLoading && !campaignsError && campaigns.map((c) => (
+              <div className="campaign-card card reveal" key={c.slug || c.title}>
+                <div className="campaign-card__img">
+                  {c.featured_image_url ? (
+                    <img src={c.featured_image_url} alt={c.title} loading="lazy" />
+                  ) : (
+                    <div style={{ minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#eef2f7', color: '#64748b', fontWeight: 700 }}>
+                      {lang === 'en' ? 'Campaign' : 'ক্যাম্পেইন'}
+                    </div>
+                  )}
+                </div>
+                <div className="campaign-card__body">
+                  <div className="campaign-card__status">
+                    <span className="badge badge-red">{c.category?.name || (lang === 'en' ? 'Campaign' : 'ক্যাম্পেইন')}</span>
+                  </div>
+                  <h3>{c.title}</h3>
+                  <p>{c.excerpt || (lang === 'en' ? 'Read the full campaign update in publications/news.' : 'সম্পূর্ণ আপডেট প্রকাশনা/সংবাদে পড়ুন।')}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
