@@ -1061,6 +1061,15 @@
   border: 1px solid #d1d5db;
 }
 
+.adm-profile-photo--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #C0392B 0%, #8F2A1E 100%);
+  color: #fff;
+  font-weight: 700;
+}
+
 .adm-profile-photo-input {
   display: none;
 }

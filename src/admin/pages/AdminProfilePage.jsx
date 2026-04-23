@@ -7,6 +7,30 @@ import { getStoredAdminUser } from '../mock/layoutMock';
 
 const MAX_PHOTO_SIZE_BYTES = 5 * 1024 * 1024;
 
+function normalizePhotoUrl(url) {
+  const value = String(url || '').trim();
+  if (!value) return '';
+
+  if (value.startsWith('data:') || value.startsWith('blob:') || value.startsWith('/')) {
+    return value;
+  }
+
+  try {
+    const parsed = new URL(value);
+
+    // Backend often returns 127.0.0.1 while frontend runs on localhost.
+    // Keep the same backend port/path but align hostname with current host.
+    if (parsed.hostname === '127.0.0.1' && window.location.hostname === 'localhost') {
+      parsed.hostname = 'localhost';
+      return parsed.toString();
+    }
+
+    return parsed.toString();
+  } catch {
+    return value;
+  }
+}
+
 function getFallbackProfile() {
   const user = getStoredAdminUser();
   return {
@@ -31,6 +55,7 @@ export default function AdminProfilePage() {
   const [saving, setSaving] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [profile, setProfile] = useState(() => getFallbackProfile());
+  const [photoLoadFailed, setPhotoLoadFailed] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -52,12 +77,13 @@ export default function AdminProfilePage() {
           phone: member.mobile || user.phone || '',
           address_line: member.address_line || '',
           bio: member.bio || '',
-          photo_url: user.profile_photo_url || '',
+          photo_url: user.profile_photo_data_url || normalizePhotoUrl(user.profile_photo_url || ''),
           role: Array.isArray(user.roles) && user.roles.length ? user.roles[0] : 'Admin',
           roleKey: Array.isArray(user.roles) && user.roles.length ? user.roles[0] : 'admin',
         };
 
         if (alive) {
+          setPhotoLoadFailed(false);
           setProfile(nextProfile);
           localStorage.setItem('ndm_user', JSON.stringify({
             ...getStoredAdminUser(),
@@ -181,7 +207,8 @@ export default function AdminProfilePage() {
         throw new Error(payload?.message || `Photo upload failed (${response.status})`);
       }
 
-      const photoUrl = payload?.data?.photo_url || '';
+      const photoUrl = URL.createObjectURL(file);
+      setPhotoLoadFailed(false);
       setProfile((current) => ({ ...current, photo_url: photoUrl }));
       setFeedback('Profile photo updated successfully.');
     } catch (err) {
@@ -223,7 +250,16 @@ export default function AdminProfilePage() {
                 <p className="adm-profile-card__sub">Signed in administrator account</p>
               </div>
               <div className="adm-profile-card__media">
-                {profile.photo_url ? <img src={profile.photo_url} alt="Profile" className="adm-profile-photo" /> : null}
+                {profile.photo_url && !photoLoadFailed ? (
+                  <img
+                    src={profile.photo_url}
+                    alt="Profile"
+                    className="adm-profile-photo"
+                    onError={() => setPhotoLoadFailed(true)}
+                  />
+                ) : (
+                  <div className="adm-profile-photo adm-profile-photo--fallback" aria-hidden="true">{initials}</div>
+                )}
                 <button
                   type="button"
                   className="ndm-btn ndm-btn--ghost"
