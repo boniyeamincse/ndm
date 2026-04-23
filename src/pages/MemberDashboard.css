@@ -446,6 +446,9 @@
   padding: 1.25rem;
   position: relative;
   overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--clr-border);
 }
 
 .db-highlight-card::after {
@@ -525,6 +528,20 @@
   color: var(--clr-text-muted);
   font-size: .84rem;
   line-height: 1.45;
+}
+
+.db-highlight-cta {
+  margin-top: .75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+}
+
+.db-highlight-card:hover .db-highlight-cta {
+  text-decoration: underline;
 }
 
 /* ── Notices section ──────────────────────────────── */

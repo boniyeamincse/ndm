@@ -92,6 +92,7 @@ export default function MemberDashboard() {
       value: status,
       meta: committee || (lang === 'en' ? 'No committee assigned yet' : 'এখনও কমিটি নির্ধারিত হয়নি'),
       tone: 'primary',
+      to: '/member/settings',
     },
     {
       key: 'assignments',
@@ -100,6 +101,7 @@ export default function MemberDashboard() {
       value: overviewData.active_assignments_count ?? 0,
       meta: committee || (lang === 'en' ? 'Waiting for assignment' : 'দায়িত্বের অপেক্ষায়'),
       tone: 'amber',
+      to: '/member/committee',
     },
     {
       key: 'leadership',
@@ -108,6 +110,7 @@ export default function MemberDashboard() {
       value: overviewData.leadership_assignments_count ?? 0,
       meta: position || (lang === 'en' ? 'Member role active' : 'সদস্য ভূমিকা সক্রিয়'),
       tone: 'violet',
+      to: '/member/committee',
     },
     {
       key: 'notices',
@@ -116,6 +119,7 @@ export default function MemberDashboard() {
       value: noticesLoading ? '...' : notices.length,
       meta: spotlightNotice?.title || (lang === 'en' ? 'No recent notices' : 'সাম্প্রতিক নোটিশ নেই'),
       tone: 'sky',
+      to: '/member/notices',
     },
   ];
 
@@ -254,12 +258,15 @@ export default function MemberDashboard() {
                 </div>
               ))
               : highlightCards.map(item => (
-                <article key={item.key} className={`db-highlight-card card db-highlight-card--${item.tone}`}>
+                <Link key={item.key} to={item.to} className={`db-highlight-card card db-highlight-card--${item.tone}`}>
                   <div className="db-highlight-icon">{item.icon}</div>
                   <p className="db-highlight-label">{item.label}</p>
                   <h3 className="db-highlight-value">{item.value}</h3>
                   <p className="db-highlight-meta">{item.meta}</p>
-                </article>
+                  <span className="db-highlight-cta">
+                    {lang === 'en' ? 'View details' : 'বিস্তারিত দেখুন'} <ArrowRight size={14} />
+                  </span>
+                </Link>
               ))}
           </div>
 
