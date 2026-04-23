@@ -10,6 +10,7 @@ import { EmptyState, ErrorState, LoadingSkeleton } from '../../../membership/sha
 import { useRoleActions, useRoles } from '../hooks/useRoles';
 import RolesTable from '../components/RolesTable';
 import RoleFormModal from '../components/RoleFormModal';
+import { rolesService } from '../services/rolesService';
 
 const DEFAULT_FILTERS = {
   search: '',
@@ -25,6 +26,7 @@ export default function RolesPage() {
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [modal, setModal] = useState({ open: false, mode: 'create', role: null });
   const [assignRole, setAssignRole] = useState(null);
+  const [assignLoading, setAssignLoading] = useState(false);
 
   const { items, meta, summary, loading, error, reload } = useRoles(filters);
   const { run, busyAction, actionError } = useRoleActions(() => {
@@ -41,6 +43,18 @@ export default function RolesPage() {
   function resetFilters() {
     setSearch('');
     setFilters(DEFAULT_FILTERS);
+  }
+
+  async function openAssignPermissions(role) {
+    setAssignLoading(true);
+    try {
+      const detailedRole = await rolesService.detail(role.id);
+      setAssignRole(detailedRole);
+    } catch {
+      setAssignRole(null);
+    } finally {
+      setAssignLoading(false);
+    }
   }
 
   return (
@@ -98,7 +112,7 @@ export default function RolesPage() {
                 items={items}
                 onView={(id) => navigate(`/admin/roles/${id}`)}
                 onEdit={(role) => setModal({ open: true, mode: 'edit', role })}
-                onAssignPermissions={(role) => setAssignRole(role)}
+                onAssignPermissions={openAssignPermissions}
                 onDelete={(role) => run('delete', { id: role.id })}
               />
               <PaginationBar meta={meta} page={filters.page} onPageChange={(page) => setFilters((prev) => ({ ...prev, page }))} />
@@ -114,8 +128,12 @@ export default function RolesPage() {
           onClose={() => setModal({ open: false, mode: 'create', role: null })}
           onSubmit={(payload) => {
             if (modal.mode === 'edit') {
-              run('update', { ...payload, id: modal.role.id });
-              run('sync_permissions', { id: modal.role.id, permissions: payload.permissions || [] });
+              run('update', {
+                id: modal.role.id,
+                name: payload.name,
+                display_name: payload.display_name,
+                description: payload.description,
+              });
               return;
             }
             run('create', payload);
@@ -123,7 +141,7 @@ export default function RolesPage() {
         />
 
         <RoleFormModal
-          open={Boolean(assignRole)}
+          open={Boolean(assignRole) && !assignLoading}
           mode="edit"
           role={assignRole}
           busy={busyAction === 'sync_permissions'}
