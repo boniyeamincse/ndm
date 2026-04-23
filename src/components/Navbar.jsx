@@ -51,6 +51,7 @@ export default function Navbar() {
     { to: '/leadership', label: t('nav_leadership') },
     { to: '/activities', label: t('nav_activities') },
     { to: '/news', label: t('nav_news') },
+    { to: '/blog', label: t('nav_blog') },
     { to: '/publications', label: t('nav_publications') },
     { to: '/contact', label: t('nav_contact') },
   ];
