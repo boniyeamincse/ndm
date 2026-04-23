@@ -38,11 +38,42 @@ export default function MemberDashboard() {
   const { t, lang } = useLang();
   const { user, overview, notices, noticesLoading, loading, error, reload } = useMemberDashboard();
 
+  const hasRoleContext = Boolean(overview?.latest_assignment?.committee_name || overview?.latest_assignment?.position_name);
+  const assignmentCount = Number(overview?.active_assignments_count ?? 0);
+  const profileHealth = Math.min(
+    100,
+    58
+      + (hasRoleContext ? 16 : 0)
+      + (assignmentCount > 0 ? 12 : 0)
+      + (user?.member_no ? 7 : 0)
+      + (user?.email ? 7 : 0),
+  );
+
   const quickLinks = [
-    { to: '/member/profile', icon: <User2 size={18} />, label: lang === 'en' ? 'My Profile' : 'আমার প্রোফাইল' },
-    { to: '/news', icon: <FileText size={18} />, label: t('dash_quick_news') },
-    { to: '/activities', icon: <CalendarClock size={18} />, label: t('dash_quick_events') },
-    { to: '/publications', icon: <Bell size={18} />, label: t('dash_quick_publications') },
+    {
+      to: '/member/profile',
+      icon: <User2 size={18} />,
+      label: lang === 'en' ? 'My Profile' : 'আমার প্রোফাইল',
+      helper: lang === 'en' ? 'Update personal details' : 'ব্যক্তিগত তথ্য আপডেট',
+    },
+    {
+      to: '/member/committee',
+      icon: <FileText size={18} />,
+      label: lang === 'en' ? 'Committee Workspace' : 'কমিটি ওয়ার্কস্পেস',
+      helper: lang === 'en' ? 'Assignments and role context' : 'দায়িত্ব ও ভূমিকার তথ্য',
+    },
+    {
+      to: '/member/events',
+      icon: <CalendarClock size={18} />,
+      label: lang === 'en' ? 'Events & Programs' : 'ইভেন্ট ও প্রোগ্রাম',
+      helper: lang === 'en' ? 'Upcoming activities and joins' : 'আসন্ন কার্যক্রম ও অংশগ্রহণ',
+    },
+    {
+      to: '/member/communication',
+      icon: <Bell size={18} />,
+      label: lang === 'en' ? 'Communication Hub' : 'যোগাযোগ হাব',
+      helper: lang === 'en' ? 'Announcements and messages' : 'ঘোষণা ও বার্তাসমূহ',
+    },
   ];
 
   const status = overview?.status || user?.membership_status || 'pending';
@@ -163,7 +194,10 @@ export default function MemberDashboard() {
                       </div>
                       <div className="db-hero-aside-card">
                         <span className="db-hero-aside-label">{lang === 'en' ? 'Profile Health' : 'প্রোফাইল প্রস্তুতি'}</span>
-                        <strong>{committee || position ? '85%' : '60%'}</strong>
+                        <strong>{profileHealth}%</strong>
+                        <div className="db-health-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow={profileHealth}>
+                          <span className="db-health-fill" style={{ width: `${profileHealth}%` }} />
+                        </div>
                         <p>
                           {lang === 'en'
                             ? 'Keep your information current to receive assignment and notice updates.'
@@ -194,7 +228,7 @@ export default function MemberDashboard() {
                       {item.icon}
                       <span>
                         <strong>{item.label}</strong>
-                        <small>{lang === 'en' ? 'Open module' : 'মডিউল খুলুন'}</small>
+                        <small>{item.helper}</small>
                       </span>
                     </span>
                     <ArrowRight size={16} />
