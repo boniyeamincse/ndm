@@ -4,7 +4,7 @@ import { committeeTypesService } from '../../committee-types/services/committeeT
 const EMPTY = {
   name: '',
   name_bn: '',
-  code: ''
+  code: '',
   short_name: '',
   hierarchy_rank: '',
   display_order: '',
