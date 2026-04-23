@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AdminPageHeader from '../../../../components/AdminPageHeader';
 import AdminContentWrapper, { PageContainer, PageSection } from '../../../../components/AdminContentWrapper';
@@ -30,6 +30,17 @@ export default function MembershipApplicationsPage() {
   });
 
   const [modal, setModal] = useState({ action: '', item: null });
+
+  useEffect(() => {
+    // Keep list status synced with route when navigating between status-specific pages.
+    setSearch('');
+    setFilters((prev) => ({
+      ...prev,
+      search: '',
+      status: routeConfig.status,
+      page: 1,
+    }));
+  }, [location.pathname, routeConfig.status]);
 
   const { items, meta, summary, loading, error, reload } = useMembershipApplications(filters);
   const { run, busyAction, actionError, clearError } = useMembershipApplicationActions(() => {
