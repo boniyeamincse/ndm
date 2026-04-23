@@ -26,6 +26,7 @@ export default function ReportPageLayout({
   onReload,
   tableColumns,
   searchPlaceholder,
+  extraSections,
 }) {
   const rows = data?.rows || [];
   const meta = data?.meta;
@@ -104,6 +105,7 @@ export default function ReportPageLayout({
                   </div>
                 </ReportSectionCard>
               ) : null}
+              {extraSections || null}
               <ReportSectionCard title="Detailed Data">
                 <ReportDataTable columns={tableColumns} rows={rows} />
                 {meta ? <PaginationBar meta={meta} page={filters.page || 1} onPageChange={(page) => setFilters((current) => ({ ...current, page }))} /> : null}

@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import ReportPageLayout from '../../shared/components/ReportPageLayout';
+import ReportDataTable from '../../shared/components/ReportDataTable';
+import ReportSectionCard from '../../shared/components/ReportSectionCard';
 import { useCommitteeReport } from '../../shared/hooks/useReports';
 import { committeeTypesService } from '../../../organization/committee-types/services/committeeTypesService';
 import { BD_GEO } from '../../../../../data/bd-geo';
@@ -133,6 +135,52 @@ export default function DivisionwiseCommitteeReportPage() {
       .sort((a, b) => b.total_active - a.total_active || a.division.localeCompare(b.division));
   }, [data?.rows]);
 
+  const districtGrouped = useMemo(() => {
+    const groups = new Map();
+
+    (data?.rows || []).forEach((row) => {
+      const location = splitLocation(row.location);
+      const key = `${location.division}__${location.district}`;
+
+      if (!groups.has(key)) {
+        groups.set(key, {
+          division: location.division,
+          district: location.district,
+          total_active: 0,
+          current_active: 0,
+          committee_types: new Set(),
+          latest_start_date: null,
+        });
+      }
+
+      const entry = groups.get(key);
+      entry.total_active += 1;
+
+      if (String(row.current).toLowerCase() === 'yes') {
+        entry.current_active += 1;
+      }
+
+      if (row.type) {
+        entry.committee_types.add(row.type);
+      }
+
+      if (row.start_date && (!entry.latest_start_date || String(row.start_date) > String(entry.latest_start_date))) {
+        entry.latest_start_date = row.start_date;
+      }
+    });
+
+    return Array.from(groups.values())
+      .map((entry) => ({
+        division: entry.division,
+        district: entry.district,
+        total_active: entry.total_active,
+        current_active: entry.current_active,
+        committee_types: entry.committee_types.size,
+        latest_start_date: normalizeDate(entry.latest_start_date),
+      }))
+      .sort((a, b) => b.total_active - a.total_active || a.division.localeCompare(b.division) || a.district.localeCompare(b.district));
+  }, [data?.rows]);
+
   const summary = useMemo(() => {
     const totalActive = grouped.reduce((sum, item) => sum + item.total_active, 0);
     const totalCurrent = grouped.reduce((sum, item) => sum + item.current_active, 0);
@@ -176,6 +224,22 @@ export default function DivisionwiseCommitteeReportPage() {
     meta: null,
   };
 
+  const districtSummarySection = (
+    <ReportSectionCard title="District-wise Comparison">
+      <ReportDataTable
+        columns={[
+          { key: 'division', label: 'Division' },
+          { key: 'district', label: 'District' },
+          { key: 'total_active', label: 'Active Committees' },
+          { key: 'current_active', label: 'Current Active' },
+          { key: 'committee_types', label: 'Committee Types' },
+          { key: 'latest_start_date', label: 'Latest Start Date' },
+        ]}
+        rows={districtGrouped}
+      />
+    </ReportSectionCard>
+  );
+
   return (
     <ReportPageLayout
       pageTitle="Division-wise Summary Report"
@@ -194,6 +258,7 @@ export default function DivisionwiseCommitteeReportPage() {
       loading={loading}
       error={error}
       onReload={reload}
+      extraSections={districtSummarySection}
       searchPlaceholder="Search division summary"
       tableColumns={[
         { key: 'division', label: 'Division' },
