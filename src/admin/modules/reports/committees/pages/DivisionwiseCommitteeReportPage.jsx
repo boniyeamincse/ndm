@@ -249,12 +249,12 @@ export default function DivisionwiseCommitteeReportPage() {
 
   return (
     <ReportPageLayout
-      pageTitle="Division-wise Summary Report"
-      pageSubtitle="Division level snapshot of active committees, district coverage, and current committee strength."
+      pageTitle="Division Performance Summary"
+      pageSubtitle="Division-level snapshot of active committees, district coverage, and current organizational strength."
       breadcrumbs={[
         { label: 'Admin', path: '/admin/dashboard' },
         { label: 'Reports' },
-        { label: 'Division-wise Summary Report' },
+        { label: 'Division Performance Summary' },
       ]}
       cards={cards}
       filters={filters}

@@ -141,12 +141,12 @@ export default function DistrictwiseCommitteeReportPage() {
 
   return (
     <ReportPageLayout
-      pageTitle="District-wise Committee Report"
-      pageSubtitle="See which divisions and districts have active committees and current organizational coverage."
+      pageTitle="District Committee Coverage"
+      pageSubtitle="See which divisions and districts have active committees and where coverage is still missing."
       breadcrumbs={[
         { label: 'Admin', path: '/admin/dashboard' },
         { label: 'Reports' },
-        { label: 'District-wise Committee Report' },
+        { label: 'District Committee Coverage' },
       ]}
       cards={cards}
       filters={filters}

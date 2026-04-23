@@ -841,7 +841,6 @@
     grid-template-columns: 1fr;
   }
 }
-}
 .adm-task-btn:hover { background: #fef2f2; border-color: var(--adm-primary); }
 
 /* ── Content Lists (notices / posts) ─────────────────────────── */

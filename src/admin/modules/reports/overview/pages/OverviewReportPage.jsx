@@ -20,9 +20,9 @@ export default function OverviewReportPage() {
 
   return (
     <ReportPageLayout
-      pageTitle="Overview Report"
-      pageSubtitle="Executive control center for organization operations and publishing activity."
-      breadcrumbs={[{ label: 'Admin', path: '/admin/dashboard' }, { label: 'Reports' }, { label: 'Overview Report' }]}
+      pageTitle="Executive Overview"
+      pageSubtitle="Leadership snapshot of membership, committee, assignment, and publishing performance."
+      breadcrumbs={[{ label: 'Admin', path: '/admin/dashboard' }, { label: 'Reports' }, { label: 'Executive Overview' }]}
       cards={cards}
       filters={filters}
       setFilters={setFilters}
