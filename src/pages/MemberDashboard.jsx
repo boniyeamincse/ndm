@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { User2, Bell, FileText, CalendarClock, ArrowRight, Building2, Award, Hash, Pin, Sparkles, ShieldCheck, Megaphone, BadgeCheck } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
-import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useMemberDashboard } from '../hooks/useMemberDashboard';
 import './MemberDashboard.css';
 
@@ -38,7 +37,6 @@ function formatJoinedDate(joinedAt, lang) {
 export default function MemberDashboard() {
   const { t, lang } = useLang();
   const { user, overview, notices, noticesLoading, loading, error, reload } = useMemberDashboard();
-  useScrollReveal('.reveal', [loading]);
 
   const quickLinks = [
     { to: '/member/profile', icon: <User2 size={18} />, label: lang === 'en' ? 'My Profile' : 'আমার প্রোফাইল' },
@@ -94,7 +92,7 @@ export default function MemberDashboard() {
     <main>
       <section className="section-pad dashboard-section">
         <div className="container">
-          <div className="db-page-head reveal">
+          <div className="db-page-head">
             <div>
               <div className="breadcrumb db-breadcrumb">
                 <Link to="/">{t('nav_home')}</Link><span>/</span>
@@ -114,7 +112,7 @@ export default function MemberDashboard() {
             </div>
           )}
 
-          <div className="db-hero-layout reveal">
+          <div className="db-hero-layout">
             <div className="dashboard-card card db-hero-card">
               {loading ? (
                 <div className="db-hero-skeleton">
@@ -211,7 +209,7 @@ export default function MemberDashboard() {
             </div>
           </div>
 
-          <div className="db-highlights reveal">
+          <div className="db-highlights">
             {loading
               ? [1, 2, 3, 4].map(item => (
                 <div key={item} className="db-highlight-card card">
@@ -232,7 +230,7 @@ export default function MemberDashboard() {
           </div>
 
           {/* Notices Section */}
-          <div className="db-notices-section reveal">
+          <div className="db-notices-section">
             <div className="db-section-head">
               <h3><Bell size={18} /> {lang === 'en' ? 'Recent Notices' : 'সাম্প্রতিক নোটিশ'}</h3>
               <Link to="/member/notices" className="db-see-all">
