@@ -1,7 +1,7 @@
 export default function ContentTable({ columns = [], rows = [], renderRow, testId = 'content-table' }) {
   return (
-    <div className="ndm-table-wrap" data-testid={testId}>
-      <table className="ndm-table">
+    <div className="ndm-table-wrap cnt-table-wrap" data-testid={testId}>
+      <table className="ndm-table cnt-table">
         <thead>
           <tr>
             {columns.map((col) => (
