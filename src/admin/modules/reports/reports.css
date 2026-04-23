@@ -2,6 +2,10 @@
   margin-bottom: 1.5rem;
 }
 
+.rpt-print-meta {
+  display: none;
+}
+
 .rpt-filter-stack {
   display: grid;
   gap: 0.85rem;
@@ -64,5 +68,84 @@
   .rpt-filter-actions-row {
     justify-content: stretch;
     flex-wrap: wrap;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  .adm-sidebar,
+  .adm-topbar,
+  .adm-footer,
+  .adm-sidebar-overlay,
+  .adm-topbar__dismiss,
+  .rpt-filter-stack,
+  .ndm-pagination,
+  .ndm-table__actions {
+    display: none !important;
+  }
+
+  .adm-layout,
+  .adm-layout__main,
+  .adm-layout__content,
+  .adm-content-wrapper,
+  .adm-page-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .adm-layout__main {
+    margin-left: 0 !important;
+  }
+
+  .adm-page-header {
+    margin-bottom: 0.5rem;
+  }
+
+  .adm-breadcrumbs {
+    display: none !important;
+  }
+
+  .rpt-page-section {
+    gap: 0.75rem;
+  }
+
+  .rpt-print-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    align-items: center;
+    color: #334155;
+    font-size: 12px;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid #cbd5e1;
+  }
+
+  .rpt-summary-grid,
+  .rpt-page-grid,
+  .rpt-page-grid__charts,
+  .rpt-insight-grid {
+    gap: 0.55rem;
+  }
+
+  .ndm-stat-card,
+  .rpt-chart-card,
+  .ndm-card,
+  .ndm-table-wrap {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+  }
+
+  .ndm-table thead th {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
   }
 }

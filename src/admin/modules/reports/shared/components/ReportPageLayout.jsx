@@ -30,6 +30,15 @@ export default function ReportPageLayout({
   const rows = data?.rows || [];
   const meta = data?.meta;
 
+  function handlePrint() {
+    const originalTitle = document.title;
+    document.title = `${pageTitle} - NDM Report`;
+    window.print();
+    window.setTimeout(() => {
+      document.title = originalTitle;
+    }, 150);
+  }
+
   function updateFilter(name, value) {
     setFilters((current) => ({ ...current, [name]: value, page: 1 }));
   }
@@ -40,7 +49,7 @@ export default function ReportPageLayout({
         <AdminPageHeader title={pageTitle} subtitle={pageSubtitle} breadcrumbs={breadcrumbs} />
         <ReportSummaryCards cards={cards} />
 
-        <PageSection>
+        <PageSection className="rpt-page-section">
           <ReportFiltersToolbar
             search={search}
             onSearchChange={setSearch}
@@ -57,6 +66,7 @@ export default function ReportPageLayout({
               ));
             }}
             onRefresh={onReload}
+            onPrint={handlePrint}
             onExport={() => {}}
             startDate={filters.start_date}
             endDate={filters.end_date}
@@ -66,6 +76,17 @@ export default function ReportPageLayout({
           >
             {filters.renderControls ? filters.renderControls(updateFilter) : null}
           </ReportFiltersToolbar>
+
+          <div className="rpt-print-meta" aria-hidden="true">
+            <strong>{pageTitle}</strong>
+            <span>Generated: {new Date().toLocaleString()}</span>
+            {filters.start_date || filters.end_date ? (
+              <span>
+                Range: {filters.start_date || 'Any'} to {filters.end_date || 'Any'}
+              </span>
+            ) : null}
+            {search ? <span>Search: {search}</span> : null}
+          </div>
 
           {error ? <ErrorState message={error} onRetry={onReload} /> : null}
           {loading ? <ReportSkeleton rows={8} /> : null}

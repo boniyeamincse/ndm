@@ -1,4 +1,4 @@
-import { Download, RefreshCcw } from 'lucide-react';
+import { Download, Printer, RefreshCcw } from 'lucide-react';
 import FilterToolbar from '../../../membership/shared/components/FilterToolbar';
 
 export default function ReportFiltersToolbar({
@@ -7,6 +7,7 @@ export default function ReportFiltersToolbar({
   onSubmit,
   onReset,
   onRefresh,
+  onPrint,
   onExport,
   startDate,
   endDate,
@@ -36,6 +37,7 @@ export default function ReportFiltersToolbar({
       </FilterToolbar>
       <div className="rpt-filter-actions-row">
         <button type="button" className="ndm-btn ndm-btn--ghost" onClick={onRefresh}><RefreshCcw size={14} /> Refresh</button>
+        <button type="button" className="ndm-btn ndm-btn--ghost" onClick={onPrint}><Printer size={14} /> Print</button>
         <button type="button" className="ndm-btn ndm-btn--ghost" onClick={onExport}><Download size={14} /> Export</button>
       </div>
     </div>
