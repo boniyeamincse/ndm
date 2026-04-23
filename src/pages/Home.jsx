@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, Users, BookOpen, Megaphone, Shield,
-  ChevronRight, Calendar, Eye, Star
+  ChevronRight, Calendar, Eye, Star, Rss
 } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -193,11 +193,24 @@ export default function Home() {
               { icon: <Users size={28} />, titleK: 'highlight2_title', bodyK: 'highlight2_body' },
               { icon: <Shield size={28} />, titleK: 'highlight3_title', bodyK: 'highlight3_body' },
               { icon: <BookOpen size={28} />, titleK: 'highlight4_title', bodyK: 'highlight4_body' },
+              {
+                icon: <Rss size={28} />,
+                title: lang === 'en' ? 'Blogs & Analysis' : 'ব্লগ ও বিশ্লেষণ',
+                body: lang === 'en'
+                  ? 'Read deeper student perspectives, policy analysis, and movement narratives.'
+                  : 'ছাত্রদের দৃষ্টিভঙ্গি, নীতিগত বিশ্লেষণ এবং আন্দোলনের গল্প পড়ুন।',
+                to: '/blog',
+              },
             ].map((h, i) => (
               <div className="highlight-card reveal card" key={i} style={{ transitionDelay: `${i * 0.1}s` }}>
                 <div className="highlight-card__icon">{h.icon}</div>
-                <h3 className="highlight-card__title">{t(h.titleK)}</h3>
-                <p className="highlight-card__body">{t(h.bodyK)}</p>
+                <h3 className="highlight-card__title">{h.title || t(h.titleK)}</h3>
+                <p className="highlight-card__body">{h.body || t(h.bodyK)}</p>
+                {h.to && (
+                  <Link to={h.to} className="btn btn-outline btn-sm" style={{ marginTop: '.85rem' }}>
+                    {lang === 'en' ? 'Explore Blogs' : 'ব্লগ দেখুন'} <ArrowRight size={14} />
+                  </Link>
+                )}
               </div>
             ))}
           </div>
