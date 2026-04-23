@@ -15,6 +15,18 @@ export default function PositionDetailPage() {
   const { id } = useParams();
   const { data, loading, error, reload } = usePositionDetail(id);
 
+  const committeeTypeNames = Array.isArray(data?.committee_type_names)
+    ? data.committee_type_names
+    : Array.isArray(data?.mapped_committee_types)
+      ? data.mapped_committee_types
+        .map((entry) => (typeof entry === 'string' ? entry : entry?.name))
+        .filter(Boolean)
+      : Array.isArray(data?.committee_types)
+        ? data.committee_types
+          .map((entry) => (typeof entry === 'string' ? entry : entry?.name))
+          .filter(Boolean)
+        : [];
+
   return (
     <AdminContentWrapper>
       <PageContainer>
@@ -41,7 +53,7 @@ export default function PositionDetailPage() {
                 { label: 'Hierarchy Rank', value: data.hierarchy_rank },
                 { label: 'Display Order', value: data.display_order },
                 { label: 'Code', value: data.code },
-                { label: 'Committee Type Mappings', value: Array.isArray(data.committee_types) ? data.committee_types.join(', ') : '—' },
+                { label: 'Committee Type Mappings', value: committeeTypeNames.length > 0 ? committeeTypeNames.join(', ') : '—' },
                 { label: 'Description', value: data.description },
               ]} />
               <div className="ndm-modal__actions org-form__actions">
