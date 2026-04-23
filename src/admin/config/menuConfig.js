@@ -303,6 +303,18 @@ export function getMenuState(groups, pathname) {
 }
 
 export function getPageMeta(pathname) {
+  if (pathname === '/admin/profile' || pathname.startsWith('/admin/profile/')) {
+    return {
+      title: 'Profile',
+      section: 'User',
+      breadcrumbs: [
+        { label: 'Admin', path: '/admin/dashboard' },
+        { label: 'User' },
+        { label: 'Profile', path: '/admin/profile' },
+      ],
+    };
+  }
+
   for (const group of adminMenuGroups) {
     for (const item of group.items) {
       if (itemMatchesPath(item, pathname)) {

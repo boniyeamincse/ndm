@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import FloatingJoin from './components/FloatingJoin';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './admin/pages/AdminDashboard';
+import AdminProfilePage from './admin/pages/AdminProfilePage';
 import AdminLayout from './admin/layouts/AdminLayout';
 import MembershipApplicationsPage from './admin/modules/membership/applications/pages/MembershipApplicationsPage';
 import MembershipApplicationDetailPage from './admin/modules/membership/applications/pages/MembershipApplicationDetailPage';
@@ -238,6 +239,7 @@ export default function App() {
           <Route path="settings/email" element={<EmailSettingsPage />} />
           <Route path="settings/notifications" element={<NotificationSettingsPage />} />
           <Route path="settings/security" element={<SecuritySettingsPage />} />
+          <Route path="profile" element={<AdminProfilePage />} />
 
           <Route path="profile-update-requests" element={<ProfileUpdateRequestsPage />} />
           <Route path="profile-update-requests/pending" element={<ProfileUpdateRequestsPage />} />

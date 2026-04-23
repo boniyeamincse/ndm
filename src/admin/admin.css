@@ -978,6 +978,92 @@
 .adm-empty__title { margin: 0; font-size: 14px; font-weight: 600; color: #64748b; }
 .adm-empty__sub   { margin: 0; font-size: 12px; }
 
+/* ── Admin Profile ───────────────────────────────────────────── */
+.adm-profile-card {
+  border: 1px solid var(--adm-border);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: var(--adm-shadow);
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.adm-profile-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.adm-profile-card__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C0392B 0%, #8F2A1E 100%);
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adm-profile-card__title {
+  margin: 0;
+  color: #111827;
+  font-size: 20px;
+}
+
+.adm-profile-card__sub {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.adm-profile-card__note {
+  margin: 0;
+  color: #475569;
+  font-size: 13px;
+}
+
+.adm-profile-card__error {
+  margin: 0;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.adm-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.adm-profile-field {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f8fafc;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.adm-profile-field__label {
+  font-size: 12px;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.adm-profile-field strong {
+  font-size: 14px;
+  color: #0f172a;
+  word-break: break-word;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════════════════════════ */
