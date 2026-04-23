@@ -51,17 +51,31 @@ export default function PostForm({ initialValues, busy, onCancel, onSubmit }) {
 
   return (
     <form className="cnt-form" onSubmit={(event) => handleSubmit(event, 'draft')}>
+      <section className="cnt-form__section cnt-form__section--intro">
+        <div className="cnt-form__section-head">
+          <h3>Publishing Checklist</h3>
+          <p>Complete the essentials before sending to review or publishing.</p>
+        </div>
+        <div className="cnt-form__toggles cnt-form__toggles--summary">
+          <span className={`cnt-pill ${form.title ? 'cnt-pill--green' : 'cnt-pill--slate'}`}>Title</span>
+          <span className={`cnt-pill ${form.excerpt ? 'cnt-pill--blue' : 'cnt-pill--slate'}`}>Excerpt</span>
+          <span className={`cnt-pill ${form.content ? 'cnt-pill--teal' : 'cnt-pill--slate'}`}>Content</span>
+          <span className={`cnt-pill ${form.post_category_id ? 'cnt-pill--amber' : 'cnt-pill--slate'}`}>Category</span>
+          <span className={`cnt-pill ${form.visibility === 'public' ? 'cnt-pill--purple' : 'cnt-pill--gray'}`}>{form.visibility || 'visibility'}</span>
+        </div>
+      </section>
+
       <section className="cnt-form__section">
         <div className="cnt-form__section-head">
           <h3>Main Content</h3>
           <p>Write the post headline, summary, and editorial body.</p>
         </div>
         <div className="ndm-form-grid">
-          <label className="cnt-form__field cnt-form__field--wide">
+          <label className="cnt-form__field">
             Title (English)
             <input className="ndm-input" value={form.title} onChange={(event) => updateField('title', event.target.value)} required />
           </label>
-          <label className="cnt-form__field cnt-form__field--wide">
+          <label className="cnt-form__field">
             Title (Bengali)
             <input className="ndm-input" value={form.title_bn} onChange={(event) => updateField('title_bn', event.target.value)} />
           </label>
@@ -73,11 +87,11 @@ export default function PostForm({ initialValues, busy, onCancel, onSubmit }) {
             </div>
             <span className="cnt-form__hint">Preview: /news/{slugPreview || 'post-slug'}</span>
           </label>
-          <label className="cnt-form__field cnt-form__field--wide">
+          <label className="cnt-form__field">
             Excerpt (English)
             <textarea className="ndm-input" rows={2} value={form.excerpt} onChange={(event) => updateField('excerpt', event.target.value)} />
           </label>
-          <label className="cnt-form__field cnt-form__field--wide">
+          <label className="cnt-form__field">
             Excerpt (Bengali)
             <textarea className="ndm-input" rows={2} value={form.excerpt_bn} onChange={(event) => updateField('excerpt_bn', event.target.value)} />
           </label>
