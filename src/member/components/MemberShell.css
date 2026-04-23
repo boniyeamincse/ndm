@@ -56,6 +56,25 @@
   font-size: .9rem;
 }
 
+.member-shell__avatar {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--clr-primary-lt, #c0392b33);
+}
+
+.member-shell__avatar--initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--clr-primary);
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 700;
+}
+
 .member-shell__body {
   display: grid;
   grid-template-columns: 280px 1fr;

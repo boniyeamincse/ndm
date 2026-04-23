@@ -1,15 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import MemberSidebar from './components/MemberSidebar';
 import { memberApi } from '../services/memberApi';
 import './components/MemberShell.css';
 
+function getLocalUser() {
+  try { return JSON.parse(localStorage.getItem('ndm_user') || '{}'); } catch { return {}; }
+}
+
 export default function MemberLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState(() => getLocalUser());
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem('ndm_user') || '{}');
+  useEffect(() => {
+    const onAuthChanged = () => setUser(getLocalUser());
+    window.addEventListener('auth-changed', onAuthChanged);
+    return () => window.removeEventListener('auth-changed', onAuthChanged);
+  }, []);
 
   const closeMobile = () => setMobileOpen(false);
 
@@ -47,6 +56,17 @@ export default function MemberLayout() {
           </div>
 
           <div className="member-shell__top-actions">
+            {(user?.photo_url || user?.profile_photo_url) ? (
+              <img
+                src={user.photo_url || user.profile_photo_url}
+                alt={user?.full_name || 'Member'}
+                className="member-shell__avatar"
+              />
+            ) : (
+              <span className="member-shell__avatar member-shell__avatar--initials" aria-hidden="true">
+                {(user?.full_name || user?.name || 'M').charAt(0).toUpperCase()}
+              </span>
+            )}
             <span className="member-shell__name">{user?.full_name || user?.name || 'Member'}</span>
             <button type="button" className="btn btn-outline btn-sm" onClick={handleLogout}>Logout</button>
           </div>
