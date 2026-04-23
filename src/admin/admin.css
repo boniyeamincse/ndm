@@ -993,6 +993,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-wrap: wrap;
 }
 
 .adm-profile-card__avatar {
@@ -1035,6 +1036,49 @@
   font-size: 13px;
 }
 
+.adm-profile-card__success {
+  margin: 0;
+  color: #047857;
+  background: #ecfdf5;
+  border: 1px solid #6ee7b7;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.adm-profile-card__media {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adm-profile-photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #d1d5db;
+}
+
+.adm-profile-photo-input {
+  display: none;
+}
+
+.adm-profile-form {
+  display: grid;
+  gap: 14px;
+}
+
+.adm-profile-field--wide {
+  grid-column: 1 / -1;
+}
+
+.adm-profile-form__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .adm-profile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1062,6 +1106,14 @@
   font-size: 14px;
   color: #0f172a;
   word-break: break-word;
+}
+
+@media (max-width: 640px) {
+  .adm-profile-card__media {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
