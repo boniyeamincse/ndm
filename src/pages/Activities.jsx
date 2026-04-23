@@ -5,6 +5,16 @@ import { useLang } from '../context/LanguageContext';
 import { publicApi } from '../services/publicApi';
 import './Activities.css';
 
+function normaliseAssetUrl(url) {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    return `${parsed.pathname}${parsed.search || ''}`;
+  } catch {
+    return url;
+  }
+}
+
 const EVENTS = [
   {
     title_en: 'July Anniversary Rally 2026',
@@ -195,8 +205,8 @@ export default function Activities() {
             {!campaignsLoading && !campaignsError && campaigns.map((c) => (
               <div className="campaign-card card" key={c.slug || c.title}>
                 <div className="campaign-card__img">
-                  {c.featured_image_url ? (
-                    <img src={c.featured_image_url} alt={c.title} loading="lazy" />
+                  {normaliseAssetUrl(c.featured_image_url) ? (
+                    <img src={normaliseAssetUrl(c.featured_image_url)} alt={c.title} loading="lazy" />
                   ) : (
                     <div style={{ minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#eef2f7', color: '#64748b', fontWeight: 700 }}>
                       {lang === 'en' ? 'Campaign' : 'ক্যাম্পেইন'}
