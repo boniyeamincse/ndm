@@ -27,6 +27,30 @@ export default function AdminDashboard() {
   const content  = useLatestContent();
   const charts   = useDashboardCharts('12m');
 
+  const dashboardErrors = [
+    stats.error,
+    pending.error,
+    activity.error,
+    content.error,
+    charts.error,
+  ].filter(Boolean);
+
+  const isRefreshing = [
+    stats.loading,
+    pending.loading,
+    activity.loading,
+    content.loading,
+    charts.loading,
+  ].some(Boolean);
+
+  const refreshAll = () => {
+    stats.reload();
+    pending.reload();
+    activity.reload();
+    content.reload();
+    charts.reload();
+  };
+
   const membershipTrend   = charts.data?.membershipTrend   || [];
   const applicationStatus = charts.data?.applicationStatus || [];
   const committeeTypes    = charts.data?.committeeTypes    || [];
@@ -47,7 +71,12 @@ export default function AdminDashboard() {
           ]}
           actions={(
             <>
-              <button type="button" className="adm-page-action adm-page-action--ghost">
+              <button
+                type="button"
+                className="adm-page-action adm-page-action--ghost"
+                onClick={refreshAll}
+                disabled={isRefreshing}
+              >
                 <RefreshCw size={16} />
                 <span>Refresh</span>
               </button>
@@ -60,6 +89,23 @@ export default function AdminDashboard() {
         />
 
         <div className="adm-dashboard">
+
+          {dashboardErrors.length ? (
+            <div
+              role="alert"
+              style={{
+                border: '1px solid #fecaca',
+                background: '#fef2f2',
+                color: '#b91c1c',
+                borderRadius: 'var(--adm-radius)',
+                padding: '12px 14px',
+                fontSize: 13,
+                fontWeight: 600,
+              }}
+            >
+              Live dashboard data could not be fully loaded. Resolve API/auth issues and click Refresh.
+            </div>
+          ) : null}
 
           <WelcomeBanner />
 

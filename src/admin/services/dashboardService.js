@@ -6,6 +6,7 @@ const API_BASE = '/api/v1';
 function authHeaders() {
   const token = localStorage.getItem('ndm_token');
   return {
+    Accept: 'application/json',
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };

@@ -1,15 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { dashboardService } from '../services/dashboardService';
-import {
-  mockDashboardStats,
-  mockPendingItems,
-  mockRecentActivities,
-  mockLatestNotices,
-  mockLatestPosts,
-  mockMembershipTrend,
-  mockApplicationStatus,
-  mockCommitteeTypes,
-} from '../mock/dashboardMock';
 
 // ─── Data adaptors ────────────────────────────────────────────────────────────
 // The backend uses generic {label, value} for chart series.
@@ -71,14 +61,26 @@ export function useDashboardStats() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    dashboardService.getStats()
-      .then(setData)
-      .catch(() => setData(mockDashboardStats))
-      .finally(() => setLoading(false));
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await dashboardService.getStats();
+      setData(result || null);
+    } catch (err) {
+      setData(null);
+      setError(err?.message || 'Failed to load dashboard stats.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { data, loading, error };
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  return { data, loading, error, reload: load };
 }
 
 // Hook: fetch pending items
@@ -87,14 +89,26 @@ export function usePendingItems() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    dashboardService.getPendingItems()
-      .then((raw) => setData(adaptPendingItems(Array.isArray(raw) ? raw : [])))
-      .catch(() => setData(mockPendingItems))
-      .finally(() => setLoading(false));
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const raw = await dashboardService.getPendingItems();
+      setData(adaptPendingItems(Array.isArray(raw) ? raw : []));
+    } catch (err) {
+      setData([]);
+      setError(err?.message || 'Failed to load pending items.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { data, loading, error };
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  return { data, loading, error, reload: load };
 }
 
 // Hook: fetch recent activities
@@ -103,14 +117,26 @@ export function useRecentActivities() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    dashboardService.getRecentActivities(10)
-      .then((raw) => setData(adaptActivities(Array.isArray(raw) ? raw : [])))
-      .catch(() => setData(mockRecentActivities))
-      .finally(() => setLoading(false));
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const raw = await dashboardService.getRecentActivities(10);
+      setData(adaptActivities(Array.isArray(raw) ? raw : []));
+    } catch (err) {
+      setData([]);
+      setError(err?.message || 'Failed to load recent activity.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { data, loading, error };
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  return { data, loading, error, reload: load };
 }
 
 // Hook: fetch latest content (notices + posts)
@@ -119,14 +145,26 @@ export function useLatestContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    dashboardService.getLatestContent()
-      .then(setData)
-      .catch(() => setData({ latest_notices: mockLatestNotices, latest_posts: mockLatestPosts }))
-      .finally(() => setLoading(false));
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const result = await dashboardService.getLatestContent();
+      setData(result || { latest_notices: [], latest_posts: [] });
+    } catch (err) {
+      setData({ latest_notices: [], latest_posts: [] });
+      setError(err?.message || 'Failed to load latest content.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { data, loading, error };
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  return { data, loading, error, reload: load };
 }
 
 // Hook: fetch charts data
@@ -135,21 +173,33 @@ export function useDashboardCharts(period = '12m') {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    dashboardService.getCharts(period)
-      .then((raw) => setData({
-        membershipTrend:  adaptTrendData(raw?.membership_application_trend?.data || raw?.member_growth?.data || []),
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const raw = await dashboardService.getCharts(period);
+      setData({
+        membershipTrend: adaptTrendData(raw?.membership_application_trend?.data || raw?.member_growth?.data || []),
         applicationStatus: adaptStatusData(raw?.members_by_status?.data || []),
-        committeeTypes:    adaptTypeData(raw?.committees_by_status?.data || []),
-      }))
-      .catch(() => setData({
-        membershipTrend:  mockMembershipTrend,
-        applicationStatus: mockApplicationStatus,
-        committeeTypes:    mockCommitteeTypes,
-      }))
-      .finally(() => setLoading(false));
+        committeeTypes: adaptTypeData(raw?.committees_by_status?.data || []),
+      });
+    } catch (err) {
+      setData({
+        membershipTrend: [],
+        applicationStatus: [],
+        committeeTypes: [],
+      });
+      setError(err?.message || 'Failed to load dashboard charts.');
+    } finally {
+      setLoading(false);
+    }
   }, [period]);
 
-  return { data, loading, error };
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  return { data, loading, error, reload: load };
 }
 
