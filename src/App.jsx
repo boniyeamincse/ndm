@@ -76,6 +76,8 @@ import Constitution from './pages/Constitution';
 import Join from './pages/Join';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import MemberDashboard from './pages/MemberDashboard';
 import ProfileSetup from './pages/ProfileSetup';
 import MemberProfile from './pages/MemberProfile';
@@ -123,6 +125,8 @@ export default function App() {
           <Route path="/join" element={<Join />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route
             path="/member/profile-setup"
             element={(

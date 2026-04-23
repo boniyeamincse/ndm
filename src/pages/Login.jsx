@@ -17,6 +17,7 @@ export default function Login() {
   const [apiError, setApiError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const [notice, setNotice] = useState(null);
 
   const from = location.state?.from?.pathname || '/member/dashboard';
 
@@ -24,10 +25,24 @@ export default function Login() {
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
     const socialError = params.get('social_error');
+    const reset = params.get('reset');
     const next = params.get('next');
 
+    if (reset === 'success') {
+      setNotice({
+        type: 'success',
+        message: lang === 'en'
+          ? 'Password reset successful. Please sign in with your new password.'
+          : 'পাসওয়ার্ড সফলভাবে রিসেট হয়েছে। নতুন পাসওয়ার্ড দিয়ে সাইন ইন করুন।',
+      });
+    }
+
     if (socialError) {
-      setApiError(lang === 'en' ? 'Social login failed. Please try again.' : 'সোশ্যাল লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।');
+      const message = lang === 'en'
+        ? 'Social login failed. Please try again.'
+        : 'সোশ্যাল লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।';
+      setApiError(message);
+      setNotice({ type: 'error', message });
       return;
     }
 
@@ -38,12 +53,25 @@ export default function Login() {
     localStorage.setItem('ndm_token', token);
     window.dispatchEvent(new Event('auth-changed'));
 
-    if (next === 'profile-setup') {
-      navigate('/member/profile-setup', { replace: true });
-      return;
-    }
+    const destination = next === 'profile-setup'
+      ? '/member/profile-setup'
+      : '/member/dashboard';
 
-    navigate('/member/dashboard', { replace: true });
+    setSuccess(true);
+    setNotice({
+      type: 'success',
+      message: next === 'profile-setup'
+        ? (lang === 'en'
+          ? 'Social login successful. Redirecting to profile setup...'
+          : 'সোশ্যাল লগইন সফল হয়েছে। প্রোফাইল সেটআপে নেওয়া হচ্ছে...')
+        : (lang === 'en'
+          ? 'Social login successful. Redirecting to your dashboard...'
+          : 'সোশ্যাল লগইন সফল হয়েছে। ড্যাশবোর্ডে নেওয়া হচ্ছে...'),
+    });
+
+    setTimeout(() => {
+      navigate(destination, { replace: true });
+    }, 1100);
   }, [location.search, navigate, lang]);
 
   const handleSocialLogin = provider => {
@@ -53,6 +81,9 @@ export default function Login() {
   const handleChange = e => {
     setFieldErrors(fe => ({ ...fe, [e.target.name]: undefined }));
     setApiError(null);
+    if (notice?.type === 'error') {
+      setNotice(null);
+    }
     setForm(f => ({ ...f, [e.target.name]: e.target.value }));
   };
 
@@ -65,21 +96,19 @@ export default function Login() {
     try {
       const res = await fetch('/api/v1/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ login: form.email.trim(), password: form.password }),
       });
 
       const json = await res.json();
 
       if (res.ok && json.success !== false) {
-        // Persist token and user
         const user = json.data?.user || json.user || {};
         localStorage.setItem('ndm_token', json.data?.token || json.token || '');
         localStorage.setItem('ndm_user', JSON.stringify(user));
         window.dispatchEvent(new Event('auth-changed'));
         setSuccess(true);
 
-        // Route admins to the admin dashboard, members to member dashboard
         const adminRoles = ['superadmin', 'admin', 'moderator'];
         const userRoles = Array.isArray(user.roles) ? user.roles : [user.role_type].filter(Boolean);
         const isAdmin = userRoles.some(r => adminRoles.includes(r));
@@ -138,7 +167,7 @@ export default function Login() {
               <div className="login-success">
                 <CheckCircle2 size={48} color="var(--clr-primary)" />
                 <h3>{lang === 'en' ? 'Login successful!' : 'লগইন সফল হয়েছে!'}</h3>
-                <p>{lang === 'en' ? 'Redirecting you…' : 'রিডাইরেক্ট হচ্ছে…'}</p>
+                <p>{notice?.message || (lang === 'en' ? 'Redirecting you...' : 'রিডাইরেক্ট হচ্ছে...')}</p>
               </div>
             ) : (
               <>
@@ -154,6 +183,13 @@ export default function Login() {
                   <div className="form-alert form-alert--error">
                     <AlertCircle size={16} />
                     <span>{apiError}</span>
+                  </div>
+                )}
+
+                {notice && !apiError && (
+                  <div className={`form-alert ${notice.type === 'success' ? 'form-alert--success' : 'form-alert--error'}`}>
+                    {notice.type === 'success' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                    <span>{notice.message}</span>
                   </div>
                 )}
 
@@ -212,7 +248,7 @@ export default function Login() {
                     disabled={loading}
                   >
                     {loading
-                      ? (lang === 'en' ? 'Signing in…' : 'সাইন ইন হচ্ছে…')
+                      ? (lang === 'en' ? 'Signing in...' : 'সাইন ইন হচ্ছে...')
                       : <>{t('login_submit')} <LogIn size={18} /></>}
                   </button>
                 </form>
