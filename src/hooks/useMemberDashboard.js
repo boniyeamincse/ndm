@@ -38,7 +38,9 @@ async function apiFetch(path) {
 
 export function useMemberDashboard() {
   const [user, setUser] = useState(() => getLocalUser());
-  const [dashboard, setDashboard] = useState(null);
+  const [overview, setOverview] = useState(null);
+  const [notices, setNotices] = useState([]);
+  const [noticesLoading, setNoticesLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -46,49 +48,54 @@ export function useMemberDashboard() {
     const localUser = getLocalUser();
     setUser(localUser);
     setLoading(true);
+    setNoticesLoading(true);
     setError('');
 
     if (!getToken()) {
-      setDashboard(null);
+      setOverview(null);
+      setNotices([]);
       setLoading(false);
+      setNoticesLoading(false);
       return;
     }
 
     try {
-      const [dashboardRes, profileRes] = await Promise.allSettled([
-        apiFetch('/dashboard/member'),
+      const [profileRes, overviewRes, noticesRes] = await Promise.allSettled([
         apiFetch('/me/profile'),
+        apiFetch('/me/member-overview'),
+        apiFetch('/member/notices?per_page=4'),
       ]);
-
-      if (dashboardRes.status === 'fulfilled') {
-        setDashboard(dashboardRes.value || null);
-      } else {
-        setDashboard(null);
-      }
 
       if (profileRes.status === 'fulfilled') {
         const profileUser = profileRes.value?.user || {};
         const profileMember = profileRes.value?.member || {};
-
         const mergedUser = {
           ...localUser,
           ...profileUser,
           full_name: profileMember.full_name || profileUser.name || localUser.full_name,
           member_no: profileMember.member_no || localUser.member_no,
           membership_status: profileMember.status || localUser.membership_status || 'pending',
+          photo_url: profileMember.photo_url || localUser.photo_url || null,
         };
-
         setUser(mergedUser);
         localStorage.setItem('ndm_user', JSON.stringify(mergedUser));
-      } else if (dashboardRes.status !== 'fulfilled') {
-        throw profileRes.reason || new Error('Failed to load member dashboard data.');
+      } else {
+        setError('Could not refresh profile data. Showing cached data.');
+      }
+
+      if (overviewRes.status === 'fulfilled') {
+        setOverview(overviewRes.value || null);
+      }
+
+      if (noticesRes.status === 'fulfilled') {
+        const raw = noticesRes.value;
+        setNotices(Array.isArray(raw) ? raw : []);
       }
     } catch (err) {
       setError(err?.message || 'Failed to load dashboard data.');
-      setDashboard(null);
-      setUser(localUser);
     } finally {
       setLoading(false);
+      setNoticesLoading(false);
     }
   }, []);
 
@@ -98,7 +105,9 @@ export function useMemberDashboard() {
 
   return {
     user,
-    dashboard,
+    overview,
+    notices,
+    noticesLoading,
     loading,
     error,
     reload,
