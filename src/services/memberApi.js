@@ -124,7 +124,13 @@ export const memberApi = {
 
   // ── Communication ────────────────────────────────────────────────────────
   getMessages: () => request('/member/messages'),
+  getMessageTargets: () => request('/member/messages/targets'),
   sendMessage: (data) => request('/member/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  }),
+  sendTargetedMessage: (data) => request('/member/messages', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),

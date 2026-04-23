@@ -31,7 +31,13 @@ export default function MemberCommunicationPage() {
 
   // Compose / send message state
   const [showMessageCompose, setShowMessageCompose] = useState(false);
-  const [messageForm, setMessageForm] = useState({ subject: '', body: '' });
+  const [messageForm, setMessageForm] = useState({
+    recipient_mode: 'all',
+    committee_id: '',
+    subject: '',
+    body: '',
+  });
+  const [messageTargets, setMessageTargets] = useState({ committees: [] });
   const [sendingMessage, setSendingMessage] = useState(false);
   const [messageStatus, setMessageStatus] = useState('');
 
@@ -87,22 +93,63 @@ export default function MemberCommunicationPage() {
 
   const rows = Array.isArray(data[tab]) ? data[tab] : [];
 
+  useEffect(() => {
+    if (!showMessageCompose || tab !== 'messages') return;
+
+    let cancelled = false;
+    memberApi.getMessageTargets()
+      .then((res) => {
+        if (cancelled) return;
+        setMessageTargets({ committees: Array.isArray(res?.data?.committees) ? res.data.committees : [] });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setMessageTargets({ committees: [] });
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [showMessageCompose, tab]);
+
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
     if (!messageForm.body.trim()) return;
+    if (messageForm.recipient_mode === 'committee' && !messageForm.committee_id) {
+      setMessageStatus('Please select a committee.');
+      return;
+    }
 
     setSendingMessage(true);
     setMessageStatus('');
 
     try {
-      const res = await memberApi.sendMessageToAllMembers({
+      const payload = {
+        recipient_mode: messageForm.recipient_mode,
         subject: messageForm.subject?.trim() || null,
         body: messageForm.body.trim(),
-      });
+      };
+
+      if (messageForm.recipient_mode === 'committee') {
+        payload.committee_id = Number(messageForm.committee_id);
+      }
+
+      const res = await memberApi.sendTargetedMessage(payload);
 
       const sentCount = res?.data?.sent_count || 0;
-      setMessageStatus(`SMS sent to ${sentCount} members.`);
-      setMessageForm({ subject: '', body: '' });
+      const modeLabel = messageForm.recipient_mode === 'active'
+        ? 'active members'
+        : messageForm.recipient_mode === 'committee'
+          ? 'selected committee members'
+          : 'all members';
+
+      setMessageStatus(`SMS sent to ${sentCount} ${modeLabel}.`);
+      setMessageForm({
+        recipient_mode: 'all',
+        committee_id: '',
+        subject: '',
+        body: '',
+      });
       setShowMessageCompose(false);
       setData(prev => ({ ...prev, messages: null }));
     } catch (e2) {
@@ -118,8 +165,30 @@ export default function MemberCommunicationPage() {
         {showMessageCompose && (
           <form onSubmit={handleMessageSubmit} style={{ background: '#f8fafc', border: '1px solid var(--clr-border)', borderRadius: 10, padding: '1rem', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
             <p className="member-card__meta" style={{ margin: 0, color: '#0f172a' }}>
-              Broadcast this SMS to all member accounts.
+              Select recipients, then broadcast this SMS to members.
             </p>
+            <select
+              value={messageForm.recipient_mode}
+              onChange={e => setMessageForm(p => ({ ...p, recipient_mode: e.target.value, committee_id: e.target.value === 'committee' ? p.committee_id : '' }))}
+              style={{ padding: '.5rem .75rem', border: '1px solid var(--clr-border)', borderRadius: 8, fontSize: '.92rem', background: '#fff' }}
+            >
+              <option value="all">All members</option>
+              <option value="active">Only active members</option>
+              <option value="committee">By committee</option>
+            </select>
+            {messageForm.recipient_mode === 'committee' && (
+              <select
+                value={messageForm.committee_id}
+                onChange={e => setMessageForm(p => ({ ...p, committee_id: e.target.value }))}
+                required
+                style={{ padding: '.5rem .75rem', border: '1px solid var(--clr-border)', borderRadius: 8, fontSize: '.92rem', background: '#fff' }}
+              >
+                <option value="">Select committee</option>
+                {messageTargets.committees.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            )}
             <input
               className="form-input"
               placeholder="Subject (optional)"
@@ -145,7 +214,7 @@ export default function MemberCommunicationPage() {
             )}
             <div style={{ display: 'flex', gap: '.5rem' }}>
               <button type="submit" className="btn btn-primary btn-sm" disabled={sendingMessage}>
-                <Send size={13} /> {sendingMessage ? 'Sending…' : 'Send SMS to All'}
+                <Send size={13} /> {sendingMessage ? 'Sending…' : 'Send SMS'}
               </button>
               <button type="button" className="btn btn-outline btn-sm" onClick={() => setShowMessageCompose(false)}>
                 Cancel
