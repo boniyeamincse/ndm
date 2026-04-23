@@ -1,3 +1,12 @@
+function formatActor(actor) {
+  if (!actor) return 'System';
+  if (typeof actor === 'string' || typeof actor === 'number') return String(actor);
+  if (typeof actor === 'object') {
+    return actor.name || actor.full_name || actor.email || 'System';
+  }
+  return 'System';
+}
+
 export default function Timeline({ items, statusKey = 'new_status' }) {
   return (
     <ol className="ndm-timeline">
@@ -7,7 +16,7 @@ export default function Timeline({ items, statusKey = 'new_status' }) {
           <div>
             <p className="ndm-timeline__title">{(item[statusKey] || '').replaceAll('_', ' ') || 'Updated'}</p>
             <p className="ndm-timeline__meta">
-              {item.changed_by_user?.name || item.changed_by || 'System'}
+              {item.changed_by_user?.name || formatActor(item.changed_by)}
               {' · '}
               {item.created_at ? new Date(item.created_at).toLocaleString() : 'N/A'}
             </p>
