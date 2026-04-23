@@ -24,6 +24,7 @@ const EMPTY_FORM = {
   visibility: 'public',
   is_featured: false,
   allow_on_homepage: false,
+  show_in_campaigns: false,
   scheduled_at: '',
   meta_title: '',
   meta_description: '',
@@ -141,6 +142,10 @@ export default function PostForm({ initialValues, busy, onCancel, onSubmit }) {
           <label className="ndm-checkbox-row">
             <input type="checkbox" checked={Boolean(form.allow_on_homepage)} onChange={(event) => updateField('allow_on_homepage', event.target.checked)} />
             <span>Allow on homepage</span>
+          </label>
+          <label className="ndm-checkbox-row">
+            <input type="checkbox" checked={Boolean(form.show_in_campaigns)} onChange={(event) => updateField('show_in_campaigns', event.target.checked)} />
+            <span>Show in campaigns section</span>
           </label>
         </div>
       </section>
