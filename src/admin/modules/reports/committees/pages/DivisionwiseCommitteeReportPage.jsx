@@ -135,6 +135,9 @@ export default function DivisionwiseCommitteeReportPage() {
       .sort((a, b) => b.total_active - a.total_active || a.division.localeCompare(b.division));
   }, [data?.rows]);
 
+  const totalDivisions = BD_GEO.length;
+  const totalDistricts = BD_GEO.reduce((sum, division) => sum + (division.districts?.length || 0), 0);
+
   const districtGrouped = useMemo(() => {
     const groups = new Map();
 
@@ -185,7 +188,9 @@ export default function DivisionwiseCommitteeReportPage() {
     const totalActive = grouped.reduce((sum, item) => sum + item.total_active, 0);
     const totalCurrent = grouped.reduce((sum, item) => sum + item.current_active, 0);
     const coveredDivisions = grouped.length;
-    const coveredDistricts = grouped.reduce((sum, item) => sum + item.district_coverage, 0);
+    const coveredDistricts = districtGrouped
+      .filter((item) => item.district && item.district !== 'Unknown District')
+      .length;
 
     return {
       totalActive,
@@ -194,13 +199,15 @@ export default function DivisionwiseCommitteeReportPage() {
       coveredDistricts,
       averagePerDivision: coveredDivisions ? (totalActive / coveredDivisions).toFixed(1) : '0',
     };
-  }, [grouped]);
+  }, [grouped, districtGrouped]);
 
   const cards = [
     { label: 'Active Committees', value: summary.totalActive, tone: 'success' },
+    { label: 'Total Divisions', value: totalDivisions, tone: 'neutral' },
+    { label: 'Total Districts', value: totalDistricts, tone: 'neutral' },
+    { label: 'Created Division Result', value: summary.coveredDivisions, tone: 'info' },
+    { label: 'Created District Result', value: summary.coveredDistricts, tone: 'info' },
     { label: 'Current Active', value: summary.totalCurrent, tone: 'info' },
-    { label: 'Covered Divisions', value: summary.coveredDivisions, tone: 'neutral' },
-    { label: 'Covered District Slots', value: summary.coveredDistricts, tone: 'warning' },
     { label: 'Avg / Division', value: summary.averagePerDivision, tone: 'muted' },
   ];
 
