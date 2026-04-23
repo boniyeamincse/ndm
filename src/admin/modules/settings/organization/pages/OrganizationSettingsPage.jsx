@@ -1,9 +1,50 @@
+import { useRef, useState } from 'react';
 import SettingsFieldGroup from '../../shared/components/SettingsFieldGroup';
 import SettingsFormPage from '../../shared/components/SettingsFormPage';
 import SettingsSectionCard from '../../shared/components/SettingsSectionCard';
 import { useOrganizationSettings } from '../../shared/hooks/useSettings';
 
+const MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('Failed to read file.'));
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function OrganizationSettingsPage() {
+  const logoInputRef = useRef(null);
+  const faviconInputRef = useRef(null);
+  const [uploadError, setUploadError] = useState('');
+
+  async function handleAssetUpload(event, field, label, updateField) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    event.target.value = '';
+
+    if (!file.type.startsWith('image/')) {
+      setUploadError(`${label} must be an image file.`);
+      return;
+    }
+
+    if (file.size > MAX_UPLOAD_SIZE) {
+      setUploadError(`${label} must be 2MB or smaller.`);
+      return;
+    }
+
+    try {
+      const dataUrl = await fileToDataUrl(file);
+      updateField(field, dataUrl);
+      setUploadError('');
+    } catch {
+      setUploadError(`Unable to upload ${label.toLowerCase()} right now.`);
+    }
+  }
+
   return (
     <SettingsFormPage
       title="Organization Settings"
@@ -36,6 +77,7 @@ export default function OrganizationSettingsPage() {
 
           <SettingsSectionCard title="Branding">
             <SettingsFieldGroup title="Identity" description="Manage organization naming and visual assets.">
+              {uploadError ? <div className="stg-feedback stg-feedback--error">{uploadError}</div> : null}
               <div className="ndm-form-grid">
                 <label className="stg-field">
                   <span className="stg-field__label">Organization Name</span>
@@ -51,12 +93,37 @@ export default function OrganizationSettingsPage() {
                 </label>
                 <label className="stg-field">
                   <span className="stg-field__label">Logo URL</span>
-                  <input className="ndm-input" value={form.logo_url} onChange={(e) => updateField('logo_url', e.target.value)} />
+                  <input className="ndm-input" value={form.logo_url} onChange={(e) => updateField('logo_url', e.target.value)} placeholder="/images/logo/logo.jpeg or uploaded image" />
                 </label>
                 <label className="stg-field">
                   <span className="stg-field__label">Favicon URL</span>
-                  <input className="ndm-input" value={form.favicon_url} onChange={(e) => updateField('favicon_url', e.target.value)} />
+                  <input className="ndm-input" value={form.favicon_url} onChange={(e) => updateField('favicon_url', e.target.value)} placeholder="/favicon.svg or uploaded image" />
                 </label>
+                <div className="stg-upload-actions stg-field--wide">
+                  <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => logoInputRef.current?.click()}>
+                    Upload Logo
+                  </button>
+                  <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => faviconInputRef.current?.click()}>
+                    Upload Favicon
+                  </button>
+                  <button type="button" className="ndm-btn ndm-btn--ghost" onClick={() => updateField('logo_url', '/images/logo/logo.jpeg')}>
+                    Use Default Logo Path
+                  </button>
+                </div>
+                <input
+                  ref={logoInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="stg-upload-input"
+                  onChange={(event) => handleAssetUpload(event, 'logo_url', 'Logo', updateField)}
+                />
+                <input
+                  ref={faviconInputRef}
+                  type="file"
+                  accept="image/*,.ico,.svg"
+                  className="stg-upload-input"
+                  onChange={(event) => handleAssetUpload(event, 'favicon_url', 'Favicon', updateField)}
+                />
               </div>
               <div className="stg-media-preview-grid">
                 <div className="stg-media-preview-card">

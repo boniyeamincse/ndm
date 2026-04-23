@@ -361,6 +361,16 @@
   font-size: 0.85rem;
 }
 
+.stg-upload-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.stg-upload-input {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .stg-general-hero {
     grid-template-columns: 1fr;
