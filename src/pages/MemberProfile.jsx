@@ -67,7 +67,14 @@ export default function MemberProfile() {
         throw new Error(lang === 'en' ? 'Upload completed but no photo URL was returned.' : 'আপলোড সম্পন্ন হয়েছে, কিন্তু ছবির লিংক পাওয়া যায়নি।');
       }
 
-      const bustUrl = `${freshPhotoUrl}${freshPhotoUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
+      // Normalise to a relative URL so Vite proxy serves the image correctly.
+      let relativeUrl;
+      try {
+        relativeUrl = new URL(freshPhotoUrl).pathname;
+      } catch {
+        relativeUrl = freshPhotoUrl;
+      }
+      const bustUrl = `${relativeUrl}?t=${Date.now()}`;
 
       setMember(prev => (prev ? { ...prev, photo_url: bustUrl } : prev));
       setUser(prev => {
@@ -118,10 +125,17 @@ export default function MemberProfile() {
         ]);
 
         if (profileJson?.data) {
-          setUser(profileJson.data.user);
+          const remoteUser = profileJson.data.user;
+          // Normalise absolute storage URLs to relative for Vite proxy compatibility.
+          const normalise = (url) => { try { return url ? new URL(url).pathname : null; } catch { return url; } };
+          const patchedUser = {
+            ...remoteUser,
+            profile_photo_url: normalise(remoteUser?.profile_photo_url),
+            photo_url: normalise(remoteUser?.photo_url || remoteUser?.profile_photo_url),
+          };
+          setUser(patchedUser);
           setMember(profileJson.data.member);
-          // Also update local storage to keep it sync
-          localStorage.setItem('ndm_user', JSON.stringify(profileJson.data.user));
+          localStorage.setItem('ndm_user', JSON.stringify(patchedUser));
         }
 
         if (idCardJson?.data) {

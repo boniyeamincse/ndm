@@ -22,6 +22,20 @@ function authHeaders() {
   };
 }
 
+/**
+ * Turn absolute backend storage URLs into relative paths so Vite proxy handles them.
+ * e.g. "http://127.0.0.1:8000/storage/foo.jpg" → "/storage/foo.jpg"
+ */
+function toRelativeUrl(url) {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    return u.pathname + u.search;
+  } catch {
+    return url; // already relative
+  }
+}
+
 async function apiFetch(path) {
   const res = await fetch(`${API_BASE}${path}`, { headers: authHeaders() });
   const json = await res.json().catch(() => ({}));
@@ -75,8 +89,8 @@ export function useMemberDashboard() {
           full_name: profileMember.full_name || profileUser.name || localUser.full_name,
           member_no: profileMember.member_no || localUser.member_no,
           membership_status: profileMember.status || localUser.membership_status || 'pending',
-          photo_url: profileUser.profile_photo_url || profileMember.photo_url || localUser.photo_url || null,
-          profile_photo_url: profileUser.profile_photo_url || localUser.profile_photo_url || null,
+          photo_url: toRelativeUrl(profileUser.profile_photo_url || profileMember.photo_url || localUser.photo_url || null),
+          profile_photo_url: toRelativeUrl(profileUser.profile_photo_url || localUser.profile_photo_url || null),
           profile_photo_data_url: profileUser.profile_photo_data_url || localUser.profile_photo_data_url || null,
         };
         setUser(mergedUser);
@@ -104,6 +118,16 @@ export function useMemberDashboard() {
   useEffect(() => {
     reload();
   }, [reload]);
+
+  // Re-sync user from localStorage when photo or account changes happen elsewhere (e.g. profile page upload).
+  useEffect(() => {
+    const onAuthChanged = () => {
+      const fresh = getLocalUser();
+      setUser(fresh);
+    };
+    window.addEventListener('auth-changed', onAuthChanged);
+    return () => window.removeEventListener('auth-changed', onAuthChanged);
+  }, []);
 
   return {
     user,
