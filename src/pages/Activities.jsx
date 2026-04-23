@@ -4,36 +4,6 @@ import { useLang } from '../context/LanguageContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import './Activities.css';
 
-const CAMPAIGNS = [
-  {
-    title_en: 'Campus Democracy Initiative',
-    title_bn: 'ক্যাম্পাস গণতন্ত্র উদ্যোগ',
-    desc_en: 'Demanding the restoration of student union elections in all public and private universities across Bangladesh.',
-    desc_bn: 'বাংলাদেশের সকল সরকারি ও বেসরকারি বিশ্ববিদ্যালয়ে ছাত্র সংসদ নির্বাচন পুনরুদ্ধারের দাবি।',
-    status_en: 'Active', status_bn: 'সক্রিয়',
-    img: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80',
-    icon: '🗳️',
-  },
-  {
-    title_en: 'Anti-Corruption in Education',
-    title_bn: 'শিক্ষায় দুর্নীতি বিরোধী আন্দোলন',
-    desc_en: 'Exposing and challenging corruption in admission processes, examination systems, and research funding.',
-    desc_bn: 'ভর্তি প্রক্রিয়া, পরীক্ষা পদ্ধতি ও গবেষণা তহবিলে দুর্নীতি উন্মোচন ও প্রতিরোধ।',
-    status_en: 'Active', status_bn: 'সক্রিয়',
-    img: 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=600&q=80',
-    icon: '🔍',
-  },
-  {
-    title_en: 'Green Campus Movement',
-    title_bn: 'সবুজ ক্যাম্পাস আন্দোলন',
-    desc_en: 'Promoting environmental sustainability, tree-planting drives, and climate awareness on university campuses.',
-    desc_bn: 'বিশ্ববিদ্যালয় ক্যাম্পাসে পরিবেশগত স্থায়িত্ব, বৃক্ষরোপণ ও জলবায়ু সচেতনতা প্রচার।',
-    status_en: 'Ongoing', status_bn: 'চলমান',
-    img: 'https://images.unsplash.com/photo-1542601906897-bdf0fb3f2543?w=600&q=80',
-    icon: '🌱',
-  },
-];
-
 const EVENTS = [
   {
     title_en: 'July Anniversary Rally 2026',
@@ -157,21 +127,16 @@ export default function Activities() {
             <div className="divider" />
           </div>
           <div className="campaigns-grid">
-            {CAMPAIGNS.map((c, i) => (
-              <div className="campaign-card card reveal" key={i}>
-                <div className="campaign-card__img">
-                  <img src={c.img} alt={lang === 'en' ? c.title_en : c.title_bn} loading="lazy" />
-                  <span className="campaign-card__icon">{c.icon}</span>
-                </div>
-                <div className="campaign-card__body">
-                  <div className="campaign-card__status">
-                    <span className="badge badge-red">{lang === 'en' ? c.status_en : c.status_bn}</span>
-                  </div>
-                  <h3>{lang === 'en' ? c.title_en : c.title_bn}</h3>
-                  <p>{lang === 'en' ? c.desc_en : c.desc_bn}</p>
-                </div>
-              </div>
-            ))}
+            <div className="campaign-card card reveal" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '1.6rem' }}>
+              <h3 style={{ marginBottom: '.55rem' }}>
+                {lang === 'en' ? 'No active campaigns available right now.' : 'এই মুহূর্তে কোনো সক্রিয় ক্যাম্পেইন নেই।'}
+              </h3>
+              <p style={{ color: 'var(--clr-text-muted)' }}>
+                {lang === 'en'
+                  ? 'Campaign updates will appear here once published.'
+                  : 'প্রকাশিত হলে ক্যাম্পেইন আপডেট এখানে দেখা যাবে।'}
+              </p>
+            </div>
           </div>
         </div>
       </section>
