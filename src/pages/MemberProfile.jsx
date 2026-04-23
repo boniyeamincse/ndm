@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Mail, Phone, MapPin, GraduationCap, Briefcase, FileEdit, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { User, Mail, Phone, MapPin, GraduationCap, Briefcase, FileEdit, AlertCircle, CheckCircle2, Camera, Upload } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import './MemberProfile.css';
@@ -16,6 +16,69 @@ export default function MemberProfile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+
+  // Photo upload
+  const photoInputRef = useRef(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoError, setPhotoError] = useState('');
+  const [photoSuccess, setPhotoSuccess] = useState('');
+
+  const handlePhotoSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setPhotoError(lang === 'en' ? 'Only JPG, PNG, or WebP images are allowed.' : 'শুধুমাত্র JPG, PNG বা WebP ছবি গ্রহণযোগ্য।');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setPhotoError(lang === 'en' ? 'Image must be smaller than 2 MB.' : 'ছবির আকার ২ MB-এর বেশি হওয়া যাবে না।');
+      return;
+    }
+    setPhotoError('');
+    setPhotoSuccess('');
+    setPhotoFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
+
+  const handlePhotoUpload = async () => {
+    if (!photoFile) return;
+    setPhotoUploading(true);
+    setPhotoError('');
+    setPhotoSuccess('');
+    try {
+      const formData = new FormData();
+      formData.append('photo', photoFile);
+      const res = await fetch('/api/v1/me/profile/photo', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('ndm_token')}`,
+        },
+        body: formData,
+      });
+      const json = await res.json().catch(() => ({}));
+      if (res.ok) {
+        const newPhotoUrl = json.data?.photo_url || json.data?.photo || photoPreview;
+        setMember(prev => prev ? { ...prev, photo: newPhotoUrl } : prev);
+        setPhotoSuccess(lang === 'en' ? 'Profile photo updated!' : 'প্রোফাইল ফটো আপডেট হয়েছে!');
+        setPhotoFile(null);
+      } else {
+        setPhotoError(json.message || (lang === 'en' ? 'Upload failed. Please try again.' : 'আপলোড ব্যর্থ হয়েছে। আবার চেষ্টা করুন।'));
+      }
+    } catch {
+      setPhotoError(lang === 'en' ? 'Network error. Please try again.' : 'নেটওয়ার্ক ত্রুটি। আবার চেষ্টা করুন।');
+    } finally {
+      setPhotoUploading(false);
+    }
+  };
+
+  const handlePhotoDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) handlePhotoSelect({ target: { files: [file] } });
+  };
 
   useEffect(() => {
     async function fetchProfile() {
@@ -136,6 +199,73 @@ export default function MemberProfile() {
                 {member?.status || 'Pending'}
               </span>
             </div>
+
+            {/* ── Photo Upload ── */}
+            <div className="profile-photo-section">
+              <div
+                className={`profile-photo-drop${photoPreview ? ' has-preview' : ''}`}
+                onDragOver={e => e.preventDefault()}
+                onDrop={handlePhotoDrop}
+                onClick={() => photoInputRef.current?.click()}
+                title={lang === 'en' ? 'Click or drag to change photo' : 'ফটো পরিবর্তন করতে ক্লিক বা ড্র্যাগ করুন'}
+              >
+                {photoPreview || member?.photo ? (
+                  <img
+                    src={photoPreview || member.photo}
+                    alt="Profile"
+                    className="profile-photo-img"
+                  />
+                ) : (
+                  <div className="profile-photo-placeholder">
+                    <User size={48} />
+                  </div>
+                )}
+                <div className="profile-photo-overlay">
+                  <Camera size={20} />
+                  <span>{lang === 'en' ? 'Change Photo' : 'ফটো পরিবর্তন'}</span>
+                </div>
+              </div>
+
+              <div className="profile-photo-meta">
+                <p className="profile-photo-name">{member?.full_name || user?.name}</p>
+                <p className="profile-photo-id">{member?.member_no ? `# ${member.member_no}` : ''}</p>
+
+                {photoFile && (
+                  <button
+                    className="btn btn-primary profile-photo-upload-btn"
+                    onClick={handlePhotoUpload}
+                    disabled={photoUploading}
+                  >
+                    {photoUploading
+                      ? <><span className="profile-photo-spinner" /> {lang === 'en' ? 'Uploading...' : 'আপলোড হচ্ছে...'}</>
+                      : <><Upload size={16} /> {lang === 'en' ? 'Save Photo' : 'ফটো সেভ করুন'}</>}
+                  </button>
+                )}
+
+                {photoError && (
+                  <div className="form-alert form-alert--error profile-photo-msg">
+                    <AlertCircle size={14} /><span>{photoError}</span>
+                  </div>
+                )}
+                {photoSuccess && (
+                  <div className="form-alert form-alert--success profile-photo-msg">
+                    <CheckCircle2 size={14} /><span>{photoSuccess}</span>
+                  </div>
+                )}
+
+                <p className="profile-photo-hint">
+                  {lang === 'en' ? 'JPG, PNG or WebP · max 2 MB' : 'JPG, PNG বা WebP · সর্বোচ্চ ২ MB'}
+                </p>
+              </div>
+            </div>
+
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="profile-photo-input"
+              onChange={handlePhotoSelect}
+            />
 
             <div className="profile-grid">
               <InfoField label={lang === 'en' ? 'Full Name' : 'পূর্ণ নাম'} value={member?.full_name || user?.name} />
