@@ -24,6 +24,7 @@ export default function AdminProfilePage() {
   const photoInputRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [feedback, setFeedback] = useState('');
   const [saving, setSaving] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
@@ -86,6 +87,12 @@ export default function AdminProfilePage() {
   }, []);
 
   function updateField(field, value) {
+    setFieldErrors((current) => {
+      if (!current[field]) return current;
+      const next = { ...current };
+      delete next[field];
+      return next;
+    });
     setProfile((current) => ({ ...current, [field]: value }));
   }
 
@@ -93,6 +100,7 @@ export default function AdminProfilePage() {
     event.preventDefault();
     setSaving(true);
     setError('');
+    setFieldErrors({});
     setFeedback('');
 
     try {
@@ -116,6 +124,12 @@ export default function AdminProfilePage() {
 
       setFeedback('Profile updated successfully.');
     } catch (err) {
+      if (err?.status === 422 && err?.payload?.errors && typeof err.payload.errors === 'object') {
+        const mapped = Object.fromEntries(
+          Object.entries(err.payload.errors).map(([key, value]) => [key, Array.isArray(value) ? value[0] : String(value)])
+        );
+        setFieldErrors(mapped);
+      }
       setError(err?.message || 'Failed to update profile.');
     } finally {
       setSaving(false);
@@ -220,7 +234,12 @@ export default function AdminProfilePage() {
                 <div className="adm-profile-grid">
                   <label className="adm-profile-field">
                     <span className="adm-profile-field__label"><User size={14} /> Name</span>
-                    <input className="ndm-input" value={profile.name || ''} onChange={(event) => updateField('name', event.target.value)} />
+                    <input
+                      className={`ndm-input ${fieldErrors.name ? 'adm-input--error' : ''}`}
+                      value={profile.name || ''}
+                      onChange={(event) => updateField('name', event.target.value)}
+                    />
+                    {fieldErrors.name ? <span className="adm-input-error-text">{fieldErrors.name}</span> : null}
                   </label>
                   <label className="adm-profile-field">
                     <span className="adm-profile-field__label"><Mail size={14} /> Email (read only)</span>
@@ -228,7 +247,12 @@ export default function AdminProfilePage() {
                   </label>
                   <label className="adm-profile-field">
                     <span className="adm-profile-field__label"><Phone size={14} /> Phone</span>
-                    <input className="ndm-input" value={profile.phone || ''} onChange={(event) => updateField('phone', event.target.value)} />
+                    <input
+                      className={`ndm-input ${fieldErrors.phone ? 'adm-input--error' : ''}`}
+                      value={profile.phone || ''}
+                      onChange={(event) => updateField('phone', event.target.value)}
+                    />
+                    {fieldErrors.phone ? <span className="adm-input-error-text">{fieldErrors.phone}</span> : null}
                   </label>
                   <div className="adm-profile-field">
                     <span className="adm-profile-field__label"><Shield size={14} /> Role</span>
@@ -236,11 +260,22 @@ export default function AdminProfilePage() {
                   </div>
                   <label className="adm-profile-field adm-profile-field--wide">
                     <span className="adm-profile-field__label">Address</span>
-                    <input className="ndm-input" value={profile.address_line || ''} onChange={(event) => updateField('address_line', event.target.value)} />
+                    <input
+                      className={`ndm-input ${fieldErrors.address_line ? 'adm-input--error' : ''}`}
+                      value={profile.address_line || ''}
+                      onChange={(event) => updateField('address_line', event.target.value)}
+                    />
+                    {fieldErrors.address_line ? <span className="adm-input-error-text">{fieldErrors.address_line}</span> : null}
                   </label>
                   <label className="adm-profile-field adm-profile-field--wide">
                     <span className="adm-profile-field__label">Bio</span>
-                    <textarea className="ndm-input" rows={4} value={profile.bio || ''} onChange={(event) => updateField('bio', event.target.value)} />
+                    <textarea
+                      className={`ndm-input ${fieldErrors.bio ? 'adm-input--error' : ''}`}
+                      rows={4}
+                      value={profile.bio || ''}
+                      onChange={(event) => updateField('bio', event.target.value)}
+                    />
+                    {fieldErrors.bio ? <span className="adm-input-error-text">{fieldErrors.bio}</span> : null}
                   </label>
                 </div>
                 <div className="adm-profile-form__actions">
